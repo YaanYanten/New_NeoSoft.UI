@@ -114,7 +114,7 @@ Namespace Controls
     ''' Botón personalizado con esquinas redondeadas y efectos de hover
     ''' </summary>
     <ToolboxBitmap(GetType(NeoButton), "NeoButton.bmp")>
-    Public Class NeoButton
+    Public Class NXButton
         Inherits Control
 
         #Region "Propiedades"
@@ -224,7 +224,7 @@ Para depurar la biblioteca mientras desarrollas:
 
 ## 📝 Convenciones de Código
 
-- **Prefijos**: Usar "Neo" para todos los controles (NeoButton, NeoPanel, etc.)
+- **Prefijos**: Usar "NX" para todos los controles (NXButton, NXPanel, etc.)
 - **Regiones**: Organizar código en regiones (#Region)
 - **Comentarios XML**: Documentar todas las clases y miembros públicos
 - **Propiedades**: Usar atributos `Category` y `Description`
