@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class NXImagePickerDialog
     Inherits System.Windows.Forms.Form
 
@@ -17,21 +17,18 @@ Partial Class NXImagePickerDialog
     'Requerido por el Diseñador de Windows Forms
     Private components As System.ComponentModel.IContainer
 
-    'NOTA: el Diseñador de Windows Forms necesita el siguiente procedimiento
-    'Se puede modificar usando el Diseñador de Windows Forms.  
-    'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(NXImagePickerDialog))
         Me.tabControl = New System.Windows.Forms.TabControl()
         Me.tabImagePicker = New System.Windows.Forms.TabPage()
         Me.panelPreview = New System.Windows.Forms.Panel()
+        Me.lblImageInfo = New System.Windows.Forms.Label()
         Me.picPreview = New System.Windows.Forms.PictureBox()
         Me.panelLeft = New System.Windows.Forms.Panel()
         Me.grpResourceContext = New System.Windows.Forms.GroupBox()
         Me.panelProjectResource = New System.Windows.Forms.Panel()
         Me.btnImportProject = New System.Windows.Forms.Button()
-        Me.txtProjectResource = New System.Windows.Forms.TextBox()
+        Me.lstProjectResources = New System.Windows.Forms.ListBox()
         Me.lblProjectResource = New System.Windows.Forms.Label()
         Me.rbProjectResource = New System.Windows.Forms.RadioButton()
         Me.panelLocalResource = New System.Windows.Forms.Panel()
@@ -98,21 +95,39 @@ Partial Class NXImagePickerDialog
         Me.panelPreview.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.panelPreview.BackColor = System.Drawing.Color.Gray
+        Me.panelPreview.BackColor = System.Drawing.Color.WhiteSmoke
         Me.panelPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.panelPreview.Controls.Add(Me.lblImageInfo)
         Me.panelPreview.Controls.Add(Me.picPreview)
         Me.panelPreview.Location = New System.Drawing.Point(290, 10)
         Me.panelPreview.Name = "panelPreview"
         Me.panelPreview.Size = New System.Drawing.Size(350, 470)
         Me.panelPreview.TabIndex = 1
         '
+        'lblImageInfo
+        '
+        Me.lblImageInfo.BackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.lblImageInfo.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.lblImageInfo.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        Me.lblImageInfo.ForeColor = System.Drawing.Color.White
+        Me.lblImageInfo.Location = New System.Drawing.Point(0, 448)
+        Me.lblImageInfo.Name = "lblImageInfo"
+        Me.lblImageInfo.Padding = New System.Windows.Forms.Padding(5, 0, 0, 0)
+        Me.lblImageInfo.Size = New System.Drawing.Size(348, 20)
+        Me.lblImageInfo.TabIndex = 1
+        Me.lblImageInfo.Text = "No image selected"
+        Me.lblImageInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
         'picPreview
         '
-        Me.picPreview.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.picPreview.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.picPreview.BackColor = System.Drawing.Color.White
         Me.picPreview.Location = New System.Drawing.Point(0, 0)
         Me.picPreview.Name = "picPreview"
-        Me.picPreview.Size = New System.Drawing.Size(348, 468)
-        Me.picPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.picPreview.Size = New System.Drawing.Size(348, 448)
+        Me.picPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.picPreview.TabIndex = 0
         Me.picPreview.TabStop = False
         '
@@ -143,7 +158,7 @@ Partial Class NXImagePickerDialog
         'panelProjectResource
         '
         Me.panelProjectResource.Controls.Add(Me.btnImportProject)
-        Me.panelProjectResource.Controls.Add(Me.txtProjectResource)
+        Me.panelProjectResource.Controls.Add(Me.lstProjectResources)
         Me.panelProjectResource.Controls.Add(Me.lblProjectResource)
         Me.panelProjectResource.Enabled = False
         Me.panelProjectResource.Location = New System.Drawing.Point(15, 310)
@@ -160,16 +175,14 @@ Partial Class NXImagePickerDialog
         Me.btnImportProject.Text = "Import..."
         Me.btnImportProject.UseVisualStyleBackColor = True
         '
-        'txtProjectResource
+        'lstProjectResources
         '
-        Me.txtProjectResource.Location = New System.Drawing.Point(10, 30)
-        Me.txtProjectResource.Multiline = True
-        Me.txtProjectResource.Name = "txtProjectResource"
-        Me.txtProjectResource.ReadOnly = True
-        Me.txtProjectResource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtProjectResource.Size = New System.Drawing.Size(220, 70)
-        Me.txtProjectResource.TabIndex = 1
-        Me.txtProjectResource.Text = "My.Project.Resources.resx"
+        Me.lstProjectResources.FormattingEnabled = True
+        Me.lstProjectResources.ItemHeight = 15
+        Me.lstProjectResources.Location = New System.Drawing.Point(10, 10)
+        Me.lstProjectResources.Name = "lstProjectResources"
+        Me.lstProjectResources.Size = New System.Drawing.Size(220, 94)
+        Me.lstProjectResources.TabIndex = 0
         '
         'lblProjectResource
         '
@@ -288,6 +301,7 @@ Partial Class NXImagePickerDialog
         'chkListCategories
         '
         Me.chkListCategories.CheckOnClick = True
+        Me.chkListCategories.FormattingEnabled = True
         Me.chkListCategories.Items.AddRange(New Object() {"Select All", "Actions", "Alignment", "Analysis", "Appearance", "Arrange", "Arrows", "Business Objects", "Chart"})
         Me.chkListCategories.Location = New System.Drawing.Point(5, 25)
         Me.chkListCategories.Name = "chkListCategories"
@@ -306,6 +320,7 @@ Partial Class NXImagePickerDialog
         'chkListSize
         '
         Me.chkListSize.CheckOnClick = True
+        Me.chkListSize.FormattingEnabled = True
         Me.chkListSize.Items.AddRange(New Object() {"16x16", "32x32"})
         Me.chkListSize.Location = New System.Drawing.Point(5, 348)
         Me.chkListSize.Name = "chkListSize"
@@ -323,21 +338,25 @@ Partial Class NXImagePickerDialog
         '
         'rbAddToForm
         '
+        Me.rbAddToForm.AutoSize = True
         Me.rbAddToForm.Checked = True
         Me.rbAddToForm.Location = New System.Drawing.Point(230, 467)
         Me.rbAddToForm.Name = "rbAddToForm"
-        Me.rbAddToForm.Size = New System.Drawing.Size(160, 20)
+        Me.rbAddToForm.Size = New System.Drawing.Size(143, 19)
         Me.rbAddToForm.TabIndex = 4
         Me.rbAddToForm.TabStop = True
         Me.rbAddToForm.Text = "Add to form resources"
+        Me.rbAddToForm.UseVisualStyleBackColor = True
         '
         'rbAddToProject
         '
+        Me.rbAddToProject.AutoSize = True
         Me.rbAddToProject.Location = New System.Drawing.Point(50, 467)
         Me.rbAddToProject.Name = "rbAddToProject"
-        Me.rbAddToProject.Size = New System.Drawing.Size(160, 20)
+        Me.rbAddToProject.Size = New System.Drawing.Size(154, 19)
         Me.rbAddToProject.TabIndex = 3
         Me.rbAddToProject.Text = "Add to project resources"
+        Me.rbAddToProject.UseVisualStyleBackColor = True
         '
         'tabVectorImages
         '
@@ -364,7 +383,7 @@ Partial Class NXImagePickerDialog
         Me.lblVersion.ForeColor = System.Drawing.Color.Gray
         Me.lblVersion.Location = New System.Drawing.Point(12, 548)
         Me.lblVersion.Name = "lblVersion"
-        Me.lblVersion.Size = New System.Drawing.Size(87, 15)
+        Me.lblVersion.Size = New System.Drawing.Size(81, 15)
         Me.lblVersion.TabIndex = 3
         Me.lblVersion.Text = "Version 1.0.0.0"
         '
@@ -425,40 +444,37 @@ Partial Class NXImagePickerDialog
 
     End Sub
 
-#Region "Campos de Controles"
-
-    Friend WithEvents tabControl As System.Windows.Forms.TabControl
-    Friend WithEvents tabImagePicker As System.Windows.Forms.TabPage
-    Friend WithEvents tabRasterImages As System.Windows.Forms.TabPage
-    Friend WithEvents tabVectorImages As System.Windows.Forms.TabPage
-    Friend WithEvents tabFontIcons As System.Windows.Forms.TabPage
-    Friend WithEvents panelLeft As System.Windows.Forms.Panel
-    Friend WithEvents grpResourceContext As System.Windows.Forms.GroupBox
-    Friend WithEvents rbLocalResource As System.Windows.Forms.RadioButton
-    Friend WithEvents panelLocalResource As System.Windows.Forms.Panel
-    Friend WithEvents lstLocalResources As System.Windows.Forms.ListBox
-    Friend WithEvents btnClearLocal As System.Windows.Forms.Button
-    Friend WithEvents btnImportLocal As System.Windows.Forms.Button
-    Friend WithEvents rbProjectResource As System.Windows.Forms.RadioButton
-    Friend WithEvents panelProjectResource As System.Windows.Forms.Panel
-    Friend WithEvents txtProjectResource As System.Windows.Forms.TextBox
-    Friend WithEvents lblProjectResource As System.Windows.Forms.Label
-    Friend WithEvents btnImportProject As System.Windows.Forms.Button
-    Friend WithEvents panelPreview As System.Windows.Forms.Panel
-    Friend WithEvents picPreview As System.Windows.Forms.PictureBox
-    Friend WithEvents btnOK As System.Windows.Forms.Button
-    Friend WithEvents btnCancel As System.Windows.Forms.Button
-    Friend WithEvents lblVersion As System.Windows.Forms.Label
-    Friend WithEvents panelRasterFilters As System.Windows.Forms.Panel
-    Friend WithEvents txtRasterSearch As System.Windows.Forms.TextBox
-    Friend WithEvents chkListCategories As System.Windows.Forms.CheckedListBox
-    Friend WithEvents chkListSize As System.Windows.Forms.CheckedListBox
-    Friend WithEvents flowRasterIcons As System.Windows.Forms.FlowLayoutPanel
-    Friend WithEvents rbAddToProject As System.Windows.Forms.RadioButton
-    Friend WithEvents rbAddToForm As System.Windows.Forms.RadioButton
-    Friend WithEvents lblCategories As System.Windows.Forms.Label
-    Friend WithEvents lblSize As System.Windows.Forms.Label
-
-#End Region
+    Friend WithEvents tabControl As TabControl
+    Friend WithEvents tabImagePicker As TabPage
+    Friend WithEvents tabRasterImages As TabPage
+    Friend WithEvents tabVectorImages As TabPage
+    Friend WithEvents tabFontIcons As TabPage
+    Friend WithEvents panelLeft As Panel
+    Friend WithEvents grpResourceContext As GroupBox
+    Friend WithEvents rbLocalResource As RadioButton
+    Friend WithEvents panelLocalResource As Panel
+    Friend WithEvents lstLocalResources As ListBox
+    Friend WithEvents btnClearLocal As Button
+    Friend WithEvents btnImportLocal As Button
+    Friend WithEvents rbProjectResource As RadioButton
+    Friend WithEvents panelProjectResource As Panel
+    Friend WithEvents lstProjectResources As ListBox
+    Friend WithEvents lblProjectResource As Label
+    Friend WithEvents btnImportProject As Button
+    Friend WithEvents panelPreview As Panel
+    Friend WithEvents picPreview As PictureBox
+    Friend WithEvents lblImageInfo As Label
+    Friend WithEvents btnOK As Button
+    Friend WithEvents btnCancel As Button
+    Friend WithEvents lblVersion As Label
+    Friend WithEvents panelRasterFilters As Panel
+    Friend WithEvents txtRasterSearch As TextBox
+    Friend WithEvents chkListCategories As CheckedListBox
+    Friend WithEvents chkListSize As CheckedListBox
+    Friend WithEvents flowRasterIcons As FlowLayoutPanel
+    Friend WithEvents rbAddToProject As RadioButton
+    Friend WithEvents rbAddToForm As RadioButton
+    Friend WithEvents lblCategories As Label
+    Friend WithEvents lblSize As Label
 
 End Class

@@ -32,4 +32,17 @@ Public Class FormMain
                        MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
+    Private Sub BtnImagePicker_Click(sender As Object, e As EventArgs) Handles btnImagePicker.Click
+        Using dialog As New NXImagePickerDialog()
+            If dialog.ShowDialog(Me) = DialogResult.OK Then
+                If dialog.SelectedImage IsNot Nothing Then
+                    MessageBox.Show($"Imagen seleccionada desde: {dialog.SelectedImageSource}" & vbCrLf &
+                                  $"Ruta: {dialog.SelectedImagePath}",
+                                  "Imagen Seleccionada",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End If
+            End If
+        End Using
+    End Sub
+
 End Class

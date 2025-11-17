@@ -70,6 +70,13 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs\NXImagePickerDialog.Designer.vb">
+      <DependentUpon>NXImagePickerDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\NXImagePickerDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\NXImageUITypeEditor.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="Controls\NXButton.vb">
       <SubType>Component</SubType>
@@ -80,25 +87,86 @@
     <Compile Include="Controls\NXLabel.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Dialogs\NXImagePickerDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\NXImagePickerDialog.Designer.vb">
-      <DependentUpon>NXImagePickerDialog.vb</DependentUpon>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />
     <Folder Include="Components\" />
     <Folder Include="Designers\" />
-    <Folder Include="Editors\" />
-    <Folder Include="Resources\" />
     <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Dialogs\NXImagePickerDialog.resx">
       <DependentUpon>NXImagePickerDialog.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Images\Actions\ICONS_16\AddItem_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\AddNewFile_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Add_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Apply_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Cancel_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Clear_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Close_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\DeleteList_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\DeleteToList_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Download_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Down_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\EditName_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Hide_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\ImportImage_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\New_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\OpenS_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Open_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Refresh2_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Refresh_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\RemoveItem_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Remove_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Reset_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Show_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_16\Trash_x_16.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\AddItem_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\AddNewFile_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Add_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Apply_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Cancel_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Clear_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Close_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\DeleteList_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\DeleteToList_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Download_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Down_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\EditName_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Hide_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\ImportImage_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\New_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Open2_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Open_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Refresh2_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Refresh_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\RemoveItem_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Remove_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Reset_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Show_x_32.png" />
+    <Content Include="Resources\Images\Actions\ICONS_32\Trash_x_32.png" />
+    <Content Include="Resources\Images\Icons\anime.png" />
+    <Content Include="Resources\Images\Icons\ClipCreator.png" />
+    <Content Include="Resources\Images\Icons\dashboard.png" />
+    <Content Include="Resources\Images\Icons\film.png" />
+    <Content Include="Resources\Images\Icons\gameplay.png" />
+    <Content Include="Resources\Images\Icons\Home.png" />
+    <Content Include="Resources\Images\Icons\plan.png" />
+    <Content Include="Resources\Images\Icons\settings.png" />
+    <Content Include="Resources\Images\Icons\VideoEditor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

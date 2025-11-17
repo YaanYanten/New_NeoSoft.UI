@@ -1,5 +1,6 @@
 Imports System.ComponentModel
 Imports System.Drawing
+Imports System.Drawing.Design
 Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
 
@@ -51,9 +52,66 @@ Namespace Controls
         Private _pressedBackColor As Color = Color.Empty
         Private _disabledBackColor As Color = Color.FromArgb(204, 204, 204)
 
+        'Image
+        Private _image As Image = Nothing
+        Private _imageAlign As ContentAlignment = ContentAlignment.MiddleLeft
+        Private _imageSize As Size = New Size(24, 24)
+
 #End Region
 
 #Region "Propiedades - Apariencia"
+
+        ''' <summary>
+        ''' Imagen del botón - Usa el editor personalizado
+        ''' </summary>
+        <Category("Appearance")>
+        <Description("Imagen que se muestra en el botón")>
+        <Editor(GetType(NXImageUITypeEditor), GetType(UITypeEditor))>
+        <Localizable(True)>  ' <-- AGREGAR ESTO para que se guarde en recursos
+        Public Property Image As Image
+            Get
+                Return _image
+            End Get
+            Set(value As Image)
+                _image = value
+                Me.Invalidate()
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' Alineación de la imagen en el botón
+        ''' </summary>
+        <Category("Appearance")>
+        <Description("Alineación de la imagen en el botón")>
+        <DefaultValue(GetType(ContentAlignment), "MiddleLeft")>
+        Public Property ImageAlign As ContentAlignment
+            Get
+                Return _imageAlign
+            End Get
+            Set(value As ContentAlignment)
+                If _imageAlign <> value Then
+                    _imageAlign = value
+                    Me.Invalidate()
+                End If
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' Tamaño de la imagen cuando se muestra con texto
+        ''' </summary>
+        <Category("Appearance")>
+        <Description("Tamaño de la imagen cuando se muestra con texto")>
+        Public Property ImageSize As Size
+            Get
+                Return _imageSize
+            End Get
+            Set(value As Size)
+                If _imageSize <> value Then
+                    _imageSize = value
+                    Me.Invalidate()
+                End If
+            End Set
+        End Property
 
         ''' <summary>
         ''' Radio de las esquinas redondeadas del botón (en píxeles)
@@ -208,13 +266,12 @@ Namespace Controls
 
                     Case ButtonStyle.Gradient
                         Using brush As New LinearGradientBrush(rectSurface, buttonColor,
-                                                              ControlPaint.Dark(buttonColor, 0.15F),
-                                                              LinearGradientMode.Vertical)
+                                                      ControlPaint.Dark(buttonColor, 0.15F),
+                                                      LinearGradientMode.Vertical)
                             g.FillPath(brush, path)
                         End Using
 
                     Case ButtonStyle.Outline
-                        ' Fondo transparente o blanco
                         Using brush As New SolidBrush(If(_isHovered OrElse _isPressed, Color.FromArgb(20, buttonColor), Me.Parent?.BackColor))
                             g.FillPath(brush, path)
                         End Using
@@ -242,14 +299,100 @@ Namespace Controls
                 End If
             End Using
 
-            ' Dibujar texto centrado
-            Dim textRect As Rectangle = Me.ClientRectangle
-            TextRenderer.DrawText(g, Me.Text, Me.Font, textRect, textColor,
-                                TextFormatFlags.HorizontalCenter Or
-                                TextFormatFlags.VerticalCenter Or
-                                TextFormatFlags.EndEllipsis)
+            ' ============================================================
+            ' NUEVO: DIBUJAR IMAGEN Y TEXTO
+            ' ============================================================
+
+            Dim hasImage As Boolean = (_image IsNot Nothing)
+            Dim hasText As Boolean = Not String.IsNullOrEmpty(Me.Text)
+
+            If hasImage AndAlso hasText Then
+                ' Imagen + Texto: Dibujar imagen a la izquierda, texto a la derecha
+                DrawImageAndText(g, textColor)
+
+            ElseIf hasImage Then
+                ' Solo imagen: Centrada
+                DrawImageOnly(g)
+
+            ElseIf hasText Then
+                ' Solo texto: Centrado
+                DrawTextOnly(g, textColor)
+            End If
 
             MyBase.OnPaint(e)
+        End Sub
+
+        ''' <summary>
+        ''' Dibuja solo la imagen (centrada)
+        ''' </summary>
+        Private Sub DrawImageOnly(g As Graphics)
+            If _image Is Nothing Then Return
+
+            ' Calcular posición centrada
+            Dim imgWidth As Integer = _image.Width
+            Dim imgHeight As Integer = _image.Height
+
+            ' Escalar si la imagen es muy grande
+            If imgWidth > Me.Width - 10 OrElse imgHeight > Me.Height - 10 Then
+                Dim scale As Single = Math.Min((Me.Width - 10) / CSng(imgWidth), (Me.Height - 10) / CSng(imgHeight))
+                imgWidth = CInt(imgWidth * scale)
+                imgHeight = CInt(imgHeight * scale)
+            End If
+
+            Dim imgX As Integer = (Me.Width - imgWidth) \ 2
+            Dim imgY As Integer = (Me.Height - imgHeight) \ 2
+
+            ' Dibujar imagen con calidad alta
+            g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+            g.DrawImage(_image, imgX, imgY, imgWidth, imgHeight)
+        End Sub
+
+        ''' <summary>
+        ''' Dibuja solo el texto (centrado)
+        ''' </summary>
+        Private Sub DrawTextOnly(g As Graphics, textColor As Color)
+            Dim textRect As Rectangle = Me.ClientRectangle
+            TextRenderer.DrawText(g, Me.Text, Me.Font, textRect, textColor,
+                        TextFormatFlags.HorizontalCenter Or
+                        TextFormatFlags.VerticalCenter Or
+                        TextFormatFlags.EndEllipsis)
+        End Sub
+
+        ''' <summary>
+        ''' Dibuja imagen y texto juntos
+        ''' </summary>
+        Private Sub DrawImageAndText(g As Graphics, textColor As Color)
+            If _image Is Nothing Then Return
+
+            Const padding As Integer = 8
+            Const spacing As Integer = 6
+
+            ' Calcular tamaño de imagen (máximo 24x24 para botones con texto)
+            Dim imgSize As Integer = Math.Min(24, Math.Min(_image.Width, _image.Height))
+
+            ' Medir texto
+            Dim textSize As Size = TextRenderer.MeasureText(Me.Text, Me.Font)
+
+            ' Calcular ancho total (imagen + espacio + texto)
+            Dim totalWidth As Integer = imgSize + spacing + textSize.Width
+
+            ' Calcular posición inicial (centrado horizontalmente)
+            Dim startX As Integer = (Me.Width - totalWidth) \ 2
+            If startX < padding Then startX = padding
+
+            ' Dibujar imagen
+            Dim imgY As Integer = (Me.Height - imgSize) \ 2
+            g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+            g.DrawImage(_image, startX, imgY, imgSize, imgSize)
+
+            ' Dibujar texto
+            Dim textX As Integer = startX + imgSize + spacing
+            Dim textRect As New Rectangle(textX, 0, Me.Width - textX - padding, Me.Height)
+
+            TextRenderer.DrawText(g, Me.Text, Me.Font, textRect, textColor,
+                        TextFormatFlags.Left Or
+                        TextFormatFlags.VerticalCenter Or
+                        TextFormatFlags.EndEllipsis)
         End Sub
 
         ''' <summary>
