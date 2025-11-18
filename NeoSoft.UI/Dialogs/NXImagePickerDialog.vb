@@ -1,19 +1,33 @@
-﻿Imports System.ComponentModel
+﻿Imports System.IO
 Imports System.Drawing
-Imports System.Drawing.Design
 Imports System.Drawing.Imaging
-Imports System.IO
-Imports System.Windows.Forms
-Imports System.Windows.Forms.Design
 Imports System.Reflection
-
-#Region "Image Picker Dialog"
+Imports System.Resources
+Imports System.Collections
+Imports System.Xml
+Imports System.Linq
+Imports NeoSoft.UI.Common
+Imports NeoSoft.UI.Helpers
 
 ''' <summary>
-''' Diálogo personalizado para seleccionar imágenes - Compatible con el diseñador de Visual Studio
+''' Diálogo avanzado para selección de imágenes con múltiples fuentes
+''' CORREGIDO: Sin bloqueo de controles - Usa configuración no-modal
 ''' </summary>
-Public Class NXImagePickerDialog
+Partial Public Class NXImagePickerDialog
     Inherits Form
+
+#Region "Enumeraciones"
+
+    Public Enum ImageSource
+        None
+        LocalResource
+        ProjectResource
+        RasterImage
+        VectorImage
+        FontIcon
+    End Enum
+
+#End Region
 
 #Region "Propiedades Públicas"
 
@@ -21,633 +35,813 @@ Public Class NXImagePickerDialog
     Private _selectedImagePath As String = ""
     Private _selectedImageSource As ImageSource = ImageSource.None
     Private _resourceName As String = ""
+    Private _designerContext As ComponentModel.ITypeDescriptorContext = Nothing
 
-    ''' <summary>
-    ''' Obtiene la imagen seleccionada por el usuario
-    ''' </summary>
-    <Browsable(False)>
     Public ReadOnly Property SelectedImage As Image
         Get
             Return _selectedImage
         End Get
     End Property
 
-    ''' <summary>
-    ''' Obtiene la ruta del archivo de imagen seleccionado
-    ''' </summary>
-    <Browsable(False)>
     Public ReadOnly Property SelectedImagePath As String
         Get
             Return _selectedImagePath
         End Get
     End Property
 
-    ''' <summary>
-    ''' Obtiene el origen de la imagen seleccionada
-    ''' </summary>
-    <Browsable(False)>
     Public ReadOnly Property SelectedImageSource As ImageSource
         Get
             Return _selectedImageSource
         End Get
     End Property
 
-    ''' <summary>
-    ''' Obtiene el nombre del recurso seleccionado
-    ''' </summary>
-    <Browsable(False)>
     Public ReadOnly Property ResourceName As String
         Get
             Return _resourceName
         End Get
     End Property
 
-#End Region
-
-#Region "Enumeraciones"
-
-    ''' <summary>
-    ''' Define los posibles orígenes de imagen
-    ''' </summary>
-    Public Enum ImageSource
-        ''' <summary>Ninguna imagen seleccionada</summary>
-        None
-        ''' <summary>Recurso local del formulario</summary>
-        LocalResource
-        ''' <summary>Recurso del proyecto</summary>
-        ProjectResource
-        ''' <summary>Imagen raster (PNG, JPG, etc.)</summary>
-        RasterImage
-        ''' <summary>Imagen vectorial (SVG, etc.)</summary>
-        VectorImage
-        ''' <summary>Icono de fuente</summary>
-        FontIcon
-    End Enum
+    Public Sub SetDesignerContext(context As ComponentModel.ITypeDescriptorContext)
+        _designerContext = context
+    End Sub
 
 #End Region
 
 #Region "Constructor"
 
     Public Sub New()
+        TraceLogger.Initialize()
+        TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
+        TraceLogger.WriteLine("NXImagePickerDialog - Constructor (Non-Modal Version)")
+        TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
+
         InitializeComponent()
+        InitializeDialog()
 
-        ' Configurar eventos
-        AddHandler Me.Load, AddressOf NXImagePickerDialog_Load
-        AddHandler btnOK.Click, AddressOf BtnOK_Click
-        AddHandler btnCancel.Click, AddressOf BtnCancel_Click
-
-        ' Tab Image Picker - Recurso Local
-        AddHandler btnImportLocal.Click, AddressOf BtnImportLocal_Click
-        AddHandler btnClearLocal.Click, AddressOf BtnClearLocal_Click
-        AddHandler lstLocalResources.SelectedIndexChanged, AddressOf LstLocalResources_SelectedIndexChanged
-        AddHandler lstLocalResources.DoubleClick, AddressOf LstLocalResources_DoubleClick
-
-        ' Tab Image Picker - Recursos del Proyecto
-        AddHandler lstProjectResources.SelectedIndexChanged, AddressOf LstProjectResources_SelectedIndexChanged
-        AddHandler lstProjectResources.DoubleClick, AddressOf LstProjectResources_DoubleClick
-
-        ' Radio buttons
-        AddHandler rbLocalResource.CheckedChanged, AddressOf ResourceRadioButton_CheckedChanged
-        AddHandler rbProjectResource.CheckedChanged, AddressOf ResourceRadioButton_CheckedChanged
-
-        ' Raster Images Tab
-        AddHandler txtRasterSearch.Enter, AddressOf TxtRasterSearch_Enter
-        AddHandler txtRasterSearch.Leave, AddressOf TxtRasterSearch_Leave
-        AddHandler txtRasterSearch.TextChanged, AddressOf TxtRasterSearch_TextChanged
+        TraceLogger.WriteLine("✅ NXImagePickerDialog inicializado correctamente")
+        TraceLogger.WriteLine("")
     End Sub
 
 #End Region
 
 #Region "Inicialización"
 
-    Private Sub NXImagePickerDialog_Load(sender As Object, e As EventArgs)
-        ' Tab por defecto: Image Picker
-        tabControl.SelectedIndex = 0
+    Private Sub InitializeDialog()
+        ' ⭐ CRÍTICO: Configuración para evitar bloqueo modal
+        ' NO usar FixedDialog, usar Sizable para comportamiento no-modal
+        Me.FormBorderStyle = FormBorderStyle.Sizable
+        Me.StartPosition = FormStartPosition.CenterParent
+        Me.ShowInTaskbar = False
+        Me.MinimizeBox = False
+        Me.MaximizeBox = False
 
-        ' Seleccionar por defecto "Recurso Local"
-        rbLocalResource.Checked = True
-        UpdateResourcePanels()
+        ' Tamaño mínimo para evitar que se haga muy pequeño
+        Me.MinimumSize = New Size(700, 500)
 
-        ' Cargar recursos del proyecto del usuario
-        LoadProjectResources()
+        ' Tab inicial
+        If tabControl IsNot Nothing Then
+            tabControl.SelectedIndex = 0
+        End If
 
-        ' Inicializar tabs de iconos predefinidos
-        InitializeRasterImagesTab()
+        ' Radio button inicial
+        If rbLocalResource IsNot Nothing Then
+            rbLocalResource.Checked = True
+        End If
+
+        ' Preview
+        If picPreview IsNot Nothing Then
+            picPreview.SizeMode = PictureBoxSizeMode.Zoom
+            picPreview.BackColor = Color.FromArgb(245, 245, 245)
+        End If
 
         ' Versión
         If lblVersion IsNot Nothing Then
-            lblVersion.Text = $"NeoSoft.UI v{Application.ProductVersion}"
+            lblVersion.Text = "NeoSoft.UI v1.0 - Image Picker Dialog (Non-Modal)"
         End If
+
+        TraceLogger.WriteLine("✅ Configuración no-modal aplicada")
     End Sub
 
 #End Region
 
-#Region "TAB 1: IMAGE PICKER - Recurso Local"
+#Region "Gestión de Recursos Locales"
 
-    ''' <summary>
-    ''' Botón "Importar" - Funciona exactamente como el diálogo estándar de VB.NET
-    ''' </summary>
-    Private Sub BtnImportLocal_Click(sender As Object, e As EventArgs)
+    Private Sub BtnImportLocal_Click(sender As Object, e As EventArgs) Handles btnImportLocal.Click
         Using ofd As New OpenFileDialog()
-            ofd.Title = "Seleccionar archivo de imagen"
-            ofd.Filter = "Todos los archivos de imagen|*.bmp;*.jpg;*.jpeg;*.png;*.gif;*.tif;*.tiff;*.ico;*.emf;*.wmf|" &
-                        "Archivos de mapa de bits (*.bmp)|*.bmp|" &
-                        "Archivos JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" &
-                        "Archivos PNG (*.png)|*.png|" &
-                        "Archivos GIF (*.gif)|*.gif|" &
-                        "Archivos TIFF (*.tif;*.tiff)|*.tif;*.tiff|" &
-                        "Archivos de icono (*.ico)|*.ico|" &
-                        "Archivos de metarchivo (*.emf;*.wmf)|*.emf;*.wmf|" &
-                        "Todos los archivos (*.*)|*.*"
+            ofd.Title = "Seleccionar Imagen"
+            ofd.Filter = "Archivos de Imagen|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.ico|" &
+                            "PNG|*.png|JPEG|*.jpg;*.jpeg|BMP|*.bmp|GIF|*.gif|ICO|*.ico|" &
+                            "Todos los archivos|*.*"
             ofd.FilterIndex = 1
-            ofd.Multiselect = True
-            ofd.RestoreDirectory = True
+            ofd.Multiselect = False
 
             If ofd.ShowDialog() = DialogResult.OK Then
-                ' Agregar archivos a la lista
-                For Each filePath As String In ofd.FileNames
-                    If Not lstLocalResources.Items.Contains(filePath) Then
-                        lstLocalResources.Items.Add(filePath)
-                    End If
-                Next
+                Try
+                    Dim img As Image = Image.FromFile(ofd.FileName)
 
-                ' Seleccionar el primero automáticamente
-                If ofd.FileNames.Length > 0 Then
-                    lstLocalResources.SelectedItem = ofd.FileNames(0)
-                End If
+                    If picPreview.Image IsNot Nothing Then
+                        picPreview.Image.Dispose()
+                    End If
+                    picPreview.Image = New Bitmap(img)
+
+                    _selectedImage = New Bitmap(img)
+                    _selectedImagePath = ofd.FileName
+                    _selectedImageSource = ImageSource.LocalResource
+                    _resourceName = Path.GetFileNameWithoutExtension(ofd.FileName)
+
+                    img.Dispose()
+
+                Catch ex As Exception
+                    MessageBox.Show("Error al cargar la imagen:" & vbCrLf & ex.Message,
+                                      "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Try
             End If
         End Using
     End Sub
 
-    ''' <summary>
-    ''' Al seleccionar un archivo de la lista, cargar la imagen
-    ''' </summary>
-    Private Sub LstLocalResources_SelectedIndexChanged(sender As Object, e As EventArgs)
-        If lstLocalResources.SelectedIndex >= 0 Then
-            Dim filePath As String = lstLocalResources.SelectedItem.ToString()
-            LoadImageFromFile(filePath)
-        End If
-    End Sub
 
     ''' <summary>
-    ''' Doble clic en la lista = Seleccionar y cerrar
+    ''' Botón para importar imagen al Resources.resx del proyecto
+    ''' CORREGIDO: Importa al archivo seleccionado en el ComboBox (sin doble apertura)
     ''' </summary>
-    Private Sub LstLocalResources_DoubleClick(sender As Object, e As EventArgs)
-        If lstLocalResources.SelectedIndex >= 0 Then
-            Me.DialogResult = DialogResult.OK
-            Me.Close()
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' Carga una imagen desde un archivo local
-    ''' </summary>
-    Private Sub LoadImageFromFile(filePath As String)
-        Try
-            If File.Exists(filePath) Then
-                ' Limpiar imagen anterior
-                If picPreview.Image IsNot Nothing Then
-                    Dim oldImg As Image = picPreview.Image
-                    picPreview.Image = Nothing
-                    If oldImg IsNot _selectedImage AndAlso _selectedImageSource <> ImageSource.ProjectResource Then
-                        Try
-                            oldImg.Dispose()
-                        Catch
-                        End Try
-                    End If
-                End If
-
-                ' Cargar imagen usando FileStream (no bloquea el archivo)
-                Using fs As New FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)
-                    Dim img As Image = Image.FromStream(fs)
-
-                    ' Mostrar en preview
-                    picPreview.Image = img
-
-                    ' Guardar selección
-                    _selectedImage = img
-                    _selectedImagePath = filePath
-                    _selectedImageSource = ImageSource.LocalResource
-                    _resourceName = ""
-
-                    ' Actualizar información
-                    UpdateImageInfo(img)
-                End Using
-            End If
-        Catch ex As Exception
-            MessageBox.Show($"Error al cargar la imagen:{vbCrLf}{ex.Message}",
-                          "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            picPreview.Image = Nothing
-            UpdateImageInfo(Nothing)
-        End Try
-    End Sub
-
-    ''' <summary>
-    ''' Botón "Clear" - Limpiar lista
-    ''' </summary>
-    Private Sub BtnClearLocal_Click(sender As Object, e As EventArgs)
-        lstLocalResources.Items.Clear()
-        picPreview.Image = Nothing
-        _selectedImage = Nothing
-        _selectedImagePath = ""
-        UpdateImageInfo(Nothing)
-    End Sub
-
-#End Region
-
-#Region "TAB 1: IMAGE PICKER - Recursos del Proyecto"
-
-    ''' <summary>
-    ''' Carga los recursos del proyecto del usuario (My.Resources)
-    ''' </summary>
-    Private Sub LoadProjectResources()
-        Try
-            lstProjectResources.Items.Clear()
-
-            ' Obtener el ensamblado de la aplicación del usuario
-            Dim assembly As Assembly = Assembly.GetEntryAssembly()
-            If assembly Is Nothing Then
-                assembly = Assembly.GetCallingAssembly()
-            End If
-            If assembly Is Nothing Then
-                assembly = Assembly.GetExecutingAssembly()
-            End If
-
-            ' Buscar el tipo "Resources" en My.Resources del proyecto del usuario
-            Dim resourceType As Type = Nothing
-            For Each type As Type In assembly.GetTypes()
-                If type.Name = "Resources" AndAlso
-                   type.Namespace IsNot Nothing AndAlso
-                   type.Namespace.Contains(".My.Resources") Then
-                    resourceType = type
-                    Exit For
-                End If
-            Next
-
-            If resourceType IsNot Nothing Then
-                ' Obtener propiedades estáticas (recursos)
-                Dim properties = resourceType.GetProperties(BindingFlags.Static Or BindingFlags.Public Or BindingFlags.NonPublic)
-
-                Dim imageNames As New List(Of String)
-
-                ' Filtrar solo imágenes
-                For Each prop In properties
-                    If prop.PropertyType Is GetType(Image) OrElse
-                       prop.PropertyType Is GetType(Bitmap) OrElse
-                       prop.PropertyType Is GetType(Icon) Then
-                        imageNames.Add(prop.Name)
-                    End If
-                Next
-
-                ' Ordenar alfabéticamente
-                imageNames.Sort()
-
-                ' Agregar a la lista
-                For Each Names In imageNames
-                    lstProjectResources.Items.Add(Names)
-                Next
-            End If
-
-            ' Si no hay recursos
-            If lstProjectResources.Items.Count = 0 Then
-                lstProjectResources.Items.Add("(No hay recursos de imagen en el proyecto)")
-            End If
-
-        Catch ex As Exception
-            lstProjectResources.Items.Clear()
-            lstProjectResources.Items.Add("(Error al cargar recursos)")
-        End Try
-    End Sub
-
-    ''' <summary>
-    ''' Al seleccionar un recurso del proyecto
-    ''' </summary>
-    Private Sub LstProjectResources_SelectedIndexChanged(sender As Object, e As EventArgs)
-        If lstProjectResources.SelectedIndex >= 0 Then
-            Dim resourceName As String = lstProjectResources.SelectedItem.ToString()
-
-            ' Verificar que no sea un mensaje
-            If resourceName.StartsWith("(") Then
-                Return
-            End If
-
-            LoadImageFromProjectResource(resourceName)
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' Doble clic = Seleccionar y cerrar
-    ''' </summary>
-    Private Sub LstProjectResources_DoubleClick(sender As Object, e As EventArgs)
-        If lstProjectResources.SelectedIndex >= 0 Then
-            Dim resourceName As String = lstProjectResources.SelectedItem.ToString()
-            If Not resourceName.StartsWith("(") Then
-                Me.DialogResult = DialogResult.OK
-                Me.Close()
-            End If
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' Carga una imagen desde My.Resources del proyecto del usuario
-    ''' </summary>
-    Private Sub LoadImageFromProjectResource(resourceName As String)
-        Try
-            Dim assembly As Assembly = Assembly.GetEntryAssembly()
-            If assembly Is Nothing Then assembly = Assembly.GetCallingAssembly()
-            If assembly Is Nothing Then assembly = Assembly.GetExecutingAssembly()
-
-            ' Buscar el tipo Resources
-            Dim resourceType As Type = Nothing
-            For Each type As Type In assembly.GetTypes()
-                If type.Name = "Resources" AndAlso
-                   type.Namespace IsNot Nothing AndAlso
-                   type.Namespace.Contains(".My.Resources") Then
-                    resourceType = type
-                    Exit For
-                End If
-            Next
-
-            If resourceType IsNot Nothing Then
-                ' Obtener la propiedad del recurso
-                Dim prop = resourceType.GetProperty(resourceName,
-                                                   BindingFlags.Static Or BindingFlags.Public Or BindingFlags.NonPublic)
-
-                If prop IsNot Nothing Then
-                    Dim value = prop.GetValue(Nothing, Nothing)
-                    Dim img As Image = Nothing
-
-                    ' Convertir según el tipo
-                    If TypeOf value Is Icon Then
-                        img = DirectCast(value, Icon).ToBitmap()
-                    ElseIf TypeOf value Is Image Then
-                        img = DirectCast(value, Image)
-                    End If
-
-                    If img IsNot Nothing Then
-                        ' Limpiar imagen anterior
-                        If picPreview.Image IsNot Nothing Then
-                            Dim oldImg As Image = picPreview.Image
-                            picPreview.Image = Nothing
-                            If oldImg IsNot _selectedImage OrElse _selectedImageSource <> ImageSource.ProjectResource Then
-                                Try
-                                    oldImg.Dispose()
-                                Catch
-                                End Try
-                            End If
-                        End If
-
-                        ' Mostrar preview
-                        picPreview.Image = img
-
-                        ' Guardar selección
-                        _selectedImage = img
-                        _resourceName = resourceName
-                        _selectedImagePath = $"My.Resources.{resourceName}"
-                        _selectedImageSource = ImageSource.ProjectResource
-
-                        ' Actualizar info
-                        UpdateImageInfo(img)
-                    End If
-                End If
-            End If
-
-        Catch ex As Exception
-            MessageBox.Show($"Error al cargar el recurso:{vbCrLf}{ex.Message}",
-                          "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            picPreview.Image = Nothing
-            UpdateImageInfo(Nothing)
-        End Try
-    End Sub
-
-#End Region
-
-#Region "TAB 2: RASTER IMAGES - Iconos Predefinidos"
-
-    ''' <summary>
-    ''' Inicializar el tab de Raster Images con iconos predefinidos
-    ''' </summary>
-    Private Sub InitializeRasterImagesTab()
-        ' Configurar búsqueda con placeholder
-        If txtRasterSearch IsNot Nothing Then
-            txtRasterSearch.ForeColor = Color.Gray
-            txtRasterSearch.Text = "Enter text to search..."
-        End If
-
-        ' Inicializar categorías
-        If chkListCategories IsNot Nothing AndAlso chkListCategories.Items.Count = 0 Then
-            chkListCategories.Items.Clear()
-            chkListCategories.Items.AddRange(New String() {
-                "Select All",
-                "Actions",
-                "Alignment",
-                "Arrows",
-                "Business",
-                "Communication",
-                "Data",
-                "Edit",
-                "File",
-                "Interface",
-                "Media",
-                "Navigation",
-                "Office"
-            })
-
-            ' Suscribir eventos
-            AddHandler chkListCategories.ItemCheck, AddressOf ChkListCategories_ItemCheck
-        End If
-
-        ' Inicializar tamaños
-        If chkListSize IsNot Nothing AndAlso chkListSize.Items.Count = 0 Then
-            chkListSize.Items.Clear()
-            chkListSize.Items.AddRange(New String() {"16x16", "32x32", "48x48"})
-
-            ' Suscribir eventos
-            AddHandler chkListSize.ItemCheck, AddressOf ChkListSize_ItemCheck
-        End If
-
-        ' Cargar iconos predefinidos por primera vez
-        LoadPredefinedRasterIcons()
-    End Sub
-
-    Private Sub TxtRasterSearch_Enter(sender As Object, e As EventArgs)
-        If txtRasterSearch.Text = "Enter text to search..." Then
-            txtRasterSearch.Text = ""
-            txtRasterSearch.ForeColor = Color.Black
-        End If
-    End Sub
-
-    Private Sub TxtRasterSearch_Leave(sender As Object, e As EventArgs)
-        If String.IsNullOrWhiteSpace(txtRasterSearch.Text) Then
-            txtRasterSearch.Text = "Enter text to search..."
-            txtRasterSearch.ForeColor = Color.Gray
-        End If
-    End Sub
-
-    Private Sub TxtRasterSearch_TextChanged(sender As Object, e As EventArgs)
-        If txtRasterSearch.ForeColor = Color.Black Then
-            FilterRasterIcons()
-        End If
-    End Sub
-
-    Private Sub ChkListCategories_ItemCheck(sender As Object, e As ItemCheckEventArgs)
-        If e.Index = 0 Then ' "Select All"
-            BeginInvoke(New Action(Sub()
-                                       Dim checkAll As Boolean = (e.NewValue = CheckState.Checked)
-                                       For i As Integer = 1 To chkListCategories.Items.Count - 1
-                                           chkListCategories.SetItemChecked(i, checkAll)
-                                       Next
-                                       FilterRasterIcons()
-                                   End Sub))
-        Else
-            BeginInvoke(New Action(AddressOf FilterRasterIcons))
-        End If
-    End Sub
-
-    Private Sub ChkListSize_ItemCheck(sender As Object, e As ItemCheckEventArgs)
-        BeginInvoke(New Action(AddressOf FilterRasterIcons))
-    End Sub
-
-    ''' <summary>
-    ''' Carga los iconos predefinidos embebidos en NeoSoft.UI
-    ''' </summary>
-    Private Sub LoadPredefinedRasterIcons()
-        If flowRasterIcons Is Nothing Then Return
-
-        flowRasterIcons.Controls.Clear()
-
-        ' TODO: Aquí cargarías tus iconos predefinidos de Resources de NeoSoft.UI
-        ' Por ahora, agregar iconos de ejemplo
-
-        ' Ejemplo de cómo agregar iconos predefinidos:
-        ' Dim iconNames As String() = {"Home", "Save", "Open", "Close", "Settings", "User", "Search", "Edit"}
-        ' For Each iconName In iconNames
-        '     Dim pb As New PictureBox()
-        '     pb.Size = New Size(48, 48)
-        '     pb.SizeMode = PictureBoxSizeMode.CenterImage
-        '     pb.Image = My.Resources.ResourceManager.GetObject(iconName) ' Tus iconos embebidos
-        '     pb.BorderStyle = BorderStyle.FixedSingle
-        '     pb.Cursor = Cursors.Hand
-        '     pb.Tag = iconName
-        '     AddHandler pb.Click, AddressOf RasterIcon_Click
-        '     flowRasterIcons.Controls.Add(pb)
-        ' Next
-
-        ' Por ahora, mensaje placeholder
-        Dim lblPlaceholder As New Label()
-        lblPlaceholder.Text = "Los iconos predefinidos se cargarán aquí" & vbCrLf &
-                             "desde los recursos embebidos de NeoSoft.UI"
-        lblPlaceholder.AutoSize = True
-        lblPlaceholder.ForeColor = Color.Gray
-        flowRasterIcons.Controls.Add(lblPlaceholder)
-    End Sub
-
-    Private Sub FilterRasterIcons()
-        ' TODO: Implementar filtrado de iconos según búsqueda, categoría y tamaño
-        ' Por ahora, recargar todos
-        LoadPredefinedRasterIcons()
-    End Sub
-
-    Private Sub RasterIcon_Click(sender As Object, e As EventArgs)
-        Dim pb As PictureBox = TryCast(sender, PictureBox)
-        If pb IsNot Nothing AndAlso pb.Image IsNot Nothing Then
-            ' Seleccionar este icono
-            _selectedImage = pb.Image
-            _selectedImagePath = $"NeoSoft.UI.Resources.{pb.Tag}"
-            _selectedImageSource = ImageSource.RasterImage
-            _resourceName = pb.Tag.ToString()
-
-            ' Mostrar en preview
-            picPreview.Image = pb.Image
-            UpdateImageInfo(pb.Image)
-
-            ' Opcional: Cerrar automáticamente
-            ' Me.DialogResult = DialogResult.OK
-            ' Me.Close()
-        End If
-    End Sub
-
-#End Region
-
-#Region "Actualización de Interfaz"
-
-    Private Sub ResourceRadioButton_CheckedChanged(sender As Object, e As EventArgs)
-        UpdateResourcePanels()
-    End Sub
-
-    Private Sub UpdateResourcePanels()
-        If panelLocalResource IsNot Nothing Then
-            panelLocalResource.Enabled = rbLocalResource.Checked
-        End If
-
-        If panelProjectResource IsNot Nothing Then
-            panelProjectResource.Enabled = rbProjectResource.Checked
-        End If
-    End Sub
-
-    Private Sub UpdateImageInfo(img As Image)
-        If lblImageInfo Is Nothing Then Return
-
-        If img IsNot Nothing Then
-            Try
-                Dim sizeInBytes As Long = 0
-                Try
-                    Using ms As New MemoryStream()
-                        img.Save(ms, img.RawFormat)
-                        sizeInBytes = ms.Length
-                    End Using
-                Catch
-                End Try
-
-                Dim sizeText As String = FormatFileSize(sizeInBytes)
-                Dim formatName As String = GetImageFormatName(img.RawFormat)
-
-                lblImageInfo.Text = $"{img.Width} x {img.Height} px | {formatName} | {sizeText}"
-            Catch
-                lblImageInfo.Text = $"{img.Width} x {img.Height} px"
-            End Try
-        Else
-            lblImageInfo.Text = "Sin imagen seleccionada"
-        End If
-    End Sub
-
-    Private Function GetImageFormatName(format As ImageFormat) As String
-        If format.Equals(ImageFormat.Bmp) Then Return "BMP"
-        If format.Equals(ImageFormat.Jpeg) Then Return "JPEG"
-        If format.Equals(ImageFormat.Png) Then Return "PNG"
-        If format.Equals(ImageFormat.Gif) Then Return "GIF"
-        If format.Equals(ImageFormat.Tiff) Then Return "TIFF"
-        If format.Equals(ImageFormat.Icon) Then Return "ICO"
-        Return "Unknown"
-    End Function
-
-    Private Function FormatFileSize(bytes As Long) As String
-        If bytes < 1024 Then Return $"{bytes} bytes"
-        If bytes < 1024 * 1024 Then Return $"{(bytes / 1024.0):F2} KB"
-        Return $"{(bytes / (1024.0 * 1024.0)):F2} MB"
-    End Function
-
-#End Region
-
-#Region "Botones OK y Cancel"
-
-    Private Sub BtnOK_Click(sender As Object, e As EventArgs)
-        ' Verificar que hay imagen seleccionada
-        If _selectedImage Is Nothing Then
-            MessageBox.Show("Por favor seleccione una imagen.",
-                          "Sin selección",
-                          MessageBoxButtons.OK,
-                          MessageBoxIcon.Warning)
-            Me.DialogResult = DialogResult.None
+    Private Sub BtnImportProject_Click(sender As Object, e As EventArgs) Handles btnImportProject.Click
+        ' Verificar que tenemos contexto del diseñador
+        If _designerContext Is Nothing Then
+            MessageBox.Show("No hay contexto de diseñador disponible." & vbCrLf &
+                      "Esta función solo está disponible en tiempo de diseño.",
+                      "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return
         End If
 
-        ' Cerrar con OK
+        ' ⭐ VERIFICAR QUE HAY UN ARCHIVO .RESX SELECCIONADO EN EL COMBO
+        If cboResourceFiles Is Nothing OrElse cboResourceFiles.SelectedIndex < 0 Then
+            MessageBox.Show("Por favor, selecciona un archivo de recursos en el ComboBox.",
+                      "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
+
+        Using ofd As New OpenFileDialog()
+            ofd.Title = "Seleccionar Imagen para agregar a Resources"
+            ofd.Filter = "Archivos de Imagen|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.ico|" &
+                        "PNG|*.png|JPEG|*.jpg;*.jpeg|BMP|*.bmp|GIF|*.gif|ICO|*.ico|" &
+                        "Todos los archivos|*.*"
+            ofd.FilterIndex = 1
+            ofd.Multiselect = False
+
+            Dim dialogResult As DialogResult = ofd.ShowDialog()
+
+            ' ⭐ SALIR SI SE CANCELA
+            If dialogResult <> DialogResult.OK Then
+                TraceLogger.WriteLine("ℹ️ Usuario canceló la selección de imagen")
+                Return
+            End If
+
+            Try
+                TraceLogger.WriteLine("=== IMPORTANDO IMAGEN A RESOURCES.RESX ===")
+                TraceLogger.WriteLine($"Archivo seleccionado: {ofd.FileName}")
+
+                ' ⭐ OBTENER EL ARCHIVO .RESX SELECCIONADO EN EL COMBO
+                Dim selectedItem As Object = cboResourceFiles.SelectedItem
+
+                If Not TypeOf selectedItem Is ProjectResourceFinder.ResxFileInfo Then
+                    MessageBox.Show("Error: El item seleccionado no es válido.",
+                              "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return
+                End If
+
+                Dim selectedResxInfo As ProjectResourceFinder.ResxFileInfo =
+                DirectCast(selectedItem, ProjectResourceFinder.ResxFileInfo)
+
+                Dim resxPath As String = selectedResxInfo.FullPath
+
+                TraceLogger.WriteLine($"✅ Resources.resx seleccionado: {selectedResxInfo.DisplayName}")
+                TraceLogger.WriteLine($"📍 Ruta: {resxPath}")
+
+                If String.IsNullOrEmpty(resxPath) OrElse Not File.Exists(resxPath) Then
+                    TraceLogger.WriteLine($"❌ El archivo .resx no existe: {resxPath}")
+                    MessageBox.Show("No se encontró el archivo de recursos seleccionado.",
+                              "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return
+                End If
+
+                ' Obtener el directorio Resources del proyecto
+                Dim resxDirectory As String = Path.GetDirectoryName(resxPath)
+                Dim projectResourcesDir As String = Path.Combine(
+                Path.GetDirectoryName(resxDirectory),
+                "Resources")
+
+                ' Crear carpeta Resources si no existe
+                If Not Directory.Exists(projectResourcesDir) Then
+                    Directory.CreateDirectory(projectResourcesDir)
+                    TraceLogger.WriteLine($"📁 Carpeta Resources creada: {projectResourcesDir}")
+                End If
+
+                ' Copiar imagen a la carpeta Resources
+                Dim originalFileName As String = Path.GetFileName(ofd.FileName)
+                Dim targetPath As String = Path.Combine(projectResourcesDir, originalFileName)
+
+                ' Verificar si ya existe y preguntar
+                If File.Exists(targetPath) Then
+                    Dim overwriteResult As DialogResult = MessageBox.Show(
+                    $"El archivo '{originalFileName}' ya existe en Resources.{vbCrLf}{vbCrLf}" &
+                    "¿Deseas reemplazarlo?",
+                    "Archivo Existente",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question)
+
+                    If overwriteResult = DialogResult.Cancel Then
+                        Return
+                    ElseIf overwriteResult = DialogResult.No Then
+                        ' Generar nombre único
+                        Dim baseName As String = Path.GetFileNameWithoutExtension(originalFileName)
+                        Dim extension As String = Path.GetExtension(originalFileName)
+                        Dim counter As Integer = 1
+
+                        Do While File.Exists(targetPath)
+                            targetPath = Path.Combine(projectResourcesDir, $"{baseName}_{counter}{extension}")
+                            counter += 1
+                        Loop
+
+                        originalFileName = Path.GetFileName(targetPath)
+                    End If
+                End If
+
+                ' Copiar archivo
+                File.Copy(ofd.FileName, targetPath, True)
+                TraceLogger.WriteLine($"✅ Imagen copiada a: {targetPath}")
+
+                ' ⭐ Agregar al archivo .resx SELECCIONADO (no al principal)
+                AddImageToResxFile(resxPath, targetPath,
+                             Path.GetFileNameWithoutExtension(originalFileName))
+
+                ' ⭐ RECARGAR MANUALMENTE SIN CAMBIAR SelectedIndex
+                RefreshResourceList(selectedResxInfo)
+
+                TraceLogger.WriteLine("✅ Imagen importada exitosamente")
+                MessageBox.Show($"Imagen '{originalFileName}' agregada exitosamente a {selectedResxInfo.DisplayName}",
+                          "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+            Catch ex As Exception
+                TraceLogger.WriteLine($"❌ Error importando imagen: {ex.Message}")
+                TraceLogger.WriteException(ex)
+                MessageBox.Show("Error al importar la imagen:" & vbCrLf & ex.Message,
+                          "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End Using
+    End Sub
+
+    ''' <summary>
+    ''' Recarga la lista de recursos para un archivo .resx específico SIN cambiar SelectedIndex
+    ''' </summary>
+    Private Sub RefreshResourceList(resxInfo As ProjectResourceFinder.ResxFileInfo)
+        If lstProjectResources Is Nothing Then Return
+
+        lstProjectResources.Items.Clear()
+
+        ' Agregar item (empty) al inicio
+        lstProjectResources.Items.Add(New ResourceImageInfo With {
+        .Name = "(empty)",
+        .Image = Nothing,
+        .FilePath = ""
+    })
+
+        TraceLogger.WriteLine($"=== REFRESCANDO RECURSOS DEL ARCHIVO ===")
+        TraceLogger.WriteLine($"📁 Archivo: {resxInfo.Name}")
+
+        Try
+            Dim resxPath As String = resxInfo.FullPath
+
+            If String.IsNullOrEmpty(resxPath) OrElse Not File.Exists(resxPath) Then
+                TraceLogger.WriteLine($"❌ El archivo no existe: {resxPath}")
+                Return
+            End If
+
+            Dim resxDirectory As String = Path.GetDirectoryName(resxPath)
+
+            Using reader As New Resources.ResXResourceReader(resxPath)
+                reader.BasePath = resxDirectory
+
+                Dim imageCount As Integer = 0
+
+                For Each entry As DictionaryEntry In reader
+                    Try
+                        Dim resourceName As String = entry.Key.ToString()
+                        Dim resourceValue As Object = entry.Value
+
+                        If TypeOf resourceValue Is Image OrElse
+                       TypeOf resourceValue Is Bitmap OrElse
+                       TypeOf resourceValue Is Icon Then
+
+                            lstProjectResources.Items.Add(New ResourceImageInfo With {
+                            .Name = resourceName,
+                            .Image = If(TypeOf resourceValue Is Icon,
+                                      DirectCast(resourceValue, Icon).ToBitmap(),
+                                      DirectCast(resourceValue, Image)),
+                            .FilePath = resxPath
+                        })
+
+                            imageCount += 1
+                        End If
+
+                    Catch ex As Exception
+                        TraceLogger.WriteLine($"  ⚠️ Error procesando recurso '{entry.Key}': {ex.Message}")
+
+                        Try
+                            Dim resourceName As String = entry.Key.ToString()
+                            Dim manualImage As Image = LoadImageManually(resxPath, resourceName, resxDirectory)
+
+                            If manualImage IsNot Nothing Then
+                                lstProjectResources.Items.Add(New ResourceImageInfo With {
+                                .Name = resourceName,
+                                .Image = manualImage,
+                                .FilePath = resxPath
+                            })
+
+                                imageCount += 1
+                            End If
+                        Catch manualEx As Exception
+                            TraceLogger.WriteLine($"  ❌ Error en carga manual: {manualEx.Message}")
+                        End Try
+
+                        Continue For
+                    End Try
+                Next
+
+                TraceLogger.WriteLine($"📊 Total de imágenes cargadas: {imageCount}")
+            End Using
+
+        Catch ex As Exception
+            TraceLogger.WriteLine($"❌ ERROR al refrescar recursos: {ex.Message}")
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' Agrega una imagen al archivo .resx
+    ''' </summary>
+    Private Sub AddImageToResxFile(resxPath As String, imagePath As String, resourceName As String)
+        Try
+            TraceLogger.WriteLine($"📝 Agregando imagen al .resx...")
+            TraceLogger.WriteLine($"   .resx: {resxPath}")
+            TraceLogger.WriteLine($"   Imagen: {imagePath}")
+            TraceLogger.WriteLine($"   Nombre: {resourceName}")
+
+            ' Leer el .resx existente
+            Dim resources As New Hashtable()
+
+            Using reader As New Resources.ResXResourceReader(resxPath)
+                reader.BasePath = Path.GetDirectoryName(resxPath)
+
+                For Each entry As DictionaryEntry In reader
+                    resources.Add(entry.Key, entry.Value)
+                Next
+            End Using
+
+            ' Calcular ruta relativa desde el .resx a la imagen
+            Dim resxDir As String = Path.GetDirectoryName(resxPath)
+            Dim imageUri As New Uri(imagePath)
+            Dim resxUri As New Uri(resxDir & "\")
+            Dim relativePath As String = resxUri.MakeRelativeUri(imageUri).ToString().Replace("/", "\")
+
+            TraceLogger.WriteLine($"   Ruta relativa: {relativePath}")
+
+            ' Crear ResXFileRef para la imagen
+            Dim fileRef As New Resources.ResXFileRef(relativePath, GetType(Bitmap).AssemblyQualifiedName)
+
+            ' Agregar o reemplazar el recurso
+            If resources.ContainsKey(resourceName) Then
+                resources(resourceName) = fileRef
+                TraceLogger.WriteLine($"   ⚠️ Recurso '{resourceName}' reemplazado")
+            Else
+                resources.Add(resourceName, fileRef)
+                TraceLogger.WriteLine($"   ✅ Recurso '{resourceName}' agregado")
+            End If
+
+            ' Escribir el .resx actualizado
+            Using writer As New Resources.ResXResourceWriter(resxPath)
+                For Each key As Object In resources.Keys
+                    Dim value As Object = resources(key)
+
+                    If TypeOf value Is Resources.ResXFileRef Then
+                        writer.AddResource(New Resources.ResXDataNode(key.ToString(), value))
+                    ElseIf TypeOf value Is Byte() Then
+                        writer.AddResource(key.ToString(), value)
+                    Else
+                        writer.AddResource(key.ToString(), value)
+                    End If
+                Next
+
+                writer.Generate()
+            End Using
+
+            TraceLogger.WriteLine($"✅ Archivo .resx actualizado exitosamente")
+
+        Catch ex As Exception
+            TraceLogger.WriteLine($"❌ Error en AddImageToResxFile: {ex.Message}")
+            Throw
+        End Try
+    End Sub
+
+    Private Sub BtnClearLocal_Click(sender As Object, e As EventArgs) Handles btnClearLocal.Click
+        ' Limpiar preview
+        If picPreview IsNot Nothing AndAlso picPreview.Image IsNot Nothing Then
+            picPreview.Image.Dispose()
+            picPreview.Image = Nothing
+        End If
+
+        ' Limpiar selección
+        If _selectedImage IsNot Nothing Then
+            _selectedImage.Dispose()
+            _selectedImage = Nothing
+        End If
+
+        _selectedImagePath = ""
+        _selectedImageSource = ImageSource.None
+        _resourceName = ""
+
+        TraceLogger.WriteLine("🗑️ Selección de imagen limpiada")
+    End Sub
+
+#End Region
+
+#Region "Gestión de Recursos del Proyecto"
+
+    Private Sub RbLocalResource_CheckedChanged(sender As Object, e As EventArgs) Handles rbLocalResource.CheckedChanged
+        If rbLocalResource.Checked Then
+            ' Habilitar controles locales
+            btnImportLocal.Enabled = True
+            btnClearLocal.Enabled = True
+
+            ' Deshabilitar controles de proyecto
+            cboResourceFiles.Enabled = False
+            lstProjectResources.Enabled = False
+
+            TraceLogger.WriteLine("📂 Modo: Recursos Locales")
+        End If
+    End Sub
+
+    Private Sub RbProjectResource_CheckedChanged(sender As Object, e As EventArgs) Handles rbProjectResource.CheckedChanged
+        If rbProjectResource.Checked Then
+            ' Deshabilitar controles locales
+            btnImportLocal.Enabled = False
+            btnClearLocal.Enabled = False
+
+            ' Habilitar controles de proyecto
+            cboResourceFiles.Enabled = True
+            lstProjectResources.Enabled = True
+
+            ' Cargar recursos del proyecto
+            LoadProjectResources()
+
+            TraceLogger.WriteLine("📦 Modo: Recursos del Proyecto")
+        End If
+    End Sub
+
+    Private Sub LstProjectResources_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstProjectResources.SelectedIndexChanged
+        If lstProjectResources.SelectedIndex < 0 Then Return
+
+        Try
+            Dim selectedItem As Object = lstProjectResources.SelectedItem
+
+            If TypeOf selectedItem Is ResourceImageInfo Then
+                Dim resourceInfo As ResourceImageInfo = DirectCast(selectedItem, ResourceImageInfo)
+
+                ' ⭐ SI ES (empty), LIMPIAR LA IMAGEN
+                If resourceInfo.Name = "(empty)" Then
+                    If picPreview IsNot Nothing AndAlso picPreview.Image IsNot Nothing Then
+                        picPreview.Image.Dispose()
+                        picPreview.Image = Nothing
+                    End If
+
+                    If _selectedImage IsNot Nothing Then
+                        _selectedImage.Dispose()
+                        _selectedImage = Nothing
+                    End If
+
+                    _selectedImagePath = ""
+                    _selectedImageSource = ImageSource.None
+                    _resourceName = ""
+
+                    TraceLogger.WriteLine("🗑️ Selección limpiada - (empty) seleccionado")
+                    Return
+                End If
+
+                ' Cargar imagen normal
+                If picPreview.Image IsNot Nothing Then
+                    picPreview.Image.Dispose()
+                End If
+
+                picPreview.Image = New Bitmap(resourceInfo.Image)
+
+                _selectedImage = New Bitmap(resourceInfo.Image)
+                _selectedImagePath = resourceInfo.FilePath
+                _selectedImageSource = ImageSource.ProjectResource
+                _resourceName = resourceInfo.Name
+
+                TraceLogger.WriteLine($"✅ Recurso del proyecto seleccionado: {resourceInfo.Name}")
+            End If
+
+        Catch ex As Exception
+            TraceLogger.WriteLine($"❌ Error al seleccionar recurso: {ex.Message}")
+            MessageBox.Show("Error al cargar el recurso seleccionado:" & vbCrLf & ex.Message,
+                          "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub LoadProjectResources()
+        If cboResourceFiles Is Nothing OrElse lstProjectResources Is Nothing Then
+            TraceLogger.WriteLine("⚠️ Controles no inicializados")
+            Return
+        End If
+
+        cboResourceFiles.Items.Clear()
+        lstProjectResources.Items.Clear()
+
+        TraceLogger.WriteLine("")
+        TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
+        TraceLogger.WriteLine("=== CARGA DE RECURSOS DEL PROYECTO ===")
+        TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
+        TraceLogger.WriteLine("")
+
+        If _designerContext Is Nothing Then
+            TraceLogger.WriteLine("❌ CRÍTICO: _designerContext es Nothing")
+            MessageBox.Show("No hay contexto de diseñador disponible." & vbCrLf &
+                              "Esta función solo está disponible en tiempo de diseño.",
+                              "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
+
+        TraceLogger.WriteLine("✅ _designerContext existe")
+
+        Try
+            If _designerContext.Instance Is Nothing Then
+                TraceLogger.WriteLine("❌ _designerContext.Instance es Nothing")
+                MessageBox.Show("No se pudo obtener el control que está siendo editado.",
+                                  "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            End If
+
+            Dim controlType As Type = _designerContext.Instance.GetType()
+            TraceLogger.WriteLine($"📦 Control Type: {controlType.FullName}")
+            TraceLogger.WriteLine($"   Assembly: {controlType.Assembly.GetName().Name}")
+
+            Dim resxFiles As List(Of ProjectResourceFinder.ResxFileInfo) =
+                ProjectResourceFinder.FindResourceFiles(controlType, _designerContext)
+
+            If resxFiles Is Nothing OrElse resxFiles.Count = 0 Then
+                TraceLogger.WriteLine("⚠️ No se encontraron archivos .resx")
+                MessageBox.Show("No se encontraron archivos de recursos (.resx) en el proyecto." & vbCrLf &
+                              "Asegúrate de que tu proyecto contiene archivos .resx",
+                              "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Return
+            End If
+
+            For Each resxFile As ProjectResourceFinder.ResxFileInfo In resxFiles
+                cboResourceFiles.Items.Add(resxFile)
+            Next
+
+            TraceLogger.WriteLine($"✅ {resxFiles.Count} archivos .resx cargados en el ComboBox")
+
+            If cboResourceFiles.Items.Count > 0 Then
+                cboResourceFiles.SelectedIndex = 0
+
+                Dim firstFile As ProjectResourceFinder.ResxFileInfo =
+                    DirectCast(cboResourceFiles.SelectedItem, ProjectResourceFinder.ResxFileInfo)
+                TraceLogger.WriteLine($"📌 Archivo seleccionado por defecto: {firstFile.DisplayName}")
+            End If
+
+        Catch ex As Exception
+            TraceLogger.WriteLine("")
+            TraceLogger.WriteLine("❌ ERROR GENERAL EN LoadProjectResources:")
+            TraceLogger.WriteException(ex)
+            MessageBox.Show("Error al cargar recursos del proyecto:" & vbCrLf & ex.Message,
+                          "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
+        TraceLogger.WriteLine("")
+    End Sub
+
+    Private Sub CboResourceFiles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboResourceFiles.SelectedIndexChanged
+        If cboResourceFiles.SelectedIndex < 0 Then Return
+        If lstProjectResources Is Nothing Then Return
+
+        lstProjectResources.Items.Clear()
+
+        ' ⭐ AGREGAR ITEM (empty) AL INICIO
+        lstProjectResources.Items.Add(New ResourceImageInfo With {
+        .Name = "(empty)",
+        .Image = Nothing,
+        .FilePath = ""
+    })
+
+        TraceLogger.WriteLine($"=== CARGANDO RECURSOS DEL ARCHIVO SELECCIONADO ===")
+
+        Try
+            Dim selectedItem As Object = cboResourceFiles.SelectedItem
+
+            If Not TypeOf selectedItem Is ProjectResourceFinder.ResxFileInfo Then
+                TraceLogger.WriteLine("⚠️ El item seleccionado no es un ResxFileInfo")
+                Return
+            End If
+
+            Dim resxInfo As ProjectResourceFinder.ResxFileInfo =
+            DirectCast(selectedItem, ProjectResourceFinder.ResxFileInfo)
+
+            Dim resxPath As String = resxInfo.FullPath
+            TraceLogger.WriteLine($"📁 Archivo seleccionado: {resxInfo.Name}")
+            TraceLogger.WriteLine($"📍 Ruta completa: {resxPath}")
+
+            If String.IsNullOrEmpty(resxPath) OrElse Not File.Exists(resxPath) Then
+                TraceLogger.WriteLine($"❌ El archivo no existe: {resxPath}")
+                MessageBox.Show("No se pudo encontrar el archivo de recursos.",
+                              "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            End If
+
+            Dim resxDirectory As String = Path.GetDirectoryName(resxPath)
+            TraceLogger.WriteLine($"📂 Directorio base del .resx: {resxDirectory}")
+
+            Using reader As New Resources.ResXResourceReader(resxPath)
+                reader.BasePath = resxDirectory
+                TraceLogger.WriteLine($"✅ BasePath configurado: {reader.BasePath}")
+
+                Dim imageCount As Integer = 0
+
+                For Each entry As DictionaryEntry In reader
+                    Try
+                        Dim resourceName As String = entry.Key.ToString()
+                        Dim resourceValue As Object = entry.Value
+
+                        If TypeOf resourceValue Is Image OrElse
+                       TypeOf resourceValue Is Bitmap OrElse
+                       TypeOf resourceValue Is Icon Then
+
+                            lstProjectResources.Items.Add(New ResourceImageInfo With {
+                            .Name = resourceName,
+                            .Image = If(TypeOf resourceValue Is Icon,
+                                      DirectCast(resourceValue, Icon).ToBitmap(),
+                                      DirectCast(resourceValue, Image)),
+                            .FilePath = resxPath
+                        })
+
+                            imageCount += 1
+                            TraceLogger.WriteLine($"  ✅ Imagen encontrada: {resourceName}")
+                        End If
+
+                    Catch ex As Exception
+                        TraceLogger.WriteLine($"  ⚠️ Error procesando recurso '{entry.Key}': {ex.Message}")
+
+                        Try
+                            Dim resourceName As String = entry.Key.ToString()
+                            Dim manualImage As Image = LoadImageManually(resxPath, resourceName, resxDirectory)
+
+                            If manualImage IsNot Nothing Then
+                                lstProjectResources.Items.Add(New ResourceImageInfo With {
+                                .Name = resourceName,
+                                .Image = manualImage,
+                                .FilePath = resxPath
+                            })
+
+                                imageCount += 1
+                                TraceLogger.WriteLine($"  ✅ Imagen cargada manualmente: {resourceName}")
+                            End If
+                        Catch manualEx As Exception
+                            TraceLogger.WriteLine($"  ❌ Error en carga manual: {manualEx.Message}")
+                        End Try
+
+                        Continue For
+                    End Try
+                Next
+
+                TraceLogger.WriteLine($"📊 Total de imágenes cargadas: {imageCount}")
+
+                If imageCount = 0 Then
+                    MessageBox.Show("El archivo de recursos no contiene imágenes." & vbCrLf & vbCrLf &
+                              "Esto puede deberse a que las imágenes tienen rutas relativas inválidas." & vbCrLf &
+                              "Revisa el Output window para más detalles.",
+                                  "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End If
+            End Using
+
+        Catch ex As Exception
+            TraceLogger.WriteLine($"❌ ERROR al cargar recursos: {ex.Message}")
+            TraceLogger.WriteLine($"Stack Trace: {ex.StackTrace}")
+            MessageBox.Show("Error al leer el archivo de recursos:" & vbCrLf & ex.Message,
+                          "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Function LoadImageManually(resxPath As String, resourceName As String, baseDirectory As String) As Image
+        Try
+            TraceLogger.WriteLine($"      🔍 Intentando carga manual de: {resourceName}")
+
+            Dim xmlDoc As New Xml.XmlDocument()
+            xmlDoc.Load(resxPath)
+
+            Dim nsmgr As New Xml.XmlNamespaceManager(xmlDoc.NameTable)
+            Dim dataNode As Xml.XmlNode = xmlDoc.SelectSingleNode($"//data[@name='{resourceName}']", nsmgr)
+
+            If dataNode Is Nothing Then
+                TraceLogger.WriteLine($"      ❌ No se encontró el nodo para: {resourceName}")
+                Return Nothing
+            End If
+
+            Dim typeAttr As Xml.XmlAttribute = dataNode.Attributes("type")
+            If typeAttr IsNot Nothing Then
+                TraceLogger.WriteLine($"      📝 Tipo: {typeAttr.Value}")
+            End If
+
+            Dim valueNode As Xml.XmlNode = dataNode.SelectSingleNode("value")
+            If valueNode Is Nothing Then
+                TraceLogger.WriteLine($"      ❌ No se encontró el nodo value")
+                Return Nothing
+            End If
+
+            Dim value As String = valueNode.InnerText.Trim()
+            TraceLogger.WriteLine($"      📄 Value: {If(value.Length > 50, value.Substring(0, 50) & "...", value)}")
+
+            If value.Contains(";") Then
+                Dim parts As String() = value.Split(";"c)
+                If parts.Length > 0 Then
+                    Dim relativePath As String = parts(0).Trim()
+                    TraceLogger.WriteLine($"      📁 Ruta relativa detectada: {relativePath}")
+
+                    Dim fullPath As String = Path.Combine(baseDirectory, relativePath)
+                    TraceLogger.WriteLine($"      🔗 Ruta completa: {fullPath}")
+
+                    If File.Exists(fullPath) Then
+                        TraceLogger.WriteLine($"      ✅ Archivo encontrado, cargando...")
+                        Return Image.FromFile(fullPath)
+                    Else
+                        TraceLogger.WriteLine($"      ❌ Archivo no existe: {fullPath}")
+
+                        Dim commonSubDirs As String() = {"Resources", "..\Resources", "..\..\Resources"}
+                        For Each subDir As String In commonSubDirs
+                            Dim altPath As String = Path.Combine(baseDirectory, subDir, Path.GetFileName(relativePath))
+                            TraceLogger.WriteLine($"      🔍 Intentando: {altPath}")
+
+                            If File.Exists(altPath) Then
+                                TraceLogger.WriteLine($"      ✅ Encontrado en ubicación alternativa")
+                                Return Image.FromFile(altPath)
+                            End If
+                        Next
+                    End If
+                End If
+            ElseIf value.Length > 100 Then
+                TraceLogger.WriteLine($"      📦 Detectado como Base64, intentando decodificar...")
+                Try
+                    Dim imageBytes As Byte() = Convert.FromBase64String(value)
+                    Using ms As New MemoryStream(imageBytes)
+                        Return Image.FromStream(ms)
+                    End Using
+                Catch base64Ex As Exception
+                    TraceLogger.WriteLine($"      ❌ Error decodificando Base64: {base64Ex.Message}")
+                End Try
+            End If
+
+        Catch ex As Exception
+            TraceLogger.WriteLine($"      ❌ Error en LoadImageManually: {ex.Message}")
+        End Try
+
+        Return Nothing
+    End Function
+
+    Private Class ResourceImageInfo
+        Public Property Name As String
+        Public Property Image As Image
+        Public Property FilePath As String
+
+        Public Overrides Function ToString() As String
+            Return Name
+        End Function
+    End Class
+
+#End Region
+
+#Region "Gestión de Tabs"
+
+    Private Sub TabControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabControl.SelectedIndexChanged
+        If tabControl Is Nothing Then Return
+
+        Select Case tabControl.SelectedIndex
+            Case 0 ' Image Picker
+            Case 1 ' Raster Images
+            Case 2 ' Vector Images
+            Case 3 ' Font Icons
+        End Select
+    End Sub
+
+#End Region
+
+#Region "Botones de Acción"
+
+    Private Sub BtnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         Me.DialogResult = DialogResult.OK
         Me.Close()
     End Sub
 
-    Private Sub BtnCancel_Click(sender As Object, e As EventArgs)
+    Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        ClearSelection()
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
@@ -656,82 +850,33 @@ Public Class NXImagePickerDialog
 
 #Region "Métodos Públicos"
 
-    ''' <summary>
-    ''' Muestra el diálogo con un propietario
-    ''' </summary>
-    Public Shadows Function ShowDialog(owner As IWin32Window) As DialogResult
-        Return MyBase.ShowDialog(owner)
-    End Function
-
-    ''' <summary>
-    ''' Muestra el diálogo sin propietario
-    ''' </summary>
-    Public Shadows Function ShowDialog() As DialogResult
-        Return MyBase.ShowDialog()
-    End Function
-
-    ''' <summary>
-    ''' Limpia la selección actual
-    ''' </summary>
     Public Sub ClearSelection()
+        If picPreview IsNot Nothing AndAlso picPreview.Image IsNot Nothing Then
+            picPreview.Image.Dispose()
+            picPreview.Image = Nothing
+        End If
+
+        If _selectedImage IsNot Nothing AndAlso _selectedImage IsNot picPreview.Image Then
+            _selectedImage.Dispose()
+        End If
+
         _selectedImage = Nothing
         _selectedImagePath = ""
         _selectedImageSource = ImageSource.None
         _resourceName = ""
-
-        If picPreview IsNot Nothing Then
-            picPreview.Image = Nothing
-        End If
-
-        If lstLocalResources IsNot Nothing Then
-            lstLocalResources.ClearSelected()
-        End If
-
-        If lstProjectResources IsNot Nothing Then
-            lstProjectResources.ClearSelected()
-        End If
-
-        UpdateImageInfo(Nothing)
     End Sub
 
-    Private Sub btnImportProject_Click(sender As Object, e As EventArgs) Handles btnImportProject.Click
-        Try
-            ' Intentar abrir la ventana de recursos del proyecto usando DTE
-            ' Esto requiere referencias adicionales (EnvDTE)
+#End Region
 
-            ' Alternativa simple: Solo refrescar y mostrar instrucciones
-            LoadProjectResources()
+#Region "Limpieza"
 
-            Dim result = MessageBox.Show(
-                "¿Desea abrir la ventana de recursos del proyecto?" & vbCrLf & vbCrLf &
-                "Haga clic en Sí para ver las instrucciones," & vbCrLf &
-                "o en No para solo actualizar la lista de recursos.",
-                "Importar Recursos",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question)
-
-            If result = DialogResult.Yes Then
-                MessageBox.Show(
-                    "Para agregar imágenes a los recursos del proyecto:" & vbCrLf & vbCrLf &
-                    "1. En el Explorador de soluciones, doble clic en 'My Project'" & vbCrLf &
-                    "2. Ir a la pestaña 'Recursos'" & vbCrLf &
-                    "3. En el dropdown, seleccionar 'Imágenes'" & vbCrLf &
-                    "4. Clic en 'Agregar recurso' → 'Agregar archivo existente...'" & vbCrLf &
-                    "5. Seleccionar la(s) imagen(es)" & vbCrLf &
-                    "6. Guardar el proyecto (Ctrl+S)" & vbCrLf & vbCrLf &
-                    "Después cierre y vuelva a abrir este diálogo para ver los nuevos recursos.",
-                    "Cómo Importar Recursos",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information)
-            End If
-
-        Catch ex As Exception
-            MessageBox.Show("Error: " & ex.Message)
-        End Try
+    Protected Overrides Sub OnFormClosing(e As FormClosingEventArgs)
+        If Me.DialogResult = DialogResult.Cancel Then
+            ClearSelection()
+        End If
+        MyBase.OnFormClosing(e)
     End Sub
 
 #End Region
 
 End Class
-
-#End Region

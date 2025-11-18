@@ -115,7 +115,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <None Include="Resources\COLLAB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text emotes %284%29.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

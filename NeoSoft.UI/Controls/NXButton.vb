@@ -67,12 +67,19 @@ Namespace Controls
         <Category("Appearance")>
         <Description("Imagen que se muestra en el botón")>
         <Editor(GetType(NXImageUITypeEditor), GetType(UITypeEditor))>
-        <Localizable(True)>  ' <-- AGREGAR ESTO para que se guarde en recursos
+        <Localizable(True)>
         Public Property Image As Image
             Get
                 Return _image
             End Get
             Set(value As Image)
+                If _image IsNot Nothing AndAlso _image IsNot value Then
+                    Try
+                        _image.Dispose()
+                    Catch
+
+                    End Try
+                End If
                 _image = value
                 Me.Invalidate()
             End Set
@@ -323,12 +330,12 @@ Namespace Controls
         End Sub
 
         ''' <summary>
-        ''' Dibuja solo la imagen (centrada)
+        ''' Dibuja solo la imagen (centrada o según ImageAlign si no hay texto)
         ''' </summary>
         Private Sub DrawImageOnly(g As Graphics)
             If _image Is Nothing Then Return
 
-            ' Calcular posición centrada
+            ' Tamaño de la imagen
             Dim imgWidth As Integer = _image.Width
             Dim imgHeight As Integer = _image.Height
 
@@ -339,8 +346,51 @@ Namespace Controls
                 imgHeight = CInt(imgHeight * scale)
             End If
 
-            Dim imgX As Integer = (Me.Width - imgWidth) \ 2
-            Dim imgY As Integer = (Me.Height - imgHeight) \ 2
+            Dim imgX As Integer = 0
+            Dim imgY As Integer = 0
+
+            ' Calcular posición según ImageAlign
+            Select Case _imageAlign
+                Case ContentAlignment.TopLeft
+                    imgX = 5
+                    imgY = 5
+
+                Case ContentAlignment.TopCenter
+                    imgX = (Me.Width - imgWidth) \ 2
+                    imgY = 5
+
+                Case ContentAlignment.TopRight
+                    imgX = Me.Width - imgWidth - 5
+                    imgY = 5
+
+                Case ContentAlignment.MiddleLeft
+                    imgX = 5
+                    imgY = (Me.Height - imgHeight) \ 2
+
+                Case ContentAlignment.MiddleCenter
+                    imgX = (Me.Width - imgWidth) \ 2
+                    imgY = (Me.Height - imgHeight) \ 2
+
+                Case ContentAlignment.MiddleRight
+                    imgX = Me.Width - imgWidth - 5
+                    imgY = (Me.Height - imgHeight) \ 2
+
+                Case ContentAlignment.BottomLeft
+                    imgX = 5
+                    imgY = Me.Height - imgHeight - 5
+
+                Case ContentAlignment.BottomCenter
+                    imgX = (Me.Width - imgWidth) \ 2
+                    imgY = Me.Height - imgHeight - 5
+
+                Case ContentAlignment.BottomRight
+                    imgX = Me.Width - imgWidth - 5
+                    imgY = Me.Height - imgHeight - 5
+
+                Case Else ' Default: centrado
+                    imgX = (Me.Width - imgWidth) \ 2
+                    imgY = (Me.Height - imgHeight) \ 2
+            End Select
 
             ' Dibujar imagen con calidad alta
             g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
@@ -359,40 +409,138 @@ Namespace Controls
         End Sub
 
         ''' <summary>
-        ''' Dibuja imagen y texto juntos
+        ''' Dibuja imagen y texto juntos según ImageAlign
         ''' </summary>
         Private Sub DrawImageAndText(g As Graphics, textColor As Color)
-            If _image Is Nothing Then Return
+            If _image Is Nothing Then
+                DrawTextOnly(g, textColor)
+                Return
+            End If
 
             Const padding As Integer = 8
             Const spacing As Integer = 6
 
-            ' Calcular tamaño de imagen (máximo 24x24 para botones con texto)
-            Dim imgSize As Integer = Math.Min(24, Math.Min(_image.Width, _image.Height))
+            ' Tamaño de la imagen
+            Dim imgWidth As Integer = _imageSize.Width
+            Dim imgHeight As Integer = _imageSize.Height
+
+            ' Escalar si es necesario
+            If imgWidth > _image.Width Then imgWidth = _image.Width
+            If imgHeight > _image.Height Then imgHeight = _image.Height
 
             ' Medir texto
             Dim textSize As Size = TextRenderer.MeasureText(Me.Text, Me.Font)
 
-            ' Calcular ancho total (imagen + espacio + texto)
-            Dim totalWidth As Integer = imgSize + spacing + textSize.Width
+            ' Variables para posiciones
+            Dim imgX As Integer = 0
+            Dim imgY As Integer = 0
+            Dim textX As Integer = 0
+            Dim textY As Integer = 0
+            Dim textRect As Rectangle
 
-            ' Calcular posición inicial (centrado horizontalmente)
-            Dim startX As Integer = (Me.Width - totalWidth) \ 2
-            If startX < padding Then startX = padding
+            ' Calcular posiciones según ImageAlign
+            Select Case _imageAlign
+                Case ContentAlignment.TopLeft
+                    imgX = padding
+                    imgY = padding
+                    textX = imgX
+                    textY = imgY + imgHeight + spacing
+                    textRect = New Rectangle(textX, textY, Me.Width - textX - padding, Me.Height - textY - padding)
+
+                Case ContentAlignment.TopCenter
+                    imgX = (Me.Width - imgWidth) \ 2
+                    imgY = padding
+                    textX = 0
+                    textY = imgY + imgHeight + spacing
+                    textRect = New Rectangle(padding, textY, Me.Width - (padding * 2), Me.Height - textY - padding)
+
+                Case ContentAlignment.TopRight
+                    imgX = Me.Width - imgWidth - padding
+                    imgY = padding
+                    textX = 0
+                    textY = imgY + imgHeight + spacing
+                    textRect = New Rectangle(padding, textY, Me.Width - (padding * 2), Me.Height - textY - padding)
+
+                Case ContentAlignment.MiddleLeft
+                    imgX = padding
+                    imgY = (Me.Height - imgHeight) \ 2
+                    textX = imgX + imgWidth + spacing
+                    textY = 0
+                    textRect = New Rectangle(textX, padding, Me.Width - textX - padding, Me.Height - (padding * 2))
+
+                Case ContentAlignment.MiddleCenter
+                    ' Imagen arriba, texto abajo, ambos centrados
+                    imgX = (Me.Width - imgWidth) \ 2
+                    Dim totalHeight = imgHeight + spacing + textSize.Height
+                    imgY = (Me.Height - totalHeight) \ 2
+                    textX = 0
+                    textY = imgY + imgHeight + spacing
+                    textRect = New Rectangle(padding, textY, Me.Width - (padding * 2), Me.Height - textY - padding)
+
+                Case ContentAlignment.MiddleRight
+                    imgX = Me.Width - imgWidth - padding
+                    imgY = (Me.Height - imgHeight) \ 2
+                    textX = padding
+                    textY = 0
+                    textRect = New Rectangle(textX, padding, imgX - textX - spacing, Me.Height - (padding * 2))
+
+                Case ContentAlignment.BottomLeft
+                    imgX = padding
+                    imgY = Me.Height - imgHeight - padding
+                    textX = imgX
+                    textY = padding
+                    textRect = New Rectangle(textX, textY, Me.Width - textX - padding, imgY - textY - spacing)
+
+                Case ContentAlignment.BottomCenter
+                    imgX = (Me.Width - imgWidth) \ 2
+                    imgY = Me.Height - imgHeight - padding
+                    textX = 0
+                    textY = padding
+                    textRect = New Rectangle(padding, textY, Me.Width - (padding * 2), imgY - textY - spacing)
+
+                Case ContentAlignment.BottomRight
+                    imgX = Me.Width - imgWidth - padding
+                    imgY = Me.Height - imgHeight - padding
+                    textX = 0
+                    textY = padding
+                    textRect = New Rectangle(padding, textY, Me.Width - (padding * 2), imgY - textY - spacing)
+
+                Case Else ' Default a MiddleLeft
+                    imgX = padding
+                    imgY = (Me.Height - imgHeight) \ 2
+                    textX = imgX + imgWidth + spacing
+                    textY = 0
+                    textRect = New Rectangle(textX, padding, Me.Width - textX - padding, Me.Height - (padding * 2))
+            End Select
 
             ' Dibujar imagen
-            Dim imgY As Integer = (Me.Height - imgSize) \ 2
             g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
-            g.DrawImage(_image, startX, imgY, imgSize, imgSize)
+            g.DrawImage(_image, imgX, imgY, imgWidth, imgHeight)
 
-            ' Dibujar texto
-            Dim textX As Integer = startX + imgSize + spacing
-            Dim textRect As New Rectangle(textX, 0, Me.Width - textX - padding, Me.Height)
+            ' Dibujar texto con alineación apropiada
+            Dim textFlags As TextFormatFlags = TextFormatFlags.EndEllipsis Or TextFormatFlags.WordBreak
 
-            TextRenderer.DrawText(g, Me.Text, Me.Font, textRect, textColor,
-                        TextFormatFlags.Left Or
-                        TextFormatFlags.VerticalCenter Or
-                        TextFormatFlags.EndEllipsis)
+            ' Determinar alineación horizontal del texto según ImageAlign
+            Select Case _imageAlign
+                Case ContentAlignment.TopLeft, ContentAlignment.MiddleLeft, ContentAlignment.BottomLeft
+                    textFlags = textFlags Or TextFormatFlags.Left
+                Case ContentAlignment.TopCenter, ContentAlignment.MiddleCenter, ContentAlignment.BottomCenter
+                    textFlags = textFlags Or TextFormatFlags.HorizontalCenter
+                Case ContentAlignment.TopRight, ContentAlignment.MiddleRight, ContentAlignment.BottomRight
+                    textFlags = textFlags Or TextFormatFlags.Right
+            End Select
+
+            ' Determinar alineación vertical del texto
+            Select Case _imageAlign
+                Case ContentAlignment.TopLeft, ContentAlignment.TopCenter, ContentAlignment.TopRight
+                    textFlags = textFlags Or TextFormatFlags.Top
+                Case ContentAlignment.MiddleLeft, ContentAlignment.MiddleCenter, ContentAlignment.MiddleRight
+                    textFlags = textFlags Or TextFormatFlags.VerticalCenter
+                Case ContentAlignment.BottomLeft, ContentAlignment.BottomCenter, ContentAlignment.BottomRight
+                    textFlags = textFlags Or TextFormatFlags.Bottom
+            End Select
+
+            TextRenderer.DrawText(g, Me.Text, Me.Font, textRect, textColor, textFlags)
         End Sub
 
         ''' <summary>

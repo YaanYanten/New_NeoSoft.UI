@@ -45,6 +45,20 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="envdte, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\envdte.17.14.40260\lib\net472\envdte.dll</HintPath>
+    </Reference>
+    <Reference Include="envdte80, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\envdte80.17.14.40260\lib\net472\envdte80.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.17.14.40254\lib\net472\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Interop, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Interop.17.14.40260\lib\net472\Microsoft.VisualStudio.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -70,6 +84,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\TraceLogger.vb" />
     <Compile Include="Dialogs\NXImagePickerDialog.Designer.vb">
       <DependentUpon>NXImagePickerDialog.vb</DependentUpon>
     </Compile>
@@ -77,6 +92,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Editors\NXImageUITypeEditor.vb" />
+    <Compile Include="Helper\ProjectResourceFinder.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="Controls\NXButton.vb">
       <SubType>Component</SubType>
@@ -94,7 +110,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Common\" />
     <Folder Include="Components\" />
     <Folder Include="Designers\" />
     <Folder Include="Themes\" />
@@ -167,6 +182,9 @@
     <Content Include="Resources\Images\Icons\plan.png" />
     <Content Include="Resources\Images\Icons\settings.png" />
     <Content Include="Resources\Images\Icons\VideoEditor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

@@ -23,6 +23,8 @@ Partial Class FormMain
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormMain))
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Button2 = New System.Windows.Forms.Button()
         Me.lblInfoImagePicker = New NeoSoft.UI.Controls.NXLabel()
         Me.btnImagePicker = New NeoSoft.UI.Controls.NXButton()
         Me.lblSectionImagePicker = New NeoSoft.UI.Controls.NXLabel()
@@ -49,6 +51,25 @@ Partial Class FormMain
         Me.lblSectionButtons = New NeoSoft.UI.Controls.NXLabel()
         Me.lblTitle = New NeoSoft.UI.Controls.NXLabel()
         Me.SuspendLayout()
+        '
+        'Button1
+        '
+        Me.Button1.Image = Global.NeoSoft.UI.TestApp.My.Resources.Resources.COLLAB
+        Me.Button1.Location = New System.Drawing.Point(370, 637)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(160, 47)
+        Me.Button1.TabIndex = 25
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(370, 560)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(75, 23)
+        Me.Button2.TabIndex = 26
+        Me.Button2.Text = "Button2"
+        Me.Button2.UseVisualStyleBackColor = True
         '
         'lblInfoImagePicker
         '
@@ -434,7 +455,7 @@ Partial Class FormMain
         Me.btnGradient.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.btnGradient.ForeColor = System.Drawing.Color.White
         Me.btnGradient.HoverBackColor = System.Drawing.Color.Empty
-        Me.btnGradient.Image = Nothing
+        Me.btnGradient.Image = CType(resources.GetObject("btnGradient.Image"), System.Drawing.Image)
         Me.btnGradient.ImageSize = New System.Drawing.Size(24, 24)
         Me.btnGradient.Location = New System.Drawing.Point(190, 130)
         Me.btnGradient.Name = "btnGradient"
@@ -452,7 +473,7 @@ Partial Class FormMain
         Me.btnSolid.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.btnSolid.ForeColor = System.Drawing.Color.White
         Me.btnSolid.HoverBackColor = System.Drawing.Color.Empty
-        Me.btnSolid.Image = Nothing
+        Me.btnSolid.Image = CType(resources.GetObject("btnSolid.Image"), System.Drawing.Image)
         Me.btnSolid.ImageSize = New System.Drawing.Size(24, 24)
         Me.btnSolid.Location = New System.Drawing.Point(30, 130)
         Me.btnSolid.Name = "btnSolid"
@@ -505,6 +526,8 @@ Partial Class FormMain
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(562, 730)
+        Me.Controls.Add(Me.Button2)
+        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.lblInfoImagePicker)
         Me.Controls.Add(Me.btnImagePicker)
         Me.Controls.Add(Me.lblSectionImagePicker)
@@ -562,4 +585,6 @@ Partial Class FormMain
     Friend WithEvents lblSectionImagePicker As NeoSoft.UI.Controls.NXLabel
     Friend WithEvents btnImagePicker As NeoSoft.UI.Controls.NXButton
     Friend WithEvents lblInfoImagePicker As NeoSoft.UI.Controls.NXLabel
+    Friend WithEvents Button1 As Button
+    Friend WithEvents Button2 As Button
 End Class
