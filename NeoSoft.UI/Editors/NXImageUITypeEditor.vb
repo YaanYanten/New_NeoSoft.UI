@@ -6,12 +6,9 @@ Imports System.Windows.Forms.Design
 
 ''' <summary>
 ''' Editor personalizado para propiedades de tipo Image que muestra el NXImagePickerDialog
-''' CORREGIDO: Maneja correctamente IWindowsFormsEditorService para evitar bloqueo de controles
 ''' </summary>
 Public Class NXImageUITypeEditor
     Inherits UITypeEditor
-
-#Region "Overrides - Estilo de Editor"
 
     Public Overrides Function GetEditStyle(context As ITypeDescriptorContext) As UITypeEditorEditStyle
         If context IsNot Nothing AndAlso context.Instance IsNot Nothing Then
@@ -20,66 +17,33 @@ Public Class NXImageUITypeEditor
         Return UITypeEditorEditStyle.None
     End Function
 
-#End Region
-
-#Region "Overrides - Edición de Valor"
-
     Public Overrides Function EditValue(context As ITypeDescriptorContext,
-                                   provider As IServiceProvider,
-                                   value As Object) As Object
-        If context Is Nothing OrElse provider Is Nothing Then
-            Return value
-        End If
+                                       provider As IServiceProvider,
+                                       value As Object) As Object
+        If context Is Nothing OrElse provider Is Nothing Then Return value
 
         Try
-            ' Crear instancia del diálogo
             Dim dlg As New NXImagePickerDialog()
-
-            ' ⭐ CRÍTICO: Pasar el contexto del diseñador
             dlg.SetDesignerContext(context)
 
-            ' Obtener el servicio de editor
             Dim editorService As IWindowsFormsEditorService =
-            TryCast(provider.GetService(GetType(IWindowsFormsEditorService)), IWindowsFormsEditorService)
+                TryCast(provider.GetService(GetType(IWindowsFormsEditorService)), IWindowsFormsEditorService)
 
-            Dim result As DialogResult
+            Dim result As DialogResult = If(editorService IsNot Nothing,
+                                            editorService.ShowDialog(dlg),
+                                            dlg.ShowDialog())
 
-            If editorService IsNot Nothing Then
-                ' ⭐ USAR EL SERVICIO DE EDITOR (evita bloqueo de controles)
-                result = editorService.ShowDialog(dlg)
-            Else
-                ' Fallback para contextos donde no hay servicio de editor
-                result = dlg.ShowDialog()
-            End If
-
-            ' Procesar resultado
             If result = DialogResult.OK Then
-                ' ⭐ DEVOLVER Nothing SI NO HAY IMAGEN (para eliminar)
-                If dlg.SelectedImage Is Nothing Then
-                    Debug.WriteLine("NXImageUITypeEditor: Devolviendo Nothing (imagen eliminada)")
-                    Return Nothing
-                Else
-                    Debug.WriteLine($"NXImageUITypeEditor: Devolviendo imagen válida")
-                    Return dlg.SelectedImage
-                End If
+                Return dlg.SelectedImage ' Puede ser Nothing para eliminar imagen
             End If
 
-            ' Limpiar
             dlg.Dispose()
-
         Catch ex As Exception
             Debug.WriteLine($"Error en NXImageUITypeEditor: {ex.Message}")
-            MessageBox.Show($"Error al abrir el selector de imágenes:{vbCrLf}{ex.Message}",
-                      "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
-        ' ⭐ SI SE CANCELA, DEVOLVER EL VALOR ORIGINAL
         Return value
     End Function
-
-#End Region
-
-#Region "Overrides - Soporte de Pintura"
 
     Public Overrides Function GetPaintValueSupported(context As ITypeDescriptorContext) As Boolean
         Return True
@@ -87,21 +51,19 @@ Public Class NXImageUITypeEditor
 
     Public Overrides Sub PaintValue(e As PaintValueEventArgs)
         If TypeOf e.Value Is Image Then
-            Dim img As Image = DirectCast(e.Value, Image)
             Try
-                e.Graphics.DrawImage(img, e.Bounds)
+                e.Graphics.DrawImage(DirectCast(e.Value, Image), e.Bounds)
             Catch ex As Exception
-                Debug.WriteLine("Error al pintar miniatura: " & ex.Message)
+                Debug.WriteLine($"Error al pintar miniatura: {ex.Message}")
             End Try
         End If
     End Sub
 
-#End Region
-
 End Class
 
-#Region "Editor Alternativo - Para propiedades Icon"
-
+''' <summary>
+''' Editor personalizado para propiedades de tipo Icon
+''' </summary>
 Public Class NXIconUITypeEditor
     Inherits UITypeEditor
 
@@ -115,9 +77,7 @@ Public Class NXIconUITypeEditor
     Public Overrides Function EditValue(context As ITypeDescriptorContext,
                                        provider As IServiceProvider,
                                        value As Object) As Object
-        If context Is Nothing OrElse provider Is Nothing Then
-            Return value
-        End If
+        If context Is Nothing OrElse provider Is Nothing Then Return value
 
         Try
             Dim dialog As New NXImagePickerDialog()
@@ -126,33 +86,27 @@ Public Class NXIconUITypeEditor
             Dim editorService As IWindowsFormsEditorService =
                 TryCast(provider.GetService(GetType(IWindowsFormsEditorService)), IWindowsFormsEditorService)
 
-            Dim result As DialogResult
-            If editorService IsNot Nothing Then
-                result = editorService.ShowDialog(dialog)
-            Else
-                result = dialog.ShowDialog()
-            End If
+            Dim result As DialogResult = If(editorService IsNot Nothing,
+                                            editorService.ShowDialog(dialog),
+                                            dialog.ShowDialog())
 
-            If result = DialogResult.OK Then
-                If dialog.SelectedImage IsNot Nothing Then
-                    Try
-                        If TypeOf value Is Icon Then
-                            Dim bmp As New Bitmap(dialog.SelectedImage)
-                            Dim hIcon As IntPtr = bmp.GetHicon()
-                            Dim icon As Icon = Icon.FromHandle(hIcon)
-                            bmp.Dispose()
-                            Return icon
-                        Else
-                            Return dialog.SelectedImage
-                        End If
-                    Catch ex As Exception
+            If result = DialogResult.OK AndAlso dialog.SelectedImage IsNot Nothing Then
+                Try
+                    If TypeOf value Is Icon Then
+                        Dim bmp As New Bitmap(dialog.SelectedImage)
+                        Dim hIcon As IntPtr = bmp.GetHicon()
+                        Dim icon As Icon = Icon.FromHandle(hIcon)
+                        bmp.Dispose()
+                        Return icon
+                    Else
                         Return dialog.SelectedImage
-                    End Try
-                End If
+                    End If
+                Catch ex As Exception
+                    Return dialog.SelectedImage
+                End Try
             End If
 
             dialog.Dispose()
-
         Catch ex As Exception
             Debug.WriteLine($"Error en NXIconUITypeEditor: {ex.Message}")
         End Try
@@ -167,17 +121,13 @@ Public Class NXIconUITypeEditor
     Public Overrides Sub PaintValue(e As PaintValueEventArgs)
         Try
             If TypeOf e.Value Is Icon Then
-                Dim icn As Icon = DirectCast(e.Value, Icon)
-                e.Graphics.DrawIcon(icn, e.Bounds)
+                e.Graphics.DrawIcon(DirectCast(e.Value, Icon), e.Bounds)
             ElseIf TypeOf e.Value Is Image Then
-                Dim img As Image = DirectCast(e.Value, Image)
-                e.Graphics.DrawImage(img, e.Bounds)
+                e.Graphics.DrawImage(DirectCast(e.Value, Image), e.Bounds)
             End If
         Catch ex As Exception
-            Debug.WriteLine("Error al pintar miniatura de icono: " & ex.Message)
+            Debug.WriteLine($"Error al pintar miniatura de icono: {ex.Message}")
         End Try
     End Sub
 
 End Class
-
-#End Region
