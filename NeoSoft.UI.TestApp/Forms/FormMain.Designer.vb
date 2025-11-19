@@ -437,7 +437,7 @@ Partial Class FormMain
         Me.btnOutline.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.btnOutline.ForeColor = System.Drawing.Color.White
         Me.btnOutline.HoverBackColor = System.Drawing.Color.Empty
-        Me.btnOutline.Image = Nothing
+        Me.btnOutline.Image = CType(resources.GetObject("btnOutline.Image"), System.Drawing.Image)
         Me.btnOutline.ImageSize = New System.Drawing.Size(24, 24)
         Me.btnOutline.Location = New System.Drawing.Point(350, 130)
         Me.btnOutline.Name = "btnOutline"

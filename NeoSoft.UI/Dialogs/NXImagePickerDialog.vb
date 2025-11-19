@@ -555,6 +555,10 @@ Partial Public Class NXImagePickerDialog
     Private _availableSizes As New HashSet(Of String)
     Private _isLoadingCategories As Boolean = False
 
+    ' ⭐ CACHE DE IMÁGENES PARA EVITAR RECARGAS
+    Private _imageCache As New Dictionary(Of String, Image)
+    Private _allIconsInfo As New List(Of IconInfo)
+
 #End Region
 
 #Region "Inicialización - Raster Images"
@@ -567,10 +571,13 @@ Partial Public Class NXImagePickerDialog
 
             _isLoadingCategories = True
 
-            ' Limpiar controles
+            ' Limpiar controles y caché
             If chkListCategories IsNot Nothing Then chkListCategories.Items.Clear()
             If chkListSize IsNot Nothing Then chkListSize.Items.Clear()
             If flowRasterIcons IsNot Nothing Then flowRasterIcons.Controls.Clear()
+
+            _imageCache.Clear()
+            _allIconsInfo.Clear()
 
             ' Obtener la ruta física de las imágenes de la DLL
             _rasterImagesBasePath = GetDllImagesPath()
@@ -583,13 +590,23 @@ Partial Public Class NXImagePickerDialog
 
             TraceLogger.WriteLine($"✅ Ruta base de la DLL: {_rasterImagesBasePath}")
 
-            ' Cargar categorías (subcarpetas de Images en la DLL)
+            ' Cargar categorías
             LoadRasterCategories()
+
+            ' ⭐ CARGAR TODAS LAS IMÁGENES EN MEMORIA UNA SOLA VEZ
+            LoadAllIconsToMemory()
+
+            ' ⭐ ACTUALIZAR LISTAS DE SELECCIÓN ANTES DE MOSTRAR
+            UpdateSelectedCategories()
+            UpdateSelectedSizes()
 
             _isLoadingCategories = False
 
-            ' Cargar iconos inmediatamente con todas las categorías seleccionadas
-            UpdateSizesAndIcons()
+            TraceLogger.WriteLine($"📊 Categorías seleccionadas: {_selectedCategories.Count}")
+            TraceLogger.WriteLine($"📊 Tamaños seleccionados: {_selectedSizes.Count}")
+
+            ' Mostrar iconos con filtro inicial
+            FilterAndDisplayIcons()
 
             TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
         Catch ex As Exception
@@ -604,32 +621,20 @@ Partial Public Class NXImagePickerDialog
             TraceLogger.WriteLine("🔍 Buscando ruta de Resources\Images de la DLL NeoSoft.UI...")
 
             Dim neoSoftAssembly As Reflection.Assembly = Me.GetType().Assembly
-            TraceLogger.WriteLine($"📦 Assembly NeoSoft.UI: {neoSoftAssembly.GetName().Name}")
-            TraceLogger.WriteLine($"📍 Location: {neoSoftAssembly.Location}")
-
             Dim dllDirectory As String = Path.GetDirectoryName(neoSoftAssembly.Location)
-            TraceLogger.WriteLine($"📂 Directorio de la DLL: {dllDirectory}")
-
             Dim projectDirectory As String = FindNeoSoftUIProjectDirectory(dllDirectory)
 
             If Not String.IsNullOrEmpty(projectDirectory) Then
                 Dim imagesPath As String = Path.Combine(projectDirectory, "Resources", "Images")
-                TraceLogger.WriteLine($"📂 Ruta del proyecto NeoSoft.UI: {projectDirectory}")
-                TraceLogger.WriteLine($"📂 Ruta de Images: {imagesPath}")
 
                 If Directory.Exists(imagesPath) Then
                     TraceLogger.WriteLine("✅ Carpeta Resources\Images encontrada en el proyecto de la DLL")
                     Return imagesPath
-                Else
-                    TraceLogger.WriteLine("⚠️ Carpeta Resources\Images no existe en el proyecto de la DLL")
                 End If
-            Else
-                TraceLogger.WriteLine("⚠️ No se pudo encontrar el directorio del proyecto NeoSoft.UI")
             End If
 
         Catch ex As Exception
             TraceLogger.WriteLine($"❌ Error en GetDllImagesPath: {ex.Message}")
-            TraceLogger.WriteException(ex)
         End Try
 
         Return Nothing
@@ -637,8 +642,6 @@ Partial Public Class NXImagePickerDialog
 
     Private Function FindNeoSoftUIProjectDirectory(startPath As String) As String
         Try
-            TraceLogger.WriteLine("🔍 Buscando directorio del proyecto NeoSoft.UI...")
-
             Dim currentDir As New DirectoryInfo(startPath)
             Dim maxLevels As Integer = 10
             Dim level As Integer = 0
@@ -646,7 +649,6 @@ Partial Public Class NXImagePickerDialog
             While currentDir IsNot Nothing AndAlso level < maxLevels
                 Dim projectFiles As String() = Directory.GetFiles(currentDir.FullName, "NeoSoft.UI.vbproj")
                 If projectFiles.Length > 0 Then
-                    TraceLogger.WriteLine($"  ✅ Proyecto NeoSoft.UI.vbproj encontrado en: {currentDir.FullName}")
                     Return currentDir.FullName
                 End If
 
@@ -654,13 +656,11 @@ Partial Public Class NXImagePickerDialog
                 level += 1
             End While
 
-            ' PLAN B: Buscar en ubicaciones comunes
+            ' Buscar en ubicaciones comunes
             Dim commonPaths As String() = {
                 "C:\Users\" & Environment.UserName & "\source\repos",
                 "C:\Users\" & Environment.UserName & "\Documents\Visual Studio 2022\Projects",
-                "C:\Users\" & Environment.UserName & "\Documents\Visual Studio 2019\Projects",
-                "C:\Projects",
-                "C:\Proyectos"
+                "C:\Users\" & Environment.UserName & "\Documents\Visual Studio 2019\Projects"
             }
 
             For Each commonPath As String In commonPaths
@@ -668,9 +668,7 @@ Partial Public Class NXImagePickerDialog
                     Try
                         Dim foundProjects As String() = Directory.GetFiles(commonPath, "NeoSoft.UI.vbproj", SearchOption.AllDirectories)
                         If foundProjects.Length > 0 Then
-                            Dim projectDir As String = Path.GetDirectoryName(foundProjects(0))
-                            TraceLogger.WriteLine($"  ✅ Proyecto encontrado en: {projectDir}")
-                            Return projectDir
+                            Return Path.GetDirectoryName(foundProjects(0))
                         End If
                     Catch
                     End Try
@@ -691,120 +689,117 @@ Partial Public Class NXImagePickerDialog
     Private Sub LoadRasterCategories()
         Try
             If String.IsNullOrEmpty(_rasterImagesBasePath) OrElse Not Directory.Exists(_rasterImagesBasePath) Then
-                TraceLogger.WriteLine("⚠️ Ruta base no válida para cargar categorías")
                 Return
             End If
 
-            TraceLogger.WriteLine("📋 Cargando categorías (subcarpetas de Images de la DLL)...")
+            TraceLogger.WriteLine("📋 Cargando categorías...")
 
             Dim subdirectories As String() = Directory.GetDirectories(_rasterImagesBasePath)
-
-            If subdirectories.Length = 0 Then
-                TraceLogger.WriteLine("⚠️ No se encontraron subcarpetas en Resources\Images de la DLL")
-                Return
-            End If
+            If subdirectories.Length = 0 Then Return
 
             chkListCategories.Items.Clear()
-
-            ' ⭐ AGREGAR OPCIÓN "SELECT ALL" AL INICIO
             chkListCategories.Items.Add("SELECT ALL", CheckState.Checked)
 
-            ' Agregar todas las categorías MARCADAS por defecto
             For Each subdir As String In subdirectories
                 Dim categoryName As String = Path.GetFileName(subdir)
                 chkListCategories.Items.Add(categoryName, CheckState.Checked)
-                TraceLogger.WriteLine($"  ✅ Categoría agregada: {categoryName} (desde DLL)")
             Next
 
-            TraceLogger.WriteLine($"📊 Total de categorías cargadas: {chkListCategories.Items.Count - 1}") ' -1 porque SELECT ALL no es categoría
+            TraceLogger.WriteLine($"📊 Total de categorías: {chkListCategories.Items.Count - 1}")
 
         Catch ex As Exception
             TraceLogger.WriteLine($"❌ Error en LoadRasterCategories: {ex.Message}")
-            TraceLogger.WriteException(ex)
         End Try
     End Sub
 
 #End Region
 
-#Region "Eventos - Categorías"
+#Region "Carga de Todas las Imágenes en Memoria - UNA SOLA VEZ"
 
-    Private Sub ChkListCategories_ItemCheck(sender As Object, e As ItemCheckEventArgs) Handles chkListCategories.ItemCheck
-        If _isLoadingCategories Then Return
-
-        ' Si es SELECT ALL
-        If e.Index = 0 Then
-            Dim newState As CheckState = e.NewValue
-            BeginInvoke(New Action(Sub()
-                                       _isLoadingCategories = True
-                                       For i As Integer = 1 To chkListCategories.Items.Count - 1
-                                           chkListCategories.SetItemChecked(i, newState = CheckState.Checked)
-                                       Next
-                                       _isLoadingCategories = False
-                                       UpdateSizesAndIcons()
-                                   End Sub))
-        Else
-            BeginInvoke(New Action(AddressOf UpdateSizesAndIcons))
-        End If
-    End Sub
-
-    Private Sub UpdateSizesAndIcons()
-        If _isLoadingCategories Then Return
-
+    Private Sub LoadAllIconsToMemory()
         Try
-            TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
-            TraceLogger.WriteLine("=== ACTUALIZANDO TAMAÑOS E ICONOS (desde DLL) ===")
+            TraceLogger.WriteLine("💾 CARGANDO TODAS LAS IMÁGENES EN MEMORIA...")
+            Dim startTime As DateTime = DateTime.Now
 
-            _selectedCategories.Clear()
-            For i As Integer = 1 To chkListCategories.Items.Count - 1 ' Empezar en 1 para saltar SELECT ALL
-                If chkListCategories.GetItemChecked(i) Then
-                    _selectedCategories.Add(chkListCategories.Items(i).ToString())
-                End If
-            Next
-
-            TraceLogger.WriteLine($"  ✅ Categorías seleccionadas: {_selectedCategories.Count}")
-
-            If _selectedCategories.Count = 0 Then
-                TraceLogger.WriteLine("⚠️ No hay categorías seleccionadas")
-                chkListSize.Items.Clear()
-                flowRasterIcons.Controls.Clear()
-                TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
+            If String.IsNullOrEmpty(_rasterImagesBasePath) OrElse Not Directory.Exists(_rasterImagesBasePath) Then
+                TraceLogger.WriteLine("⚠️ Ruta base no válida")
                 Return
             End If
 
-            LoadAvailableSizes()
-            LoadRasterIcons()
+            Dim totalIcons As Integer = 0
+            Dim categories As String() = Directory.GetDirectories(_rasterImagesBasePath)
 
-            TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
+            TraceLogger.WriteLine($"📂 Total de carpetas de categorías encontradas: {categories.Length}")
+
+            For Each categoryPath As String In categories
+                Dim categoryName As String = Path.GetFileName(categoryPath)
+                TraceLogger.WriteLine($"  📂 Procesando categoría: {categoryName}")
+
+                Dim sizeDirectories As String() = Directory.GetDirectories(categoryPath, "ICONS_*")
+                TraceLogger.WriteLine($"     📏 Tamaños encontrados: {sizeDirectories.Length}")
+
+                For Each sizePath As String In sizeDirectories
+                    Dim sizeName As String = Path.GetFileName(sizePath)
+
+                    ' Agregar tamaño a disponibles
+                    If Not _availableSizes.Contains(sizeName) Then
+                        _availableSizes.Add(sizeName)
+                        TraceLogger.WriteLine($"        ✅ Tamaño agregado: {sizeName}")
+                    End If
+
+                    Dim imageFiles As String() = Directory.GetFiles(sizePath, "*.*").
+                        Where(Function(f) f.EndsWith(".png", StringComparison.OrdinalIgnoreCase) OrElse
+                                         f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) OrElse
+                                         f.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) OrElse
+                                         f.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase) OrElse
+                                         f.EndsWith(".ico", StringComparison.OrdinalIgnoreCase)).ToArray()
+
+                    TraceLogger.WriteLine($"        🖼️ Archivos de imagen encontrados: {imageFiles.Length}")
+
+                    For Each imageFile As String In imageFiles
+                        Try
+                            ' ⭐ CARGAR IMAGEN EN CACHÉ
+                            If Not _imageCache.ContainsKey(imageFile) Then
+                                _imageCache(imageFile) = Image.FromFile(imageFile)
+                            End If
+
+                            Dim fileName As String = Path.GetFileNameWithoutExtension(imageFile)
+                            Dim baseName As String = ExtractBaseName(fileName)
+
+                            _allIconsInfo.Add(New IconInfo With {
+                                .BaseName = baseName,
+                                .FullPath = imageFile,
+                                .Category = categoryName,
+                                .Size = sizeName,
+                                .FileName = fileName,
+                                .IsFromDll = True
+                            })
+
+                            totalIcons += 1
+                        Catch ex As Exception
+                            TraceLogger.WriteLine($"⚠️ Error cargando {Path.GetFileName(imageFile)}: {ex.Message}")
+                        End Try
+                    Next
+                Next
+            Next
+
+            Dim elapsed As TimeSpan = DateTime.Now - startTime
+            TraceLogger.WriteLine($"✅ {totalIcons} imágenes cargadas en memoria en {elapsed.TotalMilliseconds:F0}ms")
+            TraceLogger.WriteLine($"📊 Total de tamaños detectados: {_availableSizes.Count}")
+            TraceLogger.WriteLine($"📊 Total de iconos info: {_allIconsInfo.Count}")
+
+            ' Cargar lista de tamaños
+            LoadSizesList()
+
         Catch ex As Exception
-            TraceLogger.WriteLine($"❌ Error en UpdateSizesAndIcons: {ex.Message}")
+            TraceLogger.WriteLine($"❌ Error en LoadAllIconsToMemory: {ex.Message}")
             TraceLogger.WriteException(ex)
         End Try
     End Sub
 
-#End Region
-
-#Region "Carga de Tamaños"
-
-    Private Sub LoadAvailableSizes()
+    Private Sub LoadSizesList()
         Try
-            TraceLogger.WriteLine("📏 Detectando tamaños disponibles en la DLL...")
-
-            _availableSizes.Clear()
             chkListSize.Items.Clear()
-
-            For Each category As String In _selectedCategories
-                Dim categoryPath As String = Path.Combine(_rasterImagesBasePath, category)
-                If Not Directory.Exists(categoryPath) Then Continue For
-
-                Dim sizeDirectories As String() = Directory.GetDirectories(categoryPath, "ICONS_*")
-
-                For Each sizeDir As String In sizeDirectories
-                    Dim sizeName As String = Path.GetFileName(sizeDir)
-                    If Not _availableSizes.Contains(sizeName) Then
-                        _availableSizes.Add(sizeName)
-                    End If
-                Next
-            Next
 
             Dim sortedSizes = _availableSizes.OrderBy(Function(s)
                                                           Dim parts As String() = s.Split("_"c)
@@ -821,22 +816,61 @@ Partial Public Class NXImagePickerDialog
                 chkListSize.Items.Add(sizeName, CheckState.Checked)
             Next
 
-            TraceLogger.WriteLine($"📊 Total de tamaños disponibles: {chkListSize.Items.Count}")
             UpdateSelectedSizes()
 
         Catch ex As Exception
-            TraceLogger.WriteLine($"❌ Error en LoadAvailableSizes: {ex.Message}")
-            TraceLogger.WriteException(ex)
+            TraceLogger.WriteLine($"❌ Error en LoadSizesList: {ex.Message}")
         End Try
     End Sub
 
-    Private Sub UpdateSelectedSizes()
-        _selectedSizes.Clear()
-        For i As Integer = 0 To chkListSize.Items.Count - 1
-            If chkListSize.GetItemChecked(i) Then
-                _selectedSizes.Add(chkListSize.Items(i).ToString())
+    Private Function ExtractBaseName(fileName As String) As String
+        Dim pattern As String = "_x_\d+$"
+        Return Regex.Replace(fileName, pattern, "", RegexOptions.IgnoreCase)
+    End Function
+
+#End Region
+
+#Region "Eventos - Categorías"
+
+    Private Sub ChkListCategories_ItemCheck(sender As Object, e As ItemCheckEventArgs) Handles chkListCategories.ItemCheck
+        If _isLoadingCategories Then Return
+
+        If e.Index = 0 Then ' SELECT ALL
+            Dim newState As CheckState = e.NewValue
+            BeginInvoke(New Action(Sub()
+                                       _isLoadingCategories = True
+                                       For i As Integer = 1 To chkListCategories.Items.Count - 1
+                                           chkListCategories.SetItemChecked(i, newState = CheckState.Checked)
+                                       Next
+                                       _isLoadingCategories = False
+                                       UpdateSelectedCategories()
+                                       FilterAndDisplayIcons()
+                                   End Sub))
+        Else
+            BeginInvoke(New Action(Sub()
+                                       UpdateSelectedCategories()
+                                       FilterAndDisplayIcons()
+                                   End Sub))
+        End If
+    End Sub
+
+    Private Sub UpdateSelectedCategories()
+        _selectedCategories.Clear()
+
+        If chkListCategories Is Nothing OrElse chkListCategories.Items.Count <= 1 Then
+            TraceLogger.WriteLine("⚠️ No hay categorías para seleccionar")
+            Return
+        End If
+
+        For i As Integer = 1 To chkListCategories.Items.Count - 1 ' Saltar SELECT ALL
+            If chkListCategories.GetItemChecked(i) Then
+                Dim category As String = chkListCategories.Items(i).ToString()
+                _selectedCategories.Add(category)
+                TraceLogger.WriteLine($"  ✅ Categoría seleccionada: {category}")
             End If
         Next
+
+        TraceLogger.WriteLine($"📊 Total categorías seleccionadas: {_selectedCategories.Count}")
     End Sub
 
 #End Region
@@ -844,111 +878,113 @@ Partial Public Class NXImagePickerDialog
 #Region "Eventos - Tamaños"
 
     Private Sub ChkListSize_ItemCheck(sender As Object, e As ItemCheckEventArgs) Handles chkListSize.ItemCheck
-        BeginInvoke(New Action(AddressOf OnSizeSelectionChanged))
+        BeginInvoke(New Action(Sub()
+                                   UpdateSelectedSizes()
+                                   FilterAndDisplayIcons()
+                               End Sub))
     End Sub
 
-    Private Sub OnSizeSelectionChanged()
-        UpdateSelectedSizes()
-        LoadRasterIcons()
+    Private Sub UpdateSelectedSizes()
+        _selectedSizes.Clear()
+
+        If chkListSize Is Nothing OrElse chkListSize.Items.Count = 0 Then
+            TraceLogger.WriteLine("⚠️ No hay tamaños para seleccionar")
+            Return
+        End If
+
+        For i As Integer = 0 To chkListSize.Items.Count - 1
+            If chkListSize.GetItemChecked(i) Then
+                Dim size As String = chkListSize.Items(i).ToString()
+                _selectedSizes.Add(size)
+                TraceLogger.WriteLine($"  ✅ Tamaño seleccionado: {size}")
+            End If
+        Next
+
+        TraceLogger.WriteLine($"📊 Total tamaños seleccionados: {_selectedSizes.Count}")
     End Sub
 
 #End Region
 
-#Region "Carga de Iconos - OPTIMIZADA SIN GRUPOS"
+#Region "Filtrado y Visualización de Iconos - OPTIMIZADO"
 
-    Private Sub LoadRasterIcons()
+    Private Sub FilterAndDisplayIcons()
         Try
             TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
-            TraceLogger.WriteLine("=== CARGANDO ICONOS RASTER (desde DLL NeoSoft.UI) ===")
+            TraceLogger.WriteLine("🔄 FILTRANDO Y MOSTRANDO ICONOS...")
+            TraceLogger.WriteLine($"   Categorías seleccionadas: {_selectedCategories.Count}")
+            TraceLogger.WriteLine($"   Tamaños seleccionados: {_selectedSizes.Count}")
+            TraceLogger.WriteLine($"   Total iconos disponibles: {_allIconsInfo.Count}")
 
-            ' ⭐ SUSPENDER DISEÑO PARA EVITAR PARPADEO
+            Dim startTime As DateTime = DateTime.Now
+
+            ' ⭐ SUSPENDER LAYOUT
             flowRasterIcons.SuspendLayout()
             flowRasterIcons.Controls.Clear()
 
-            If _selectedCategories.Count = 0 OrElse _selectedSizes.Count = 0 Then
-                TraceLogger.WriteLine("⚠️ No hay categorías o tamaños seleccionados")
+            If _selectedCategories.Count = 0 Then
+                TraceLogger.WriteLine("⚠️ No hay categorías seleccionadas - no se mostrarán iconos")
                 flowRasterIcons.ResumeLayout()
                 TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
                 Return
             End If
 
-            Dim totalIcons As Integer = 0
-            Dim allIcons As New List(Of IconInfo)
+            If _selectedSizes.Count = 0 Then
+                TraceLogger.WriteLine("⚠️ No hay tamaños seleccionados - no se mostrarán iconos")
+                flowRasterIcons.ResumeLayout()
+                TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
+                Return
+            End If
 
-            For Each category As String In _selectedCategories
-                Dim categoryPath As String = Path.Combine(_rasterImagesBasePath, category)
-                If Not Directory.Exists(categoryPath) Then Continue For
+            ' ⭐ FILTRAR ICONOS SIN RECARGAR IMÁGENES
+            Dim filteredIcons = _allIconsInfo.Where(Function(icon)
+                                                        Dim matchCategory = _selectedCategories.Contains(icon.Category)
+                                                        Dim matchSize = _selectedSizes.Contains(icon.Size)
+                                                        Return matchCategory AndAlso matchSize
+                                                    End Function).
+                                              OrderBy(Function(i) i.Category).
+                                              ThenBy(Function(i) i.BaseName).
+                                              ThenBy(Function(i) i.Size).ToList()
 
-                For Each sizeName As String In _selectedSizes
-                    Dim sizePath As String = Path.Combine(categoryPath, sizeName)
-                    If Not Directory.Exists(sizePath) Then Continue For
+            TraceLogger.WriteLine($"📊 Iconos después del filtro: {filteredIcons.Count}")
 
-                    Dim imageFiles As String() = Directory.GetFiles(sizePath, "*.*").
-                        Where(Function(f) f.EndsWith(".png", StringComparison.OrdinalIgnoreCase) OrElse
-                                         f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) OrElse
-                                         f.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) OrElse
-                                         f.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase) OrElse
-                                         f.EndsWith(".ico", StringComparison.OrdinalIgnoreCase)).ToArray()
+            If filteredIcons.Count = 0 Then
+                TraceLogger.WriteLine("⚠️ Ningún icono coincide con los filtros")
+            End If
 
-                    For Each imageFile As String In imageFiles
-                        Try
-                            Dim fileName As String = Path.GetFileNameWithoutExtension(imageFile)
-                            Dim baseName As String = ExtractBaseName(fileName)
-
-                            allIcons.Add(New IconInfo With {
-                                .BaseName = baseName,
-                                .FullPath = imageFile,
-                                .Category = category,
-                                .Size = sizeName,
-                                .FileName = fileName,
-                                .IsFromDll = True
-                            })
-
-                            totalIcons += 1
-                        Catch ex As Exception
-                            TraceLogger.WriteLine($"    ⚠️ Error procesando archivo {Path.GetFileName(imageFile)}: {ex.Message}")
-                        End Try
-                    Next
-                Next
-            Next
-
-            TraceLogger.WriteLine($"📊 Total de iconos de la DLL encontrados: {totalIcons}")
-
-            ' ⭐ CREAR CONTROLES DIRECTAMENTE SIN GRUPOS
-            For Each iconInfo In allIcons.OrderBy(Function(i) i.Category).ThenBy(Function(i) i.BaseName).ThenBy(Function(i) i.Size)
+            ' ⭐ CREAR CONTROLES CON IMÁGENES DEL CACHÉ
+            Dim createdControls As Integer = 0
+            For Each iconInfo In filteredIcons
                 Try
-                    CreateSingleIconControl(iconInfo)
+                    CreateSingleIconControlFromCache(iconInfo)
+                    createdControls += 1
                 Catch ex As Exception
                     TraceLogger.WriteLine($"⚠️ Error creando control para {iconInfo.FileName}: {ex.Message}")
                 End Try
             Next
 
-            ' ⭐ REANUDAR DISEÑO
-            flowRasterIcons.ResumeLayout()
-            flowRasterIcons.PerformLayout()
+            TraceLogger.WriteLine($"📊 Controles creados: {createdControls}")
 
+            ' ⭐ REANUDAR LAYOUT
+            flowRasterIcons.ResumeLayout(True)
+
+            Dim elapsed As TimeSpan = DateTime.Now - startTime
+            TraceLogger.WriteLine($"✅ Iconos mostrados en {elapsed.TotalMilliseconds:F0}ms")
             TraceLogger.WriteLine("════════════════════════════════════════════════════════════")
 
         Catch ex As Exception
-            TraceLogger.WriteLine($"❌ Error en LoadRasterIcons: {ex.Message}")
+            TraceLogger.WriteLine($"❌ Error en FilterAndDisplayIcons: {ex.Message}")
             TraceLogger.WriteException(ex)
             flowRasterIcons.ResumeLayout()
         End Try
     End Sub
 
-    Private Function ExtractBaseName(fileName As String) As String
-        Dim pattern As String = "_x_\d+$"
-        Dim baseName As String = Regex.Replace(fileName, pattern, "", RegexOptions.IgnoreCase)
-        Return baseName
-    End Function
-
 #End Region
 
-#Region "Creación de Controles de Iconos - SIMPLIFICADO"
+#Region "Creación de Controles - DESDE CACHÉ"
 
-    Private Sub CreateSingleIconControl(iconInfo As IconInfo)
+    Private Sub CreateSingleIconControlFromCache(iconInfo As IconInfo)
         Try
-            ' Panel contenedor para un solo icono
+            ' Panel contenedor
             Dim iconPanel As New Panel With {
                 .Width = 80,
                 .Height = 100,
@@ -959,50 +995,49 @@ Partial Public Class NXImagePickerDialog
                 .Tag = iconInfo
             }
 
-            ' PictureBox para la imagen
-            Dim picBox As New PictureBox With {
-                .Image = Image.FromFile(iconInfo.FullPath),
-                .SizeMode = PictureBoxSizeMode.Zoom,
-                .Width = 70,
-                .Height = 70,
-                .Left = 5,
-                .Top = 5,
-                .Cursor = Cursors.Hand,
-                .Tag = iconInfo
-            }
+            ' ⭐ USAR IMAGEN DEL CACHÉ (NO RECARGAR)
+            Dim cachedImage As Image = Nothing
+            If _imageCache.TryGetValue(iconInfo.FullPath, cachedImage) Then
+                Dim picBox As New PictureBox With {
+                    .Image = cachedImage,
+                    .SizeMode = PictureBoxSizeMode.Zoom,
+                    .Width = 70,
+                    .Height = 70,
+                    .Left = 5,
+                    .Top = 5,
+                    .Cursor = Cursors.Hand,
+                    .Tag = iconInfo
+                }
 
-            ' Label con el nombre
-            Dim lblName As New Label With {
-                .Text = iconInfo.BaseName,
-                .Width = 70,
-                .Height = 20,
-                .Left = 5,
-                .Top = 78,
-                .TextAlign = ContentAlignment.MiddleCenter,
-                .Font = New Font("Segoe UI", 7.0F, FontStyle.Regular),
-                .ForeColor = Color.FromArgb(64, 64, 64)
-            }
+                Dim lblName As New Label With {
+                    .Text = iconInfo.BaseName,
+                    .Width = 70,
+                    .Height = 20,
+                    .Left = 5,
+                    .Top = 78,
+                    .TextAlign = ContentAlignment.MiddleCenter,
+                    .Font = New Font("Segoe UI", 7.0F, FontStyle.Regular),
+                    .ForeColor = Color.FromArgb(64, 64, 64)
+                }
 
-            ' Tooltip
-            Dim tooltip As New ToolTip()
-            tooltip.SetToolTip(picBox, $"{iconInfo.FileName}{vbCrLf}Categoría: {iconInfo.Category}{vbCrLf}Tamaño: {iconInfo.Size}")
-            tooltip.SetToolTip(iconPanel, $"{iconInfo.FileName}{vbCrLf}Categoría: {iconInfo.Category}{vbCrLf}Tamaño: {iconInfo.Size}")
+                Dim tooltip As New ToolTip()
+                tooltip.SetToolTip(picBox, $"{iconInfo.FileName}{vbCrLf}Categoría: {iconInfo.Category}{vbCrLf}Tamaño: {iconInfo.Size}")
 
-            ' Eventos
-            AddHandler picBox.Click, AddressOf RasterIcon_Click
-            AddHandler iconPanel.Click, AddressOf RasterIcon_Click
-            AddHandler picBox.MouseEnter, Sub(s, e) iconPanel.BackColor = Color.FromArgb(230, 240, 255)
-            AddHandler picBox.MouseLeave, Sub(s, e) iconPanel.BackColor = Color.White
-            AddHandler iconPanel.MouseEnter, Sub(s, e) iconPanel.BackColor = Color.FromArgb(230, 240, 255)
-            AddHandler iconPanel.MouseLeave, Sub(s, e) iconPanel.BackColor = Color.White
+                AddHandler picBox.Click, AddressOf RasterIcon_Click
+                AddHandler iconPanel.Click, AddressOf RasterIcon_Click
+                AddHandler picBox.MouseEnter, Sub() iconPanel.BackColor = Color.FromArgb(230, 240, 255)
+                AddHandler picBox.MouseLeave, Sub() iconPanel.BackColor = Color.White
+                AddHandler iconPanel.MouseEnter, Sub() iconPanel.BackColor = Color.FromArgb(230, 240, 255)
+                AddHandler iconPanel.MouseLeave, Sub() iconPanel.BackColor = Color.White
 
-            iconPanel.Controls.Add(picBox)
-            iconPanel.Controls.Add(lblName)
+                iconPanel.Controls.Add(picBox)
+                iconPanel.Controls.Add(lblName)
+            End If
 
             flowRasterIcons.Controls.Add(iconPanel)
 
         Catch ex As Exception
-            TraceLogger.WriteLine($"❌ Error en CreateSingleIconControl para {iconInfo.FileName}: {ex.Message}")
+            TraceLogger.WriteLine($"❌ Error en CreateSingleIconControlFromCache: {ex.Message}")
         End Try
     End Sub
 
@@ -1015,22 +1050,28 @@ Partial Public Class NXImagePickerDialog
             Dim iconInfo As IconInfo = Nothing
 
             If TypeOf sender Is PictureBox Then
-                Dim picBox As PictureBox = DirectCast(sender, PictureBox)
-                iconInfo = TryCast(picBox.Tag, IconInfo)
+                iconInfo = TryCast(DirectCast(sender, PictureBox).Tag, IconInfo)
             ElseIf TypeOf sender Is Panel Then
-                Dim panel As Panel = DirectCast(sender, Panel)
-                iconInfo = TryCast(panel.Tag, IconInfo)
+                iconInfo = TryCast(DirectCast(sender, Panel).Tag, IconInfo)
             End If
 
             If iconInfo Is Nothing Then Return
 
-            TraceLogger.WriteLine($"🖱️ Icono de la DLL seleccionado: {iconInfo.FileName}")
+            TraceLogger.WriteLine($"🖱️ Icono seleccionado: {iconInfo.FileName}")
 
             If picPreview.Image IsNot Nothing Then picPreview.Image.Dispose()
-            picPreview.Image = New Bitmap(iconInfo.FullPath)
+
+            ' ⭐ USAR IMAGEN DEL CACHÉ PARA PREVIEW
+            Dim cachedImage As Image = Nothing
+            If _imageCache.TryGetValue(iconInfo.FullPath, cachedImage) Then
+                picPreview.Image = New Bitmap(cachedImage)
+            End If
 
             If _selectedImage IsNot Nothing Then _selectedImage.Dispose()
-            _selectedImage = New Bitmap(iconInfo.FullPath)
+            If _imageCache.TryGetValue(iconInfo.FullPath, cachedImage) Then
+                _selectedImage = New Bitmap(cachedImage)
+            End If
+
             _selectedImagePath = iconInfo.FullPath
             _selectedImageSource = ImageSource.RasterImage
             _resourceName = iconInfo.BaseName
@@ -1043,14 +1084,12 @@ Partial Public Class NXImagePickerDialog
     End Sub
 
     Private Sub HighlightSelectedIcon(selectedControl As Object)
-        ' Quitar resaltado de todos
         For Each control As Control In flowRasterIcons.Controls
             If TypeOf control Is Panel Then
                 control.BackColor = Color.White
             End If
         Next
 
-        ' Resaltar el seleccionado
         If TypeOf selectedControl Is PictureBox Then
             Dim pic As PictureBox = DirectCast(selectedControl, PictureBox)
             If TypeOf pic.Parent Is Panel Then
@@ -1059,6 +1098,23 @@ Partial Public Class NXImagePickerDialog
         ElseIf TypeOf selectedControl Is Panel Then
             DirectCast(selectedControl, Panel).BackColor = Color.FromArgb(180, 220, 255)
         End If
+    End Sub
+
+#End Region
+
+#Region "Limpieza - Liberar Caché"
+
+    Protected Overrides Sub OnFormClosed(e As FormClosedEventArgs)
+        ' Liberar todas las imágenes del caché
+        For Each img In _imageCache.Values
+            Try
+                img.Dispose()
+            Catch
+            End Try
+        Next
+        _imageCache.Clear()
+
+        MyBase.OnFormClosed(e)
     End Sub
 
 #End Region
