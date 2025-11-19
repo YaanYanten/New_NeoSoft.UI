@@ -139,8 +139,6 @@ Partial Class NXImagePickerDialog
         Me.panelProjectResource.Controls.Add(Me.lstProjectResources)
         Me.panelProjectResource.Controls.Add(Me.lblResourceFile)
         Me.panelProjectResource.Controls.Add(Me.cboResourceFiles)
-        '⭐ CAMBIO CRÍTICO: Enabled = True (antes era False)
-        Me.panelProjectResource.Enabled = True
         Me.panelProjectResource.Location = New System.Drawing.Point(15, 150)
         Me.panelProjectResource.Name = "panelProjectResource"
         Me.panelProjectResource.Size = New System.Drawing.Size(240, 310)
@@ -155,7 +153,6 @@ Partial Class NXImagePickerDialog
         Me.btnImportProject.TabIndex = 3
         Me.btnImportProject.Text = "Import..."
         Me.btnImportProject.UseVisualStyleBackColor = True
-        'AddHandler Me.btnImportProject.Click, AddressOf Me.BtnImportProject_Click
         '
         'lstProjectResources
         '
@@ -174,7 +171,7 @@ Partial Class NXImagePickerDialog
         Me.lblResourceFile.AutoSize = True
         Me.lblResourceFile.Location = New System.Drawing.Point(10, 10)
         Me.lblResourceFile.Name = "lblResourceFile"
-        Me.lblResourceFile.Size = New System.Drawing.Size(79, 15)
+        Me.lblResourceFile.Size = New System.Drawing.Size(77, 15)
         Me.lblResourceFile.TabIndex = 0
         Me.lblResourceFile.Text = "Resource file:"
         '
@@ -343,7 +340,7 @@ Partial Class NXImagePickerDialog
         Me.lblVersion.ForeColor = System.Drawing.Color.Gray
         Me.lblVersion.Location = New System.Drawing.Point(12, 548)
         Me.lblVersion.Name = "lblVersion"
-        Me.lblVersion.Size = New System.Drawing.Size(100, 15)
+        Me.lblVersion.Size = New System.Drawing.Size(97, 15)
         Me.lblVersion.TabIndex = 3
         Me.lblVersion.Text = "NeoSoft.UI v1.0.0"
         '
@@ -380,11 +377,8 @@ Partial Class NXImagePickerDialog
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.tabControl)
         Me.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        '⭐ CAMBIO CRÍTICO: Sizable en lugar de FixedDialog
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        '⭐ AGREGAR: Tamaño mínimo
         Me.MinimumSize = New System.Drawing.Size(700, 630)
         Me.Name = "NXImagePickerDialog"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
