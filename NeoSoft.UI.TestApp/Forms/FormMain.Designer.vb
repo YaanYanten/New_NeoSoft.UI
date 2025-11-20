@@ -54,21 +54,20 @@ Partial Class FormMain
         '
         'Button1
         '
-        Me.Button1.Image = Global.NeoSoft.UI.TestApp.My.Resources.Resources.COLLAB
-        Me.Button1.Location = New System.Drawing.Point(370, 637)
+        Me.Button1.Location = New System.Drawing.Point(30, 715)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(160, 47)
+        Me.Button1.Size = New System.Drawing.Size(250, 35)
         Me.Button1.TabIndex = 25
-        Me.Button1.Text = "Button1"
+        Me.Button1.Text = "▼ Cambiar Máscara de txtNormal"
         Me.Button1.UseVisualStyleBackColor = True
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(370, 560)
+        Me.Button2.Location = New System.Drawing.Point(290, 715)
         Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 23)
+        Me.Button2.Size = New System.Drawing.Size(250, 35)
         Me.Button2.TabIndex = 26
-        Me.Button2.Text = "Button2"
+        Me.Button2.Text = "✓ Validar Todos los Campos"
         Me.Button2.UseVisualStyleBackColor = True
         '
         'lblInfoImagePicker
@@ -267,7 +266,8 @@ Partial Class FormMain
         Me.lblInfoTextBox.ShadowOffset = New System.Drawing.Point(1, 1)
         Me.lblInfoTextBox.Size = New System.Drawing.Size(520, 20)
         Me.lblInfoTextBox.TabIndex = 14
-        Me.lblInfoTextBox.Text = "Soporta placeholder, validación, password y estilos personalizados"
+        Me.lblInfoTextBox.Text = "Soporta máscaras con validación en tiempo real, placeholder y estilos personaliza" &
+    "dos"
         '
         'txtUnderline
         '
@@ -332,6 +332,7 @@ Partial Class FormMain
         Me.txtNormal.ErrorColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.txtNormal.ForeColor = System.Drawing.Color.Black
         Me.txtNormal.Location = New System.Drawing.Point(30, 305)
+        Me.txtNormal.Mask = "00/00/00"
         Me.txtNormal.Name = "txtNormal"
         Me.txtNormal.Padding = New System.Windows.Forms.Padding(8)
         Me.txtNormal.PlaceholderColor = System.Drawing.Color.Gray
@@ -339,6 +340,7 @@ Partial Class FormMain
         Me.txtNormal.Size = New System.Drawing.Size(250, 35)
         Me.txtNormal.SuccessColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(167, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.txtNormal.TabIndex = 10
+        Me.txtNormal.Text = "  /  /"
         '
         'lblSectionTextBox
         '

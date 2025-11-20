@@ -6,13 +6,8 @@ Imports System.Windows.Forms
 Namespace Controls
 
     ''' <summary>
-    ''' TextBox personalizado con soporte para placeholder, bordes redondeados y validación visual.
-    ''' Proporciona una alternativa moderna al TextBox estándar de Windows Forms.
+    ''' TextBox personalizado con soporte para placeholder, bordes redondeados, máscaras y validación visual.
     ''' </summary>
-    ''' <remarks>
-    ''' El control NXTextBox incluye características como texto de placeholder,
-    ''' bordes personalizables, indicadores de foco y validación visual.
-    ''' </remarks>
     <ToolboxBitmap(GetType(TextBox))>
     <DefaultEvent("TextChanged")>
     Public Class NXTextBox
@@ -20,7 +15,8 @@ Namespace Controls
 
 #Region "Campos Privados"
 
-        Private _textBox As TextBox
+        Private _textBox As TextBoxBase
+        Private _validationRule As Helpers.MaskValidationRules.MaskRule
         Private _borderRadius As Integer = 4
         Private _borderSize As Integer = 2
         Private _borderColor As Color = Color.FromArgb(200, 200, 200)
@@ -43,30 +39,26 @@ Namespace Controls
 #Region "Constructor"
 
         Public Sub New()
-            ' Configurar estilos del UserControl
             Me.SetStyle(ControlStyles.UserPaint Or
-                       ControlStyles.AllPaintingInWmPaint Or
-                       ControlStyles.OptimizedDoubleBuffer Or
-                       ControlStyles.ResizeRedraw Or
-                       ControlStyles.SupportsTransparentBackColor, True)
+                   ControlStyles.AllPaintingInWmPaint Or
+                   ControlStyles.OptimizedDoubleBuffer Or
+                   ControlStyles.ResizeRedraw Or
+                   ControlStyles.SupportsTransparentBackColor, True)
 
-            ' Crear y configurar TextBox interno
+            ' Crear TextBox normal por defecto
             _textBox = New TextBox()
             _textBox.BorderStyle = BorderStyle.None
             _textBox.Font = New Font("Segoe UI", 10.0F)
             _textBox.ForeColor = Color.Black
             _textBox.BackColor = Color.White
 
-            ' Configuración inicial
             Me.Size = New Size(200, 35)
             Me.BackColor = Color.White
             Me.ForeColor = Color.Black
             Me.Padding = New Padding(8, 8, 8, 8)
 
-            ' Agregar TextBox al control
             Me.Controls.Add(_textBox)
 
-            ' Suscribirse a eventos del TextBox
             AddHandler _textBox.TextChanged, AddressOf OnBaseTextChanged
             AddHandler _textBox.Enter, AddressOf OnBaseEnter
             AddHandler _textBox.Leave, AddressOf OnBaseLeave
@@ -77,11 +69,28 @@ Namespace Controls
 
 #End Region
 
-#Region "Propiedades - Apariencia"
+#Region "Inicialización en Tiempo de Diseño"
 
         ''' <summary>
-        ''' Radio de las esquinas redondeadas del TextBox
+        ''' Se llama después de que todas las propiedades han sido establecidas
+        ''' CRÍTICO: Aquí es donde aplicamos la máscara después de la deserialización
         ''' </summary>
+        Protected Overrides Sub OnHandleCreated(e As EventArgs)
+            MyBase.OnHandleCreated(e)
+
+            ' ⭐ Si hay una máscara configurada en el diseñador, aplicarla ahora
+            If Not String.IsNullOrEmpty(_pendingMask) Then
+                ApplyMask(_pendingMask)
+                _pendingMask = Nothing
+            End If
+        End Sub
+
+        Private _pendingMask As String = Nothing
+
+#End Region
+
+#Region "Propiedades - Apariencia"
+
         <Category("Apariencia NX")>
         <Description("Radio de las esquinas redondeadas")>
         <DefaultValue(4)>
@@ -98,9 +107,6 @@ Namespace Controls
             End Set
         End Property
 
-        ''' <summary>
-        ''' Grosor del borde del TextBox
-        ''' </summary>
         <Category("Apariencia NX")>
         <Description("Grosor del borde")>
         <DefaultValue(2)>
@@ -117,9 +123,6 @@ Namespace Controls
             End Set
         End Property
 
-        ''' <summary>
-        ''' Color del borde en estado normal
-        ''' </summary>
         <Category("Apariencia NX")>
         <Description("Color del borde en estado normal")>
         Public Property BorderColor As Color
@@ -134,9 +137,6 @@ Namespace Controls
             End Set
         End Property
 
-        ''' <summary>
-        ''' Color del borde cuando el TextBox tiene el foco
-        ''' </summary>
         <Category("Apariencia NX")>
         <Description("Color del borde cuando tiene el foco")>
         Public Property BorderFocusColor As Color
@@ -151,9 +151,6 @@ Namespace Controls
             End Set
         End Property
 
-        ''' <summary>
-        ''' Estilo de borde solo en la parte inferior (subrayado)
-        ''' </summary>
         <Category("Apariencia NX")>
         <Description("Muestra solo el borde inferior (estilo subrayado)")>
         <DefaultValue(False)>
@@ -173,9 +170,6 @@ Namespace Controls
 
 #Region "Propiedades - Texto y Placeholder"
 
-        ''' <summary>
-        ''' Texto del placeholder que se muestra cuando el TextBox está vacío
-        ''' </summary>
         <Category("Apariencia NX")>
         <Description("Texto de placeholder cuando está vacío")>
         <DefaultValue("")>
@@ -191,9 +185,6 @@ Namespace Controls
             End Set
         End Property
 
-        ''' <summary>
-        ''' Color del texto del placeholder
-        ''' </summary>
         <Category("Apariencia NX")>
         <Description("Color del texto del placeholder")>
         Public Property PlaceholderColor As Color
@@ -208,25 +199,17 @@ Namespace Controls
             End Set
         End Property
 
-        ''' <summary>
-        ''' Obtiene o establece el texto del TextBox
-        ''' </summary>
         <Category("Apariencia")>
         <Description("Texto del control")>
         <Browsable(True)>
         <DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)>
         Public Overrides Property Text As String
             Get
-                If _isPlaceholder Then
-                    Return ""
-                Else
-                    Return _textBox.Text
-                End If
+                If _isPlaceholder Then Return ""
+                Return _textBox.Text
             End Get
             Set(value As String)
-                If _isPlaceholder Then
-                    RemovePlaceholder()
-                End If
+                If _isPlaceholder Then RemovePlaceholder()
                 _textBox.Text = value
                 If String.IsNullOrWhiteSpace(value) AndAlso Not _isFocused Then
                     SetPlaceholder()
@@ -234,9 +217,6 @@ Namespace Controls
             End Set
         End Property
 
-        ''' <summary>
-        ''' Indica si el TextBox debe mostrar caracteres de contraseña
-        ''' </summary>
         <Category("Comportamiento")>
         <Description("Muestra caracteres de contraseña")>
         <DefaultValue(False)>
@@ -246,31 +226,30 @@ Namespace Controls
             End Get
             Set(value As Boolean)
                 _isPassword = value
-                If Not _isPlaceholder Then
-                    _textBox.UseSystemPasswordChar = value
+                If Not _isPlaceholder AndAlso TypeOf _textBox Is TextBox Then
+                    DirectCast(_textBox, TextBox).UseSystemPasswordChar = value
                 End If
             End Set
         End Property
 
-        ''' <summary>
-        ''' Obtiene o establece si el texto está en varias líneas
-        ''' </summary>
         <Category("Comportamiento")>
         <Description("Permite texto en varias líneas")>
         <DefaultValue(False)>
         Public Property Multiline As Boolean
             Get
-                Return _textBox.Multiline
+                If TypeOf _textBox Is TextBox Then
+                    Return DirectCast(_textBox, TextBox).Multiline
+                End If
+                Return False
             End Get
             Set(value As Boolean)
-                _textBox.Multiline = value
-                UpdateTextBoxPosition()
+                If TypeOf _textBox Is TextBox Then
+                    DirectCast(_textBox, TextBox).Multiline = value
+                    UpdateTextBoxPosition()
+                End If
             End Set
         End Property
 
-        ''' <summary>
-        ''' Máximo número de caracteres permitidos
-        ''' </summary>
         <Category("Comportamiento")>
         <Description("Máximo número de caracteres")>
         <DefaultValue(32767)>
@@ -285,11 +264,8 @@ Namespace Controls
 
 #End Region
 
-#Region "Propiedades - Validación"
+#Region "Propiedades - Validación Visual"
 
-        ''' <summary>
-        ''' Indica si el TextBox tiene un error de validación
-        ''' </summary>
         <Category("Apariencia NX")>
         <Description("Indica si hay un error de validación")>
         <DefaultValue(False)>
@@ -306,9 +282,6 @@ Namespace Controls
             End Set
         End Property
 
-        ''' <summary>
-        ''' Muestra un indicador de éxito/validación correcta
-        ''' </summary>
         <Category("Apariencia NX")>
         <Description("Muestra indicador de validación correcta")>
         <DefaultValue(False)>
@@ -325,9 +298,6 @@ Namespace Controls
             End Set
         End Property
 
-        ''' <summary>
-        ''' Color del borde cuando hay error
-        ''' </summary>
         <Category("Apariencia NX")>
         <Description("Color del borde cuando hay error")>
         Public Property ErrorColor As Color
@@ -340,9 +310,6 @@ Namespace Controls
             End Set
         End Property
 
-        ''' <summary>
-        ''' Color del borde cuando la validación es correcta
-        ''' </summary>
         <Category("Apariencia NX")>
         <Description("Color del borde cuando la validación es correcta")>
         Public Property SuccessColor As Color
@@ -357,13 +324,174 @@ Namespace Controls
 
 #End Region
 
-#Region "Métodos Protegidos - Renderizado"
+#Region "Propiedades - Mask"
+
+        Private _currentMask As String = ""
+
+        ''' <summary>
+        ''' Máscara de entrada de datos con validación en tiempo real
+        ''' </summary>
+        <Category("Comportamiento")>
+        <Description("Máscara de entrada de datos con validación en tiempo real")>
+        <DefaultValue("")>
+        <Editor(GetType(NXMaskUITypeEditor), GetType(System.Drawing.Design.UITypeEditor))>
+        Public Property Mask As String
+            Get
+                Return _currentMask
+            End Get
+            Set(value As String)
+                _currentMask = value
+
+                ' ⭐ Si el handle no está creado, guardar para aplicar después
+                If Not Me.IsHandleCreated Then
+                    _pendingMask = value
+                    Return
+                End If
+
+                ApplyMask(value)
+            End Set
+        End Property
+
+        Private Sub ApplyMask(maskValue As String)
+            If String.IsNullOrEmpty(maskValue) Then
+                If TypeOf _textBox Is NXMaskedTextBox Then
+                    ConvertToNormalTextBox()
+                End If
+                _validationRule = Nothing
+            Else
+                _validationRule = Helpers.MaskValidationRules.GetRuleForMask(maskValue)
+
+                If Not TypeOf _textBox Is NXMaskedTextBox Then
+                    ConvertToMaskedTextBox()
+                End If
+
+                Dim maskedBox As NXMaskedTextBox = DirectCast(_textBox, NXMaskedTextBox)
+                maskedBox.ValidationRule = _validationRule
+
+                ' ⭐ CRÍTICO: Solo aplicar la máscara si es diferente
+                If maskedBox.Mask <> maskValue Then
+                    maskedBox.Mask = maskValue
+                End If
+            End If
+        End Sub
+
+        Private Sub ConvertToMaskedTextBox()
+            Dim oldText As String = If(_isPlaceholder, "", _textBox.Text)
+            Dim oldFont As Font = _textBox.Font
+            Dim oldForeColor As Color = _textBox.ForeColor
+            Dim oldBackColor As Color = _textBox.BackColor
+
+            RemoveHandler _textBox.TextChanged, AddressOf OnBaseTextChanged
+            RemoveHandler _textBox.Enter, AddressOf OnBaseEnter
+            RemoveHandler _textBox.Leave, AddressOf OnBaseLeave
+            RemoveHandler _textBox.KeyPress, AddressOf OnBaseKeyPress
+
+            Me.Controls.Remove(_textBox)
+            _textBox.Dispose()
+
+            Dim maskedBox As New NXMaskedTextBox()
+            maskedBox.BorderStyle = BorderStyle.None
+            maskedBox.Font = oldFont
+            maskedBox.ForeColor = oldForeColor
+            maskedBox.BackColor = oldBackColor
+            maskedBox.BeepOnError = False
+            maskedBox.RejectInputOnFirstFailure = False
+
+            _textBox = maskedBox
+
+            ' ⭐ NO restaurar texto aquí - el diseñador lo hará
+            If Not String.IsNullOrEmpty(oldText) AndAlso Not Me.DesignMode Then
+                Try
+                    _textBox.Text = oldText
+                Catch
+                    ' Ignorar errores de máscara inválida
+                End Try
+            End If
+
+            AddHandler _textBox.TextChanged, AddressOf OnBaseTextChanged
+            AddHandler _textBox.Enter, AddressOf OnBaseEnter
+            AddHandler _textBox.Leave, AddressOf OnBaseLeave
+            AddHandler _textBox.KeyPress, AddressOf OnBaseKeyPress
+
+            Me.Controls.Add(_textBox)
+            UpdateTextBoxPosition()
+
+            Debug.WriteLine($"✅ Convertido a NXMaskedTextBox con máscara: {_currentMask}")
+        End Sub
+
+        Private Sub ConvertToNormalTextBox()
+            Dim oldText As String = _textBox.Text.Replace("_", "").Trim()
+            Dim oldFont As Font = _textBox.Font
+            Dim oldForeColor As Color = _textBox.ForeColor
+            Dim oldBackColor As Color = _textBox.BackColor
+
+            RemoveHandler _textBox.TextChanged, AddressOf OnBaseTextChanged
+            RemoveHandler _textBox.Enter, AddressOf OnBaseEnter
+            RemoveHandler _textBox.Leave, AddressOf OnBaseLeave
+            RemoveHandler _textBox.KeyPress, AddressOf OnBaseKeyPress
+
+            Me.Controls.Remove(_textBox)
+            _textBox.Dispose()
+
+            Dim normalBox As New TextBox()
+            normalBox.BorderStyle = BorderStyle.None
+            normalBox.Font = oldFont
+            normalBox.ForeColor = oldForeColor
+            normalBox.BackColor = oldBackColor
+
+            _textBox = normalBox
+
+            If Not String.IsNullOrEmpty(oldText) Then
+                _textBox.Text = oldText
+            End If
+
+            AddHandler _textBox.TextChanged, AddressOf OnBaseTextChanged
+            AddHandler _textBox.Enter, AddressOf OnBaseEnter
+            AddHandler _textBox.Leave, AddressOf OnBaseLeave
+            AddHandler _textBox.KeyPress, AddressOf OnBaseKeyPress
+
+            Me.Controls.Add(_textBox)
+            UpdateTextBoxPosition()
+
+            Debug.WriteLine("✅ Convertido a TextBox normal")
+        End Sub
+
+#End Region
+
+#Region "Métodos Públicos"
+
+        Public Shadows Sub Focus()
+            _textBox.Focus()
+        End Sub
+
+        Public Sub SelectAll()
+            _textBox.SelectAll()
+        End Sub
+
+        Public Sub Clear()
+            _textBox.Clear()
+            SetPlaceholder()
+        End Sub
+
+        ''' <summary>
+        ''' Obtiene el texto sin caracteres de máscara
+        ''' </summary>
+        Public Function GetTextWithoutMask() As String
+            If TypeOf _textBox Is NXMaskedTextBox Then
+                Return _textBox.Text.Replace("_", "").Replace("/", "").Replace("-", "").Replace(":", "").
+                       Replace(" ", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace(",", "").Trim()
+            End If
+            Return Me.Text
+        End Function
+
+#End Region
+
+#Region "Renderizado"
 
         Protected Overrides Sub OnPaint(e As PaintEventArgs)
             Dim g As Graphics = e.Graphics
             g.SmoothingMode = SmoothingMode.AntiAlias
 
-            ' Determinar color del borde según estado
             Dim currentBorderColor As Color = _borderColor
             If _hasError Then
                 currentBorderColor = _errorColor
@@ -376,19 +504,15 @@ Namespace Controls
             Dim rectBorder As New Rectangle(0, 0, Me.Width - 1, Me.Height - 1)
 
             If _underlineStyle Then
-                ' Estilo subrayado (solo borde inferior)
                 Using pen As New Pen(currentBorderColor, _borderSize)
                     g.DrawLine(pen, 0, Me.Height - _borderSize, Me.Width, Me.Height - _borderSize)
                 End Using
             Else
-                ' Estilo con esquinas redondeadas
                 Using path As GraphicsPath = GetRoundedRectangle(rectBorder, _borderRadius)
-                    ' Fondo
                     Using brush As New SolidBrush(Me.BackColor)
                         g.FillPath(brush, path)
                     End Using
 
-                    ' Borde
                     If _borderSize > 0 Then
                         Using pen As New Pen(currentBorderColor, _borderSize)
                             pen.Alignment = PenAlignment.Inset
@@ -401,9 +525,6 @@ Namespace Controls
             MyBase.OnPaint(e)
         End Sub
 
-        ''' <summary>
-        ''' Crea una ruta de gráficos con esquinas redondeadas
-        ''' </summary>
         Private Function GetRoundedRectangle(rect As Rectangle, radius As Integer) As GraphicsPath
             Dim path As New GraphicsPath()
 
@@ -429,31 +550,7 @@ Namespace Controls
 
 #End Region
 
-#Region "Métodos Privados - Placeholder"
-
-        Private Sub SetPlaceholder()
-            If Not String.IsNullOrWhiteSpace(_placeholderText) Then
-                _isPlaceholder = True
-                _textBox.Text = _placeholderText
-                _textBox.ForeColor = _placeholderColor
-                _textBox.UseSystemPasswordChar = False
-            End If
-        End Sub
-
-        Private Sub RemovePlaceholder()
-            If _isPlaceholder Then
-                _isPlaceholder = False
-                _textBox.Text = ""
-                _textBox.ForeColor = Me.ForeColor
-                If _isPassword Then
-                    _textBox.UseSystemPasswordChar = True
-                End If
-            End If
-        End Sub
-
-#End Region
-
-#Region "Métodos Privados - Eventos del TextBox Base"
+#Region "Eventos"
 
         Private Sub OnBaseTextChanged(sender As Object, e As EventArgs)
             MyBase.OnTextChanged(e)
@@ -461,9 +558,7 @@ Namespace Controls
 
         Private Sub OnBaseEnter(sender As Object, e As EventArgs)
             _isFocused = True
-            If _isPlaceholder Then
-                RemovePlaceholder()
-            End If
+            If _isPlaceholder Then RemovePlaceholder()
             Me.Invalidate()
         End Sub
 
@@ -478,26 +573,6 @@ Namespace Controls
         Private Sub OnBaseKeyPress(sender As Object, e As KeyPressEventArgs)
             MyBase.OnKeyPress(e)
         End Sub
-
-#End Region
-
-#Region "Métodos Privados - Actualización"
-
-        Private Sub UpdateTextBoxPosition()
-            If _textBox.Multiline Then
-                _textBox.Location = New Point(Me.Padding.Left, Me.Padding.Top)
-                _textBox.Size = New Size(Me.Width - Me.Padding.Left - Me.Padding.Right,
-                                        Me.Height - Me.Padding.Top - Me.Padding.Bottom)
-            Else
-                Dim yPos As Integer = (Me.Height - _textBox.Height) \ 2
-                _textBox.Location = New Point(Me.Padding.Left, yPos)
-                _textBox.Size = New Size(Me.Width - Me.Padding.Left - Me.Padding.Right, _textBox.Height)
-            End If
-        End Sub
-
-#End Region
-
-#Region "Métodos Protegidos - Overrides"
 
         Protected Overrides Sub OnResize(e As EventArgs)
             UpdateTextBoxPosition()
@@ -525,28 +600,49 @@ Namespace Controls
 
 #End Region
 
-#Region "Métodos Públicos"
+#Region "Placeholder"
 
-        ''' <summary>
-        ''' Establece el foco en el TextBox
-        ''' </summary>
-        Public Shadows Sub Focus()
-            _textBox.Focus()
+        Private Sub SetPlaceholder()
+            If Not String.IsNullOrWhiteSpace(_placeholderText) Then
+                _isPlaceholder = True
+                _textBox.Text = _placeholderText
+                _textBox.ForeColor = _placeholderColor
+                If TypeOf _textBox Is TextBox Then
+                    DirectCast(_textBox, TextBox).UseSystemPasswordChar = False
+                End If
+            End If
         End Sub
 
-        ''' <summary>
-        ''' Selecciona todo el texto del TextBox
-        ''' </summary>
-        Public Sub SelectAll()
-            _textBox.SelectAll()
+        Private Sub RemovePlaceholder()
+            If _isPlaceholder Then
+                _isPlaceholder = False
+                _textBox.Text = ""
+                _textBox.ForeColor = Me.ForeColor
+                If _isPassword AndAlso TypeOf _textBox Is TextBox Then
+                    DirectCast(_textBox, TextBox).UseSystemPasswordChar = True
+                End If
+            End If
         End Sub
 
-        ''' <summary>
-        ''' Limpia el contenido del TextBox
-        ''' </summary>
-        Public Sub Clear()
-            _textBox.Clear()
-            SetPlaceholder()
+#End Region
+
+#Region "Posicionamiento"
+
+        Private Sub UpdateTextBoxPosition()
+            Dim isMultiline As Boolean = False
+            If TypeOf _textBox Is TextBox Then
+                isMultiline = DirectCast(_textBox, TextBox).Multiline
+            End If
+
+            If isMultiline Then
+                _textBox.Location = New Point(Me.Padding.Left, Me.Padding.Top)
+                _textBox.Size = New Size(Me.Width - Me.Padding.Left - Me.Padding.Right,
+                                        Me.Height - Me.Padding.Top - Me.Padding.Bottom)
+            Else
+                Dim yPos As Integer = (Me.Height - _textBox.Height) \ 2
+                _textBox.Location = New Point(Me.Padding.Left, yPos)
+                _textBox.Size = New Size(Me.Width - Me.Padding.Left - Me.Padding.Right, _textBox.Height)
+            End If
         End Sub
 
 #End Region

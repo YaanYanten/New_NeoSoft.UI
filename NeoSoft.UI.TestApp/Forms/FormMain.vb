@@ -3,8 +3,7 @@ Imports NeoSoft.UI.Controls
 Public Class FormMain
 
     Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' El diseño ya está configurado en el Designer
-        ' Solo agregamos los manejadores de eventos aquí
+        ' ⭐ YA NO ES NECESARIO - Todo se configura automáticamente desde el diseñador
     End Sub
 
     Private Sub btnSolid_Click(sender As Object, e As EventArgs) Handles btnSolid.Click
@@ -43,6 +42,19 @@ Public Class FormMain
                 End If
             End If
         End Using
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Dim resultados As New System.Text.StringBuilder()
+        resultados.AppendLine("=== VALIDACIÓN DE MÁSCARAS ===")
+        resultados.AppendLine()
+        resultados.AppendLine($"📅 Fecha: {txtNormal.Text}")
+        resultados.AppendLine($"📞 Teléfono: {txtError.Text}")
+        resultados.AppendLine($"🕐 Hora: {txtSuccess.Text}")
+        resultados.AppendLine($"📮 ZIP: {txtUnderline.Text}")
+
+        MessageBox.Show(resultados.ToString(), "Valores Actuales",
+                       MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
 End Class

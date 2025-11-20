@@ -85,13 +85,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\TraceLogger.vb" />
+    <Compile Include="Controls\NXMaskedTextBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Dialogs\NXImagePickerDialog.Designer.vb">
       <DependentUpon>NXImagePickerDialog.vb</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\NXImagePickerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Dialogs\NXMaskPickerDialog.Designer.vb">
+      <DependentUpon>NXMaskPickerDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\NXMaskPickerDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Editors\NXImageUITypeEditor.vb" />
+    <Compile Include="Editors\NXMaskUITypeEditor.vb" />
+    <Compile Include="Helper\MaskValidationRules.vb" />
     <Compile Include="Helper\ProjectResourceFinder.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="Controls\NXButton.vb">
@@ -117,6 +128,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Dialogs\NXImagePickerDialog.resx">
       <DependentUpon>NXImagePickerDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\NXMaskPickerDialog.resx">
+      <DependentUpon>NXMaskPickerDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
