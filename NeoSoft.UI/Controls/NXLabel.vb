@@ -17,6 +17,7 @@ Namespace Controls
     <ToolboxBitmap(GetType(Label))>
     Public Class NXLabel
         Inherits Control
+        Implements Theming.IThemeable
 
 #Region "Enumeraciones"
 
@@ -567,6 +568,38 @@ Namespace Controls
         Protected Overrides Sub OnTextChanged(e As EventArgs)
             Me.Invalidate()
             MyBase.OnTextChanged(e)
+        End Sub
+
+#End Region
+
+#Region "Soporte de Temas"
+
+        Private _useTheme As Boolean = False
+
+        <Category("Apariencia NX")>
+        <Description("Indica si el control usa el tema global automáticamente")>
+        <DefaultValue(False)>
+        Public Property UseTheme As Boolean Implements Theming.IThemeable.UseTheme
+            Get
+                Return _useTheme
+            End Get
+            Set(value As Boolean)
+                If _useTheme <> value Then
+                    _useTheme = value
+                    If value Then
+                        ApplyTheme(Theming.NXThemeManager.Instance.CurrentTheme)
+                    End If
+                End If
+            End Set
+        End Property
+
+        Public Sub ApplyTheme(theme As Theming.NXTheme) Implements Theming.IThemeable.ApplyTheme
+            If Not _useTheme Then Return
+
+            Me.ForeColor = theme.ForeColor
+            Me.BorderColor = theme.BorderColor
+            Me.BorderRadius = theme.BorderRadius
+            Me.Invalidate()
         End Sub
 
 #End Region

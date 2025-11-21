@@ -1,6 +1,7 @@
 Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
+Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
 
 Namespace Controls
@@ -12,6 +13,7 @@ Namespace Controls
     <DefaultEvent("TextChanged")>
     Public Class NXTextBox
         Inherits UserControl
+        Implements Theming.IThemeable
 
 #Region "Campos Privados"
 
@@ -643,6 +645,42 @@ Namespace Controls
                 _textBox.Location = New Point(Me.Padding.Left, yPos)
                 _textBox.Size = New Size(Me.Width - Me.Padding.Left - Me.Padding.Right, _textBox.Height)
             End If
+        End Sub
+
+#End Region
+
+#Region "Soporte de Temas"
+
+        Private _useTheme As Boolean = False
+
+        <Category("Apariencia NX")>
+        <Description("Indica si el control usa el tema global automáticamente")>
+        <DefaultValue(False)>
+        Public Property UseTheme As Boolean Implements Theming.IThemeable.UseTheme
+            Get
+                Return _useTheme
+            End Get
+            Set(value As Boolean)
+                If _useTheme <> value Then
+                    _useTheme = value
+                    If value Then
+                        ApplyTheme(Theming.NXThemeManager.Instance.CurrentTheme)
+                    End If
+                End If
+            End Set
+        End Property
+
+        Public Sub ApplyTheme(theme As Theming.NXTheme) Implements Theming.IThemeable.ApplyTheme
+            If Not _useTheme Then Return
+
+            Me.BackColor = theme.BackColor
+            Me.ForeColor = theme.ForeColor
+            Me.BorderColor = theme.BorderColor
+            Me.BorderFocusColor = theme.PrimaryColor
+            Me.ErrorColor = theme.ErrorColor
+            Me.SuccessColor = theme.SuccessColor
+            Me.BorderRadius = theme.TextBoxBorderRadius
+            Me.Invalidate()
         End Sub
 
 #End Region

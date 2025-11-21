@@ -2,7 +2,9 @@ Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Drawing.Design
 Imports System.Drawing.Drawing2D
+Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
+Imports NeoSoft.UI.Theming
 
 Namespace Controls
 
@@ -18,6 +20,7 @@ Namespace Controls
     <DefaultEvent("Click")>
     Public Class NXButton
         Inherits Control
+        Implements IThemeable
 
 #Region "Enumeraciones"
 
@@ -668,6 +671,56 @@ Namespace Controls
         Protected Overrides Sub OnTextChanged(e As EventArgs)
             Me.Invalidate()
             MyBase.OnTextChanged(e)
+        End Sub
+
+#End Region
+
+#Region "Soporte de Temas"
+
+
+
+        Private _useTheme As Boolean = False
+
+        <Category("Apariencia NX")>
+        <Description("Indica si el control usa el tema global automáticamente")>
+        <DefaultValue(False)>
+        Public Property UseTheme As Boolean Implements Theming.IThemeable.UseTheme
+            Get
+                Return _useTheme
+            End Get
+            Set(value As Boolean)
+                If _useTheme <> value Then
+                    _useTheme = value
+                    If value Then
+                        ApplyTheme(Theming.NXThemeManager.Instance.CurrentTheme)
+                    End If
+                End If
+            End Set
+        End Property
+
+        Public Sub ApplyTheme(theme As Theming.NXTheme) Implements Theming.IThemeable.ApplyTheme
+            If Not _useTheme Then Return
+
+            ' Aplicar colores del tema según el estilo del botón
+            Select Case _buttonStyle
+                Case ButtonStyle.Solid
+                    Me.BackColor = theme.PrimaryColor
+                    Me.ForeColor = Helpers.ColorHelper.GetContrastingTextColor(theme.PrimaryColor)
+                    Me.BorderColor = theme.PrimaryColor
+
+                Case ButtonStyle.Outline
+                    Me.BackColor = theme.BackColor
+                    Me.ForeColor = theme.PrimaryColor
+                    Me.BorderColor = theme.PrimaryColor
+
+                Case ButtonStyle.Gradient
+                    Me.BackColor = theme.PrimaryColor
+                    Me.ForeColor = Helpers.ColorHelper.GetContrastingTextColor(theme.PrimaryColor)
+                    Me.BorderColor = theme.PrimaryColor
+            End Select
+
+            Me.BorderRadius = theme.ButtonBorderRadius
+            Me.Invalidate()
         End Sub
 
 #End Region

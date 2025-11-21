@@ -48,13 +48,20 @@ Partial Class FormMain
         Me.btnOutline = New NeoSoft.UI.Controls.NXButton()
         Me.btnGradient = New NeoSoft.UI.Controls.NXButton()
         Me.btnSolid = New NeoSoft.UI.Controls.NXButton()
+        Me.btnThemeDemo = New NeoSoft.UI.Controls.NXButton()
         Me.lblSectionButtons = New NeoSoft.UI.Controls.NXLabel()
         Me.lblTitle = New NeoSoft.UI.Controls.NXLabel()
+        Me.chkStandard = New NeoSoft.UI.Controls.NXCheckBox()
+        Me.chkSwitch = New NeoSoft.UI.Controls.NXCheckBox()
+        Me.chkButton = New NeoSoft.UI.Controls.NXCheckBox()
+        Me.chkDisabled = New NeoSoft.UI.Controls.NXCheckBox()
+        Me.lblSectionCheckBox = New NeoSoft.UI.Controls.NXLabel()
+        Me.lblInfoCheckBox = New NeoSoft.UI.Controls.NXLabel()
         Me.SuspendLayout()
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(30, 715)
+        Me.Button1.Location = New System.Drawing.Point(571, 127)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(250, 35)
         Me.Button1.TabIndex = 25
@@ -63,7 +70,7 @@ Partial Class FormMain
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(290, 715)
+        Me.Button2.Location = New System.Drawing.Point(831, 127)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(250, 35)
         Me.Button2.TabIndex = 26
@@ -77,7 +84,7 @@ Partial Class FormMain
         Me.lblInfoImagePicker.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic)
         Me.lblInfoImagePicker.ForeColor = System.Drawing.Color.Gray
         Me.lblInfoImagePicker.GradientColor = System.Drawing.Color.Empty
-        Me.lblInfoImagePicker.Location = New System.Drawing.Point(30, 690)
+        Me.lblInfoImagePicker.Location = New System.Drawing.Point(571, 102)
         Me.lblInfoImagePicker.Name = "lblInfoImagePicker"
         Me.lblInfoImagePicker.OutlineColor = System.Drawing.Color.Black
         Me.lblInfoImagePicker.Padding = New System.Windows.Forms.Padding(5)
@@ -97,7 +104,7 @@ Partial Class FormMain
         Me.btnImagePicker.HoverBackColor = System.Drawing.Color.Empty
         Me.btnImagePicker.Image = CType(resources.GetObject("btnImagePicker.Image"), System.Drawing.Image)
         Me.btnImagePicker.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnImagePicker.Location = New System.Drawing.Point(30, 640)
+        Me.btnImagePicker.Location = New System.Drawing.Point(571, 52)
         Me.btnImagePicker.Name = "btnImagePicker"
         Me.btnImagePicker.PressedBackColor = System.Drawing.Color.Empty
         Me.btnImagePicker.Size = New System.Drawing.Size(184, 40)
@@ -111,7 +118,7 @@ Partial Class FormMain
         Me.lblSectionImagePicker.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblSectionImagePicker.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
         Me.lblSectionImagePicker.GradientColor = System.Drawing.Color.Empty
-        Me.lblSectionImagePicker.Location = New System.Drawing.Point(20, 600)
+        Me.lblSectionImagePicker.Location = New System.Drawing.Point(561, 12)
         Me.lblSectionImagePicker.Name = "lblSectionImagePicker"
         Me.lblSectionImagePicker.OutlineColor = System.Drawing.Color.Black
         Me.lblSectionImagePicker.Padding = New System.Windows.Forms.Padding(5)
@@ -128,7 +135,7 @@ Partial Class FormMain
         Me.lblInfoLabel.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic)
         Me.lblInfoLabel.ForeColor = System.Drawing.Color.Gray
         Me.lblInfoLabel.GradientColor = System.Drawing.Color.Empty
-        Me.lblInfoLabel.Location = New System.Drawing.Point(30, 560)
+        Me.lblInfoLabel.Location = New System.Drawing.Point(22, 482)
         Me.lblInfoLabel.Name = "lblInfoLabel"
         Me.lblInfoLabel.OutlineColor = System.Drawing.Color.Black
         Me.lblInfoLabel.Padding = New System.Windows.Forms.Padding(5)
@@ -147,7 +154,7 @@ Partial Class FormMain
         Me.lblBorderBottom.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblBorderBottom.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
         Me.lblBorderBottom.GradientColor = System.Drawing.Color.Empty
-        Me.lblBorderBottom.Location = New System.Drawing.Point(290, 520)
+        Me.lblBorderBottom.Location = New System.Drawing.Point(282, 442)
         Me.lblBorderBottom.Name = "lblBorderBottom"
         Me.lblBorderBottom.OutlineColor = System.Drawing.Color.Black
         Me.lblBorderBottom.Padding = New System.Windows.Forms.Padding(5)
@@ -166,7 +173,7 @@ Partial Class FormMain
         Me.lblBorderLeft.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblBorderLeft.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
         Me.lblBorderLeft.GradientColor = System.Drawing.Color.Empty
-        Me.lblBorderLeft.Location = New System.Drawing.Point(30, 520)
+        Me.lblBorderLeft.Location = New System.Drawing.Point(22, 442)
         Me.lblBorderLeft.Name = "lblBorderLeft"
         Me.lblBorderLeft.OutlineColor = System.Drawing.Color.Black
         Me.lblBorderLeft.Padding = New System.Windows.Forms.Padding(12, 5, 5, 5)
@@ -183,7 +190,7 @@ Partial Class FormMain
         Me.lblShadow.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
         Me.lblShadow.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
         Me.lblShadow.GradientColor = System.Drawing.Color.Empty
-        Me.lblShadow.Location = New System.Drawing.Point(370, 475)
+        Me.lblShadow.Location = New System.Drawing.Point(362, 397)
         Me.lblShadow.Name = "lblShadow"
         Me.lblShadow.OutlineColor = System.Drawing.Color.Black
         Me.lblShadow.Padding = New System.Windows.Forms.Padding(5)
@@ -204,7 +211,7 @@ Partial Class FormMain
         Me.lblGradient.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
         Me.lblGradient.ForeColor = System.Drawing.Color.White
         Me.lblGradient.GradientColor = System.Drawing.Color.FromArgb(CType(CType(103, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(183, Byte), Integer))
-        Me.lblGradient.Location = New System.Drawing.Point(200, 475)
+        Me.lblGradient.Location = New System.Drawing.Point(192, 397)
         Me.lblGradient.Name = "lblGradient"
         Me.lblGradient.OutlineColor = System.Drawing.Color.Black
         Me.lblGradient.Padding = New System.Windows.Forms.Padding(5)
@@ -223,14 +230,14 @@ Partial Class FormMain
         Me.lblSolid.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
         Me.lblSolid.ForeColor = System.Drawing.Color.White
         Me.lblSolid.GradientColor = System.Drawing.Color.Empty
-        Me.lblSolid.Location = New System.Drawing.Point(30, 475)
+        Me.lblSolid.Location = New System.Drawing.Point(22, 397)
         Me.lblSolid.Name = "lblSolid"
         Me.lblSolid.OutlineColor = System.Drawing.Color.Black
         Me.lblSolid.Padding = New System.Windows.Forms.Padding(5)
         Me.lblSolid.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.lblSolid.ShadowOffset = New System.Drawing.Point(1, 1)
         Me.lblSolid.Size = New System.Drawing.Size(160, 35)
-        Me.lblSolid.TabIndex = 16
+        Me.lblSolid.TabIndex = 27
         Me.lblSolid.Text = "Label con Fondo"
         Me.lblSolid.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -241,14 +248,14 @@ Partial Class FormMain
         Me.lblSectionLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblSectionLabel.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
         Me.lblSectionLabel.GradientColor = System.Drawing.Color.Empty
-        Me.lblSectionLabel.Location = New System.Drawing.Point(20, 435)
+        Me.lblSectionLabel.Location = New System.Drawing.Point(12, 357)
         Me.lblSectionLabel.Name = "lblSectionLabel"
         Me.lblSectionLabel.OutlineColor = System.Drawing.Color.Black
         Me.lblSectionLabel.Padding = New System.Windows.Forms.Padding(5)
         Me.lblSectionLabel.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.lblSectionLabel.ShadowOffset = New System.Drawing.Point(1, 1)
         Me.lblSectionLabel.Size = New System.Drawing.Size(530, 30)
-        Me.lblSectionLabel.TabIndex = 15
+        Me.lblSectionLabel.TabIndex = 28
         Me.lblSectionLabel.Text = "NXLabel - Labels con Efectos"
         '
         'lblInfoTextBox
@@ -258,14 +265,14 @@ Partial Class FormMain
         Me.lblInfoTextBox.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic)
         Me.lblInfoTextBox.ForeColor = System.Drawing.Color.Gray
         Me.lblInfoTextBox.GradientColor = System.Drawing.Color.Empty
-        Me.lblInfoTextBox.Location = New System.Drawing.Point(30, 395)
+        Me.lblInfoTextBox.Location = New System.Drawing.Point(22, 317)
         Me.lblInfoTextBox.Name = "lblInfoTextBox"
         Me.lblInfoTextBox.OutlineColor = System.Drawing.Color.Black
         Me.lblInfoTextBox.Padding = New System.Windows.Forms.Padding(5)
         Me.lblInfoTextBox.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.lblInfoTextBox.ShadowOffset = New System.Drawing.Point(1, 1)
         Me.lblInfoTextBox.Size = New System.Drawing.Size(520, 20)
-        Me.lblInfoTextBox.TabIndex = 14
+        Me.lblInfoTextBox.TabIndex = 29
         Me.lblInfoTextBox.Text = "Soporta máscaras con validación en tiempo real, placeholder y estilos personaliza" &
     "dos"
         '
@@ -276,7 +283,7 @@ Partial Class FormMain
         Me.txtUnderline.BorderFocusColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
         Me.txtUnderline.ErrorColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.txtUnderline.ForeColor = System.Drawing.Color.Black
-        Me.txtUnderline.Location = New System.Drawing.Point(290, 350)
+        Me.txtUnderline.Location = New System.Drawing.Point(282, 272)
         Me.txtUnderline.Name = "txtUnderline"
         Me.txtUnderline.Padding = New System.Windows.Forms.Padding(8)
         Me.txtUnderline.PlaceholderColor = System.Drawing.Color.Gray
@@ -295,7 +302,7 @@ Partial Class FormMain
         Me.txtSuccess.ErrorColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.txtSuccess.ForeColor = System.Drawing.Color.Black
         Me.txtSuccess.IsPassword = True
-        Me.txtSuccess.Location = New System.Drawing.Point(30, 350)
+        Me.txtSuccess.Location = New System.Drawing.Point(22, 272)
         Me.txtSuccess.Name = "txtSuccess"
         Me.txtSuccess.Padding = New System.Windows.Forms.Padding(8)
         Me.txtSuccess.PlaceholderColor = System.Drawing.Color.Gray
@@ -314,7 +321,7 @@ Partial Class FormMain
         Me.txtError.ErrorColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.txtError.ForeColor = System.Drawing.Color.Black
         Me.txtError.HasError = True
-        Me.txtError.Location = New System.Drawing.Point(290, 305)
+        Me.txtError.Location = New System.Drawing.Point(282, 227)
         Me.txtError.Name = "txtError"
         Me.txtError.Padding = New System.Windows.Forms.Padding(8)
         Me.txtError.PlaceholderColor = System.Drawing.Color.Gray
@@ -331,7 +338,7 @@ Partial Class FormMain
         Me.txtNormal.BorderRadius = 6
         Me.txtNormal.ErrorColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(69, Byte), Integer))
         Me.txtNormal.ForeColor = System.Drawing.Color.Black
-        Me.txtNormal.Location = New System.Drawing.Point(30, 305)
+        Me.txtNormal.Location = New System.Drawing.Point(22, 227)
         Me.txtNormal.Mask = "00/00/00"
         Me.txtNormal.Name = "txtNormal"
         Me.txtNormal.Padding = New System.Windows.Forms.Padding(8)
@@ -349,7 +356,7 @@ Partial Class FormMain
         Me.lblSectionTextBox.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblSectionTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
         Me.lblSectionTextBox.GradientColor = System.Drawing.Color.Empty
-        Me.lblSectionTextBox.Location = New System.Drawing.Point(20, 265)
+        Me.lblSectionTextBox.Location = New System.Drawing.Point(12, 187)
         Me.lblSectionTextBox.Name = "lblSectionTextBox"
         Me.lblSectionTextBox.OutlineColor = System.Drawing.Color.Black
         Me.lblSectionTextBox.Padding = New System.Windows.Forms.Padding(5)
@@ -366,7 +373,7 @@ Partial Class FormMain
         Me.lblInfoButtons.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic)
         Me.lblInfoButtons.ForeColor = System.Drawing.Color.Gray
         Me.lblInfoButtons.GradientColor = System.Drawing.Color.Empty
-        Me.lblInfoButtons.Location = New System.Drawing.Point(30, 225)
+        Me.lblInfoButtons.Location = New System.Drawing.Point(22, 147)
         Me.lblInfoButtons.Name = "lblInfoButtons"
         Me.lblInfoButtons.OutlineColor = System.Drawing.Color.Black
         Me.lblInfoButtons.Padding = New System.Windows.Forms.Padding(5)
@@ -387,7 +394,7 @@ Partial Class FormMain
         Me.btnDisabled.HoverBackColor = System.Drawing.Color.Empty
         Me.btnDisabled.Image = Nothing
         Me.btnDisabled.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnDisabled.Location = New System.Drawing.Point(290, 180)
+        Me.btnDisabled.Location = New System.Drawing.Point(282, 102)
         Me.btnDisabled.Name = "btnDisabled"
         Me.btnDisabled.PressedBackColor = System.Drawing.Color.Empty
         Me.btnDisabled.Size = New System.Drawing.Size(120, 35)
@@ -405,7 +412,7 @@ Partial Class FormMain
         Me.btnSquare.HoverBackColor = System.Drawing.Color.Empty
         Me.btnSquare.Image = Nothing
         Me.btnSquare.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnSquare.Location = New System.Drawing.Point(160, 180)
+        Me.btnSquare.Location = New System.Drawing.Point(152, 102)
         Me.btnSquare.Name = "btnSquare"
         Me.btnSquare.PressedBackColor = System.Drawing.Color.Empty
         Me.btnSquare.Size = New System.Drawing.Size(120, 35)
@@ -423,7 +430,7 @@ Partial Class FormMain
         Me.btnRounded.HoverBackColor = System.Drawing.Color.Empty
         Me.btnRounded.Image = Nothing
         Me.btnRounded.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnRounded.Location = New System.Drawing.Point(30, 180)
+        Me.btnRounded.Location = New System.Drawing.Point(22, 102)
         Me.btnRounded.Name = "btnRounded"
         Me.btnRounded.PressedBackColor = System.Drawing.Color.Empty
         Me.btnRounded.Size = New System.Drawing.Size(120, 35)
@@ -441,7 +448,7 @@ Partial Class FormMain
         Me.btnOutline.HoverBackColor = System.Drawing.Color.Empty
         Me.btnOutline.Image = CType(resources.GetObject("btnOutline.Image"), System.Drawing.Image)
         Me.btnOutline.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnOutline.Location = New System.Drawing.Point(350, 130)
+        Me.btnOutline.Location = New System.Drawing.Point(342, 52)
         Me.btnOutline.Name = "btnOutline"
         Me.btnOutline.PressedBackColor = System.Drawing.Color.Empty
         Me.btnOutline.Size = New System.Drawing.Size(150, 40)
@@ -459,7 +466,7 @@ Partial Class FormMain
         Me.btnGradient.HoverBackColor = System.Drawing.Color.Empty
         Me.btnGradient.Image = CType(resources.GetObject("btnGradient.Image"), System.Drawing.Image)
         Me.btnGradient.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnGradient.Location = New System.Drawing.Point(190, 130)
+        Me.btnGradient.Location = New System.Drawing.Point(182, 52)
         Me.btnGradient.Name = "btnGradient"
         Me.btnGradient.PressedBackColor = System.Drawing.Color.Empty
         Me.btnGradient.Size = New System.Drawing.Size(150, 40)
@@ -477,12 +484,29 @@ Partial Class FormMain
         Me.btnSolid.HoverBackColor = System.Drawing.Color.Empty
         Me.btnSolid.Image = CType(resources.GetObject("btnSolid.Image"), System.Drawing.Image)
         Me.btnSolid.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnSolid.Location = New System.Drawing.Point(30, 130)
+        Me.btnSolid.Location = New System.Drawing.Point(22, 52)
         Me.btnSolid.Name = "btnSolid"
         Me.btnSolid.PressedBackColor = System.Drawing.Color.Empty
         Me.btnSolid.Size = New System.Drawing.Size(150, 40)
         Me.btnSolid.TabIndex = 2
         Me.btnSolid.Text = "Botón Solid"
+        '
+        'btnThemeDemo
+        '
+        Me.btnThemeDemo.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.btnThemeDemo.BorderColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.btnThemeDemo.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnThemeDemo.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnThemeDemo.ForeColor = System.Drawing.Color.White
+        Me.btnThemeDemo.HoverBackColor = System.Drawing.Color.Empty
+        Me.btnThemeDemo.Image = Nothing
+        Me.btnThemeDemo.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnThemeDemo.Location = New System.Drawing.Point(741, 357)
+        Me.btnThemeDemo.Name = "btnThemeDemo"
+        Me.btnThemeDemo.PressedBackColor = System.Drawing.Color.Empty
+        Me.btnThemeDemo.Size = New System.Drawing.Size(140, 40)
+        Me.btnThemeDemo.TabIndex = 33
+        Me.btnThemeDemo.Text = "🎨 Demo de Temas"
         '
         'lblSectionButtons
         '
@@ -491,7 +515,7 @@ Partial Class FormMain
         Me.lblSectionButtons.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblSectionButtons.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
         Me.lblSectionButtons.GradientColor = System.Drawing.Color.Empty
-        Me.lblSectionButtons.Location = New System.Drawing.Point(20, 90)
+        Me.lblSectionButtons.Location = New System.Drawing.Point(12, 12)
         Me.lblSectionButtons.Name = "lblSectionButtons"
         Me.lblSectionButtons.OutlineColor = System.Drawing.Color.Black
         Me.lblSectionButtons.Padding = New System.Windows.Forms.Padding(5)
@@ -522,12 +546,116 @@ Partial Class FormMain
         Me.lblTitle.Text = "Controles NX - Demostración"
         Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'chkStandard
+        '
+        Me.chkStandard.BackColor = System.Drawing.Color.Transparent
+        Me.chkStandard.CheckColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.chkStandard.CheckColorUnchecked = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.chkStandard.Checked = True
+        Me.chkStandard.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.chkStandard.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.chkStandard.ForeColor = System.Drawing.Color.Black
+        Me.chkStandard.Location = New System.Drawing.Point(571, 227)
+        Me.chkStandard.Name = "chkStandard"
+        Me.chkStandard.Size = New System.Drawing.Size(200, 25)
+        Me.chkStandard.SwitchColorOff = System.Drawing.Color.FromArgb(CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer))
+        Me.chkStandard.SwitchColorOn = System.Drawing.Color.FromArgb(CType(CType(76, Byte), Integer), CType(CType(175, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.chkStandard.TabIndex = 27
+        Me.chkStandard.Text = "Standard CheckBox"
+        '
+        'chkSwitch
+        '
+        Me.chkSwitch.BackColor = System.Drawing.Color.Transparent
+        Me.chkSwitch.CheckColor = System.Drawing.Color.FromArgb(CType(CType(76, Byte), Integer), CType(CType(175, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.chkSwitch.CheckColorUnchecked = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.chkSwitch.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.chkSwitch.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.chkSwitch.ForeColor = System.Drawing.Color.Black
+        Me.chkSwitch.Location = New System.Drawing.Point(571, 262)
+        Me.chkSwitch.Name = "chkSwitch"
+        Me.chkSwitch.Size = New System.Drawing.Size(200, 25)
+        Me.chkSwitch.Style = NeoSoft.UI.Controls.NXCheckBox.CheckBoxStyle.Switch
+        Me.chkSwitch.SwitchColorOff = System.Drawing.Color.FromArgb(CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer))
+        Me.chkSwitch.SwitchColorOn = System.Drawing.Color.FromArgb(CType(CType(76, Byte), Integer), CType(CType(175, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.chkSwitch.TabIndex = 28
+        Me.chkSwitch.Text = "Toggle Switch"
+        '
+        'chkButton
+        '
+        Me.chkButton.BackColor = System.Drawing.Color.Transparent
+        Me.chkButton.BorderRadius = 6
+        Me.chkButton.CheckColor = System.Drawing.Color.FromArgb(CType(CType(156, Byte), Integer), CType(CType(39, Byte), Integer), CType(CType(176, Byte), Integer))
+        Me.chkButton.CheckColorUnchecked = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.chkButton.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.chkButton.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.chkButton.ForeColor = System.Drawing.Color.Black
+        Me.chkButton.Location = New System.Drawing.Point(831, 227)
+        Me.chkButton.Name = "chkButton"
+        Me.chkButton.Size = New System.Drawing.Size(120, 35)
+        Me.chkButton.Style = NeoSoft.UI.Controls.NXCheckBox.CheckBoxStyle.Button
+        Me.chkButton.SwitchColorOff = System.Drawing.Color.FromArgb(CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer))
+        Me.chkButton.SwitchColorOn = System.Drawing.Color.FromArgb(CType(CType(76, Byte), Integer), CType(CType(175, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.chkButton.TabIndex = 29
+        Me.chkButton.Text = "Button Style"
+        '
+        'chkDisabled
+        '
+        Me.chkDisabled.BackColor = System.Drawing.Color.Transparent
+        Me.chkDisabled.CheckColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.chkDisabled.CheckColorUnchecked = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.chkDisabled.Checked = True
+        Me.chkDisabled.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.chkDisabled.Enabled = False
+        Me.chkDisabled.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.chkDisabled.ForeColor = System.Drawing.Color.Black
+        Me.chkDisabled.Location = New System.Drawing.Point(831, 262)
+        Me.chkDisabled.Name = "chkDisabled"
+        Me.chkDisabled.Size = New System.Drawing.Size(120, 25)
+        Me.chkDisabled.SwitchColorOff = System.Drawing.Color.FromArgb(CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer))
+        Me.chkDisabled.SwitchColorOn = System.Drawing.Color.FromArgb(CType(CType(76, Byte), Integer), CType(CType(175, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.chkDisabled.TabIndex = 30
+        Me.chkDisabled.Text = "Disabled"
+        '
+        'lblSectionCheckBox
+        '
+        Me.lblSectionCheckBox.BackColor = System.Drawing.Color.Transparent
+        Me.lblSectionCheckBox.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.lblSectionCheckBox.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.lblSectionCheckBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.lblSectionCheckBox.GradientColor = System.Drawing.Color.Empty
+        Me.lblSectionCheckBox.Location = New System.Drawing.Point(571, 187)
+        Me.lblSectionCheckBox.Name = "lblSectionCheckBox"
+        Me.lblSectionCheckBox.OutlineColor = System.Drawing.Color.Black
+        Me.lblSectionCheckBox.Padding = New System.Windows.Forms.Padding(5)
+        Me.lblSectionCheckBox.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblSectionCheckBox.ShadowOffset = New System.Drawing.Point(1, 1)
+        Me.lblSectionCheckBox.Size = New System.Drawing.Size(530, 30)
+        Me.lblSectionCheckBox.TabIndex = 31
+        Me.lblSectionCheckBox.Text = "NXCheckBox - CheckBoxes Modernos"
+        '
+        'lblInfoCheckBox
+        '
+        Me.lblInfoCheckBox.BackColor = System.Drawing.Color.Transparent
+        Me.lblInfoCheckBox.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.lblInfoCheckBox.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic)
+        Me.lblInfoCheckBox.ForeColor = System.Drawing.Color.Gray
+        Me.lblInfoCheckBox.GradientColor = System.Drawing.Color.Empty
+        Me.lblInfoCheckBox.Location = New System.Drawing.Point(571, 297)
+        Me.lblInfoCheckBox.Name = "lblInfoCheckBox"
+        Me.lblInfoCheckBox.OutlineColor = System.Drawing.Color.Black
+        Me.lblInfoCheckBox.Padding = New System.Windows.Forms.Padding(5)
+        Me.lblInfoCheckBox.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblInfoCheckBox.ShadowOffset = New System.Drawing.Point(1, 1)
+        Me.lblInfoCheckBox.Size = New System.Drawing.Size(520, 20)
+        Me.lblInfoCheckBox.TabIndex = 32
+        Me.lblInfoCheckBox.Text = "Soporta estilos Standard, Switch y Button con animaciones suaves"
+        '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(562, 730)
+        Me.ClientSize = New System.Drawing.Size(1103, 534)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.lblInfoImagePicker)
@@ -553,8 +681,14 @@ Partial Class FormMain
         Me.Controls.Add(Me.btnOutline)
         Me.Controls.Add(Me.btnGradient)
         Me.Controls.Add(Me.btnSolid)
+        Me.Controls.Add(Me.btnThemeDemo)
         Me.Controls.Add(Me.lblSectionButtons)
-        Me.Controls.Add(Me.lblTitle)
+        Me.Controls.Add(Me.chkStandard)
+        Me.Controls.Add(Me.chkSwitch)
+        Me.Controls.Add(Me.chkButton)
+        Me.Controls.Add(Me.chkDisabled)
+        Me.Controls.Add(Me.lblSectionCheckBox)
+        Me.Controls.Add(Me.lblInfoCheckBox)
         Me.Name = "FormMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "NeoSoft.UI - Demostración de Controles NX"
@@ -587,6 +721,13 @@ Partial Class FormMain
     Friend WithEvents lblSectionImagePicker As NeoSoft.UI.Controls.NXLabel
     Friend WithEvents btnImagePicker As NeoSoft.UI.Controls.NXButton
     Friend WithEvents lblInfoImagePicker As NeoSoft.UI.Controls.NXLabel
+    Friend WithEvents chkStandard As NeoSoft.UI.Controls.NXCheckBox
+    Friend WithEvents chkSwitch As NeoSoft.UI.Controls.NXCheckBox
+    Friend WithEvents chkButton As NeoSoft.UI.Controls.NXCheckBox
+    Friend WithEvents chkDisabled As NeoSoft.UI.Controls.NXCheckBox
+    Friend WithEvents lblSectionCheckBox As NeoSoft.UI.Controls.NXLabel
+    Friend WithEvents lblInfoCheckBox As NeoSoft.UI.Controls.NXLabel
     Friend WithEvents Button1 As Button
     Friend WithEvents Button2 As Button
+    Friend WithEvents btnThemeDemo As NeoSoft.UI.Controls.NXButton
 End Class

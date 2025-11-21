@@ -16,18 +16,15 @@ Public Class TraceLogger
         If _isInitialized Then Return
 
         Try
-            ' Crear ruta en el escritorio del usuario
             Dim desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
             _logFilePath = Path.Combine(desktopPath, "NeoSoft_TraceLogger.txt")
 
-            ' Si el archivo ya existe, agregamos separador de sesión
             If File.Exists(_logFilePath) Then
                 File.AppendAllText(_logFilePath, vbCrLf & vbCrLf &
                                      "═══════════════════════════════════════════════════════════════" & vbCrLf &
                                      $"NUEVA SESIÓN: {DateTime.Now:yyyy-MM-dd HH:mm:ss}" & vbCrLf &
                                      "═══════════════════════════════════════════════════════════════" & vbCrLf & vbCrLf)
             Else
-                ' Crear archivo nuevo
                 File.WriteAllText(_logFilePath,
                                     "═══════════════════════════════════════════════════════════════" & vbCrLf &
                                     "NeoSoft.UI - Trace Logger" & vbCrLf &
@@ -38,27 +35,23 @@ Public Class TraceLogger
             End If
 
             _isInitialized = True
-
-            ' Escribir mensaje de inicialización
             WriteLine("✅ TraceLogger inicializado correctamente")
             WriteLine($"📁 Archivo de log: {_logFilePath}")
             WriteLine("")
 
         Catch ex As Exception
-            ' Si falla, intentar en temp
             Try
                 _logFilePath = Path.Combine(Path.GetTempPath(), "NeoSoft_TraceLogger.txt")
                 File.WriteAllText(_logFilePath, $"[{DateTime.Now:HH:mm:ss.fff}] Logger inicializado en TEMP{vbCrLf}")
                 _isInitialized = True
             Catch
-                ' Si todo falla, desactivar
                 _isInitialized = False
             End Try
         End Try
     End Sub
 
     ''' <summary>
-    ''' Escribe una línea en el log
+    ''' Escribe una línea en el log (acepta interpolación de strings)
     ''' </summary>
     Public Shared Sub WriteLine(message As String)
         If Not _isInitialized Then Initialize()
@@ -67,12 +60,36 @@ Public Class TraceLogger
         Try
             SyncLock _lockObject
                 Dim timestamp As String = DateTime.Now.ToString("HH:mm:ss.fff")
-                Dim logLine As String = $"[{timestamp}] {message}{vbCrLf}"
+                ' ⭐ Escapar llaves para evitar FormatException
+                Dim safeMessage = message.Replace("{", "{{").Replace("}", "}}")
+                Dim logLine As String = $"[{timestamp}] {safeMessage}{vbCrLf}"
                 File.AppendAllText(_logFilePath, logLine)
             End SyncLock
         Catch ex As Exception
             ' Silencioso si falla
         End Try
+    End Sub
+
+    ''' <summary>
+    ''' Escribe con información de contexto
+    ''' </summary>
+    Public Shared Sub LogDebug(context As String, message As String)
+        WriteLine($"{context} {message}")
+    End Sub
+
+    Public Shared Sub LogInfo(context As String, message As String)
+        WriteLine($"ℹ️ {context} {message}")
+    End Sub
+
+    Public Shared Sub LogWarning(context As String, message As String)
+        WriteLine($"⚠️ {context} {message}")
+    End Sub
+
+    Public Shared Sub LogError(context As String, message As String, Optional ex As Exception = Nothing)
+        WriteLine($"❌ {context} {message}")
+        If ex IsNot Nothing Then
+            WriteException(ex, context)
+        End If
     End Sub
 
     ''' <summary>
@@ -118,9 +135,6 @@ Public Class TraceLogger
         WriteLine("")
     End Sub
 
-    ''' <summary>
-    ''' Abre el archivo de log en el Bloc de notas
-    ''' </summary>
     Public Shared Sub OpenLog()
         If Not _isInitialized Then Initialize()
         If Not _isInitialized OrElse String.IsNullOrEmpty(_logFilePath) Then Return
@@ -130,13 +144,9 @@ Public Class TraceLogger
                 Process.Start("notepad.exe", _logFilePath)
             End If
         Catch ex As Exception
-            ' Silencioso si falla
         End Try
     End Sub
 
-    ''' <summary>
-    ''' Obtiene la ruta del archivo de log
-    ''' </summary>
     Public Shared ReadOnly Property LogFilePath As String
         Get
             If Not _isInitialized Then Initialize()
@@ -144,20 +154,15 @@ Public Class TraceLogger
         End Get
     End Property
 
-    ''' <summary>
-    ''' Limpia el contenido del log actual
-    ''' </summary>
     Public Shared Sub Clear()
         If Not _isInitialized Then Initialize()
         If Not _isInitialized OrElse String.IsNullOrEmpty(_logFilePath) Then Return
 
         Try
             SyncLock _lockObject
-                File.WriteAllText(_logFilePath,
-                                    $"[{DateTime.Now:HH:mm:ss.fff}] Log limpiado{vbCrLf}")
+                File.WriteAllText(_logFilePath, $"[{DateTime.Now:HH:mm:ss.fff}] Log limpiado{vbCrLf}")
             End SyncLock
         Catch ex As Exception
-            ' Silencioso si falla
         End Try
     End Sub
 

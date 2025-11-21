@@ -57,4 +57,13 @@ Public Class FormMain
                        MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
+    Private Sub ChkSwitch_CheckedChanged(sender As Object, e As EventArgs) Handles chkSwitch.CheckedChanged
+        Debug.WriteLine($"Switch cambió a: {chkSwitch.Checked}")
+    End Sub
+
+    Private Sub BtnThemeDemo_Click(sender As Object, e As EventArgs) Handles btnThemeDemo.Click
+        Dim frmTheme As New FormThemeDemo()
+        frmTheme.ShowDialog()
+    End Sub
+
 End Class
