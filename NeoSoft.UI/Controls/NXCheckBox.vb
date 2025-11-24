@@ -2,6 +2,7 @@
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
+Imports NeoSoft.UI.Design
 
 Namespace Controls
 
@@ -9,6 +10,7 @@ Namespace Controls
     ''' CheckBox personalizado con estilos modernos, animaciones y switch toggle
     ''' </summary>
     <ToolboxBitmap(GetType(CheckBox))>
+    <PropertyTab(GetType(NXPropertiesTab), PropertyTabScope.Component)>
     <DefaultEvent("CheckedChanged")>
     Public Class NXCheckBox
         Inherits Control
@@ -73,6 +75,7 @@ Namespace Controls
 #Region "Propiedades Públicas"
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Indica si el CheckBox está marcado")>
         <DefaultValue(False)>
         Public Property Checked As Boolean
@@ -90,6 +93,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Estilo del CheckBox (Standard, Switch, Button)")>
         <DefaultValue(GetType(CheckBoxStyle), "Standard")>
         Public Property Style As CheckBoxStyle
@@ -105,6 +109,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Tamaño del checkbox en píxeles")>
         <DefaultValue(20)>
         Public Property CheckSize As Integer
@@ -122,6 +127,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color cuando está marcado")>
         Public Property CheckColor As Color
             Get
@@ -134,6 +140,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color cuando está desmarcado")>
         Public Property CheckColorUnchecked As Color
             Get
@@ -146,6 +153,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Radio de las esquinas redondeadas")>
         <DefaultValue(4)>
         Public Property BorderRadius As Integer
@@ -162,6 +170,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Ancho del switch (solo para estilo Switch)")>
         <DefaultValue(45)>
         Public Property SwitchWidth As Integer
@@ -178,6 +187,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Alto del switch (solo para estilo Switch)")>
         <DefaultValue(22)>
         Public Property SwitchHeight As Integer
@@ -194,6 +204,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del switch cuando está ON")>
         Public Property SwitchColorOn As Color
             Get
@@ -206,6 +217,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del switch cuando está OFF")>
         Public Property SwitchColorOff As Color
             Get
@@ -589,6 +601,7 @@ Namespace Controls
         Private _useTheme As Boolean = False
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Indica si el control usa el tema global automáticamente")>
         <DefaultValue(False)>
         Public Property UseTheme As Boolean Implements Theming.IThemeable.UseTheme

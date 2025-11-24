@@ -17,12 +17,13 @@ Partial Class FormThemeDemo
     End Sub
 
     Private Sub InitializeComponent()
-        Dim NxRadioGroupItem7 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
-        Dim NxRadioGroupItem8 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
-        Dim NxRadioGroupItem9 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
-        Dim NxRadioGroupItem10 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
-        Dim NxRadioGroupItem11 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
-        Dim NxRadioGroupItem12 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem1 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem2 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem3 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem4 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem5 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem6 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormThemeDemo))
         Me.pnlRadioGroups = New NeoSoft.UI.Controls.NXPanel()
         Me.rgpNotifications = New NeoSoft.UI.Controls.NXRadioGroup()
         Me.rgpSubscription = New NeoSoft.UI.Controls.NXRadioGroup()
@@ -72,18 +73,18 @@ Partial Class FormThemeDemo
         Me.rgpNotifications.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.rgpNotifications.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.rgpNotifications.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
-        NxRadioGroupItem7.Tag = Nothing
-        NxRadioGroupItem7.Text = "🔔 Todas"
-        NxRadioGroupItem7.Value = "all"
-        NxRadioGroupItem8.Tag = Nothing
-        NxRadioGroupItem8.Text = "🔕 Solo importantes"
-        NxRadioGroupItem8.Value = "important"
-        NxRadioGroupItem9.Tag = Nothing
-        NxRadioGroupItem9.Text = "⛔ Ninguna"
-        NxRadioGroupItem9.Value = "none"
-        Me.rgpNotifications.Items.Add(NxRadioGroupItem7)
-        Me.rgpNotifications.Items.Add(NxRadioGroupItem8)
-        Me.rgpNotifications.Items.Add(NxRadioGroupItem9)
+        NxRadioGroupItem1.Tag = Nothing
+        NxRadioGroupItem1.Text = "🔔 Todas"
+        NxRadioGroupItem1.Value = "all"
+        NxRadioGroupItem2.Tag = Nothing
+        NxRadioGroupItem2.Text = "🔕 Solo importantes"
+        NxRadioGroupItem2.Value = "important"
+        NxRadioGroupItem3.Tag = Nothing
+        NxRadioGroupItem3.Text = "⛔ Ninguna"
+        NxRadioGroupItem3.Value = "none"
+        Me.rgpNotifications.Items.Add(NxRadioGroupItem1)
+        Me.rgpNotifications.Items.Add(NxRadioGroupItem2)
+        Me.rgpNotifications.Items.Add(NxRadioGroupItem3)
         Me.rgpNotifications.Location = New System.Drawing.Point(330, 50)
         Me.rgpNotifications.Name = "rgpNotifications"
         Me.rgpNotifications.Padding = New System.Windows.Forms.Padding(10)
@@ -100,18 +101,18 @@ Partial Class FormThemeDemo
         Me.rgpSubscription.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.rgpSubscription.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.rgpSubscription.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
-        NxRadioGroupItem10.Tag = Nothing
-        NxRadioGroupItem10.Text = "📅 Mensual - $9.99"
-        NxRadioGroupItem10.Value = "monthly"
-        NxRadioGroupItem11.Tag = Nothing
-        NxRadioGroupItem11.Text = "📆 Anual - $99.99 (ahorra 17%)"
-        NxRadioGroupItem11.Value = "yearly"
-        NxRadioGroupItem12.Tag = Nothing
-        NxRadioGroupItem12.Text = "🆓 Gratuito"
-        NxRadioGroupItem12.Value = "free"
-        Me.rgpSubscription.Items.Add(NxRadioGroupItem10)
-        Me.rgpSubscription.Items.Add(NxRadioGroupItem11)
-        Me.rgpSubscription.Items.Add(NxRadioGroupItem12)
+        NxRadioGroupItem4.Tag = Nothing
+        NxRadioGroupItem4.Text = "📅 Mensual - $9.99"
+        NxRadioGroupItem4.Value = "monthly"
+        NxRadioGroupItem5.Tag = Nothing
+        NxRadioGroupItem5.Text = "📆 Anual - $99.99 (ahorra 17%)"
+        NxRadioGroupItem5.Value = "yearly"
+        NxRadioGroupItem6.Tag = Nothing
+        NxRadioGroupItem6.Text = "🆓 Gratuito"
+        NxRadioGroupItem6.Value = "free"
+        Me.rgpSubscription.Items.Add(NxRadioGroupItem4)
+        Me.rgpSubscription.Items.Add(NxRadioGroupItem5)
+        Me.rgpSubscription.Items.Add(NxRadioGroupItem6)
         Me.rgpSubscription.Location = New System.Drawing.Point(15, 50)
         Me.rgpSubscription.Name = "rgpSubscription"
         Me.rgpSubscription.Padding = New System.Windows.Forms.Padding(10)
@@ -228,22 +229,25 @@ Partial Class FormThemeDemo
         '
         'grpGender
         '
+        Me.grpGender.Appearance.HeaderBackColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer))
+        Me.grpGender.Appearance.HeaderBackColor2 = System.Drawing.Color.FromArgb(CType(CType(230, Byte), Integer), CType(CType(230, Byte), Integer), CType(CType(230, Byte), Integer))
+        Me.grpGender.Appearance.HeaderIcon = Nothing
+        Me.grpGender.Appearance.HeaderIconSize = New System.Drawing.Size(20, 20)
+        Me.grpGender.Appearance.HoverBackColor = System.Drawing.Color.Empty
+        Me.grpGender.Appearance.PressedBackColor = System.Drawing.Color.Empty
+        Me.grpGender.Appearance.UseTheme = True
         Me.grpGender.BackColor = System.Drawing.Color.White
-        Me.grpGender.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
-        Me.grpGender.BorderRadius = 4
         Me.grpGender.Controls.Add(Me.rdoOther)
         Me.grpGender.Controls.Add(Me.rdoFemale)
         Me.grpGender.Controls.Add(Me.rdoMale)
         Me.grpGender.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.grpGender.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
-        Me.grpGender.HeaderBackColor = System.Drawing.Color.FromArgb(CType(CType(247, Byte), Integer), CType(CType(247, Byte), Integer), CType(CType(247, Byte), Integer))
         Me.grpGender.Location = New System.Drawing.Point(20, 176)
         Me.grpGender.Name = "grpGender"
         Me.grpGender.Padding = New System.Windows.Forms.Padding(15, 50, 15, 15)
         Me.grpGender.Size = New System.Drawing.Size(210, 200)
         Me.grpGender.TabIndex = 34
         Me.grpGender.Text = "Género"
-        Me.grpGender.UseTheme = True
         '
         'rdoOther
         '
@@ -293,23 +297,27 @@ Partial Class FormThemeDemo
         '
         'grpPayment
         '
+        Me.grpPayment.Appearance.HeaderBackColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer))
+        Me.grpPayment.Appearance.HeaderBackColor2 = System.Drawing.Color.FromArgb(CType(CType(230, Byte), Integer), CType(CType(230, Byte), Integer), CType(CType(230, Byte), Integer))
+        Me.grpPayment.Appearance.HeaderIcon = CType(resources.GetObject("grpPayment.Appearance.HeaderIcon"), System.Drawing.Image)
+        Me.grpPayment.Appearance.HeaderIconPosition = NeoSoft.UI.Design.NXAppearance.IconPosition.Right
+        Me.grpPayment.Appearance.HeaderIconSize = New System.Drawing.Size(20, 20)
+        Me.grpPayment.Appearance.HoverBackColor = System.Drawing.Color.Empty
+        Me.grpPayment.Appearance.PressedBackColor = System.Drawing.Color.Empty
+        Me.grpPayment.Appearance.UseTheme = True
         Me.grpPayment.BackColor = System.Drawing.Color.White
-        Me.grpPayment.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
-        Me.grpPayment.BorderRadius = 4
         Me.grpPayment.Controls.Add(Me.rdoTransfer)
         Me.grpPayment.Controls.Add(Me.rdoCash)
         Me.grpPayment.Controls.Add(Me.rdoDebitCard)
         Me.grpPayment.Controls.Add(Me.rdoCreditCard)
         Me.grpPayment.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.grpPayment.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
-        Me.grpPayment.HeaderBackColor = System.Drawing.Color.FromArgb(CType(CType(247, Byte), Integer), CType(CType(247, Byte), Integer), CType(CType(247, Byte), Integer))
         Me.grpPayment.Location = New System.Drawing.Point(240, 176)
         Me.grpPayment.Name = "grpPayment"
         Me.grpPayment.Padding = New System.Windows.Forms.Padding(15, 50, 15, 15)
         Me.grpPayment.Size = New System.Drawing.Size(250, 200)
         Me.grpPayment.TabIndex = 35
         Me.grpPayment.Text = "Método de Pago"
-        Me.grpPayment.UseTheme = True
         '
         'rdoTransfer
         '

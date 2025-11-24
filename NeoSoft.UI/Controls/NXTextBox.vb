@@ -3,6 +3,7 @@ Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
+Imports NeoSoft.UI.Design
 
 Namespace Controls
 
@@ -10,6 +11,7 @@ Namespace Controls
     ''' TextBox personalizado con soporte para placeholder, bordes redondeados, máscaras y validación visual.
     ''' </summary>
     <ToolboxBitmap(GetType(TextBox))>
+    <PropertyTab(GetType(NXPropertiesTab), PropertyTabScope.Component)>
     <DefaultEvent("TextChanged")>
     Public Class NXTextBox
         Inherits UserControl
@@ -94,6 +96,7 @@ Namespace Controls
 #Region "Propiedades - Apariencia"
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Radio de las esquinas redondeadas")>
         <DefaultValue(4)>
         Public Property BorderRadius As Integer
@@ -110,6 +113,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Grosor del borde")>
         <DefaultValue(2)>
         Public Property BorderSize As Integer
@@ -126,6 +130,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del borde en estado normal")>
         Public Property BorderColor As Color
             Get
@@ -140,6 +145,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del borde cuando tiene el foco")>
         Public Property BorderFocusColor As Color
             Get
@@ -154,6 +160,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Muestra solo el borde inferior (estilo subrayado)")>
         <DefaultValue(False)>
         Public Property UnderlineStyle As Boolean
@@ -173,6 +180,7 @@ Namespace Controls
 #Region "Propiedades - Texto y Placeholder"
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Texto de placeholder cuando está vacío")>
         <DefaultValue("")>
         Public Property PlaceholderText As String
@@ -188,6 +196,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del texto del placeholder")>
         Public Property PlaceholderColor As Color
             Get
@@ -202,6 +211,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia")>
+        <NXProperty()>
         <Description("Texto del control")>
         <Browsable(True)>
         <DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)>
@@ -220,6 +230,7 @@ Namespace Controls
         End Property
 
         <Category("Comportamiento")>
+        <NXProperty()>
         <Description("Muestra caracteres de contraseña")>
         <DefaultValue(False)>
         Public Property IsPassword As Boolean
@@ -235,6 +246,7 @@ Namespace Controls
         End Property
 
         <Category("Comportamiento")>
+        <NXProperty()>
         <Description("Permite texto en varias líneas")>
         <DefaultValue(False)>
         Public Property Multiline As Boolean
@@ -253,6 +265,7 @@ Namespace Controls
         End Property
 
         <Category("Comportamiento")>
+        <NXProperty()>
         <Description("Máximo número de caracteres")>
         <DefaultValue(32767)>
         Public Property MaxLength As Integer
@@ -269,6 +282,7 @@ Namespace Controls
 #Region "Propiedades - Validación Visual"
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Indica si hay un error de validación")>
         <DefaultValue(False)>
         Public Property HasError As Boolean
@@ -285,6 +299,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Muestra indicador de validación correcta")>
         <DefaultValue(False)>
         Public Property ShowSuccessIndicator As Boolean
@@ -301,6 +316,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del borde cuando hay error")>
         Public Property ErrorColor As Color
             Get
@@ -313,6 +329,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del borde cuando la validación es correcta")>
         Public Property SuccessColor As Color
             Get
@@ -334,6 +351,7 @@ Namespace Controls
         ''' Máscara de entrada de datos con validación en tiempo real
         ''' </summary>
         <Category("Comportamiento")>
+        <NXProperty()>
         <Description("Máscara de entrada de datos con validación en tiempo real")>
         <DefaultValue("")>
         <Editor(GetType(NXMaskUITypeEditor), GetType(System.Drawing.Design.UITypeEditor))>
@@ -654,6 +672,7 @@ Namespace Controls
         Private _useTheme As Boolean = False
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Indica si el control usa el tema global automáticamente")>
         <DefaultValue(False)>
         Public Property UseTheme As Boolean Implements Theming.IThemeable.UseTheme

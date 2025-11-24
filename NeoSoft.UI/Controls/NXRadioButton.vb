@@ -2,6 +2,7 @@
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
+Imports NeoSoft.UI.Design
 Imports NeoSoft.UI.Theming
 
 Namespace Controls
@@ -10,6 +11,7 @@ Namespace Controls
     ''' RadioButton personalizado con estilos modernos y animaciones
     ''' </summary>
     <ToolboxBitmap(GetType(RadioButton))>
+    <PropertyTab(GetType(NXPropertiesTab), PropertyTabScope.Component)>
     <DefaultEvent("CheckedChanged")>
     Public Class NXRadioButton
         Inherits Control
@@ -55,6 +57,7 @@ Namespace Controls
 #Region "Propiedades Públicas"
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Indica si el RadioButton está seleccionado")>
         <DefaultValue(False)>
         Public Property Checked As Boolean
@@ -78,6 +81,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Tamaño del círculo del RadioButton")>
         <DefaultValue(18)>
         Public Property RadioSize As Integer
@@ -95,6 +99,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color cuando está seleccionado")>
         Public Property RadioColor As Color
             Get
@@ -107,6 +112,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color cuando no está seleccionado")>
         Public Property RadioColorUnchecked As Color
             Get
@@ -286,6 +292,7 @@ Namespace Controls
         Private _useTheme As Boolean = False
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Indica si el control usa el tema global automáticamente")>
         <DefaultValue(False)>
         Public Property UseTheme As Boolean Implements IThemeable.UseTheme

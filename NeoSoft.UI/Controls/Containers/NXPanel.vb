@@ -2,6 +2,7 @@
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
+Imports NeoSoft.UI.Design
 Imports NeoSoft.UI.Theming
 
 Namespace Controls
@@ -10,6 +11,7 @@ Namespace Controls
     ''' Panel personalizado con bordes redondeados, sombras y soporte de temas
     ''' </summary>
     <ToolboxBitmap(GetType(Panel))>
+    <PropertyTab(GetType(NXPropertiesTab), PropertyTabScope.Component)>
     Public Class NXPanel
         Inherits Panel
         Implements IThemeable
@@ -44,6 +46,7 @@ Namespace Controls
 #Region "Propiedades"
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Radio de las esquinas redondeadas")>
         <DefaultValue(8)>
         Public Property BorderRadius As Integer
@@ -60,6 +63,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Grosor del borde")>
         <DefaultValue(0)>
         Public Property BorderSize As Integer
@@ -76,6 +80,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del borde")>
         Public Property BorderColor As Color
             Get
@@ -90,6 +95,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Muestra sombra debajo del panel")>
         <DefaultValue(False)>
         Public Property ShowShadow As Boolean
@@ -105,6 +111,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color de la sombra")>
         Public Property ShadowColor As Color
             Get
@@ -119,6 +126,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Desplazamiento de la sombra en píxeles")>
         <DefaultValue(5)>
         Public Property ShadowOffset As Integer
@@ -222,6 +230,7 @@ Namespace Controls
         Private _useTheme As Boolean = False
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Indica si el control usa el tema global automáticamente")>
         <DefaultValue(False)>
         Public Property UseTheme As Boolean Implements IThemeable.UseTheme

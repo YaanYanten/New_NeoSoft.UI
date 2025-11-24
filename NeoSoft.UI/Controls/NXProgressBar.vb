@@ -2,6 +2,7 @@
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
+Imports NeoSoft.UI.Design
 Imports NeoSoft.UI.Theming
 
 Namespace Controls
@@ -10,6 +11,7 @@ Namespace Controls
     ''' Barra de progreso avanzada con soporte de texto, separadores y control de operaciones
     ''' </summary>
     <ToolboxBitmap(GetType(ProgressBar))>
+    <PropertyTab(GetType(NXPropertiesTab), PropertyTabScope.Component)>
     <DefaultProperty("Value")>
     <DefaultEvent("ValueChanged")>
     Public Class NXProgressBar
@@ -120,6 +122,7 @@ Namespace Controls
 #Region "Propiedades - Valores"
 
         <Category("Behavior")>
+        <NXProperty()>
         <Description("Valor mínimo de la barra de progreso")>
         <DefaultValue(0)>
         Public Property Minimum As Integer
@@ -140,6 +143,7 @@ Namespace Controls
         End Property
 
         <Category("Behavior")>
+        <NXProperty()>
         <Description("Valor máximo de la barra de progreso")>
         <DefaultValue(100)>
         Public Property Maximum As Integer
@@ -159,6 +163,7 @@ Namespace Controls
         End Property
 
         <Category("Behavior")>
+        <NXProperty()>
         <Description("Valor actual de la barra de progreso")>
         <DefaultValue(0)>
         Public Property Value As Integer
@@ -192,6 +197,7 @@ Namespace Controls
         End Property
 
         <Category("Behavior")>
+        <NXProperty()>
         <Description("Incremento al llamar PerformStep")>
         <DefaultValue(1)>
         Public Property [Step] As Integer
@@ -204,6 +210,7 @@ Namespace Controls
         End Property
 
         <Category("Behavior")>
+        <NXProperty()>
         <Description("Indica si hay una operación en progreso (previene cambios de valor)")>
         <DefaultValue(False)>
         Public Property IsOperationInProgress As Boolean
@@ -227,6 +234,7 @@ Namespace Controls
         End Property
 
         <Category("Behavior")>
+        <NXProperty()>
         <Description("Permite cambiar el valor haciendo clic con el mouse")>
         <DefaultValue(True)>
         Public Property AllowMouseInteraction As Boolean
@@ -252,6 +260,7 @@ Namespace Controls
 #Region "Propiedades - Apariencia"
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color de la barra de progreso")>
         Public Property ProgressColor As Color
             Get
@@ -264,6 +273,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color secundario para gradiente (vacío para no usar gradiente)")>
         Public Property ProgressColor2 As Color
             Get
@@ -276,6 +286,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color de fondo de la barra")>
         Public Property BackgroundColor As Color
             Get
@@ -288,6 +299,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del borde")>
         Public Property BorderColor As Color
             Get
@@ -300,6 +312,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Radio de las esquinas redondeadas")>
         <DefaultValue(4)>
         Public Property BorderRadius As Integer
@@ -314,6 +327,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Grosor del borde")>
         <DefaultValue(1)>
         Public Property BorderSize As Integer
@@ -328,6 +342,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Usar gradiente para la barra de progreso")>
         <DefaultValue(True)>
         Public Property UseGradient As Boolean
@@ -341,6 +356,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Modo de gradiente")>
         <DefaultValue(GetType(LinearGradientMode), "Horizontal")>
         Public Property GradientMode As LinearGradientMode
@@ -358,6 +374,7 @@ Namespace Controls
 #Region "Propiedades - Estilo"
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Estilo de la barra de progreso")>
         <DefaultValue(GetType(ProgressBarStyle), "Continuous")>
         Public Property Style As ProgressBarStyle
@@ -382,6 +399,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Orientación de la barra")>
         <DefaultValue(GetType(ProgressBarOrientation), "Horizontal")>
         Public Property Orientation As ProgressBarOrientation
@@ -395,6 +413,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Velocidad de animación del marquee (ms)")>
         <DefaultValue(30)>
         Public Property MarqueeSpeed As Integer
@@ -412,6 +431,7 @@ Namespace Controls
 #Region "Propiedades - Texto"
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Mostrar porcentaje en la barra")>
         <DefaultValue(True)>
         Public Property ShowPercentage As Boolean
@@ -425,6 +445,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Posición del texto")>
         <DefaultValue(GetType(TextPosition), "Center")>
         Public Property TextPositions As TextPosition
@@ -438,6 +459,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Texto personalizado (usar {0} para el porcentaje)")>
         <DefaultValue("")>
         Public Property CustomText As String
@@ -451,6 +473,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Formato del texto de porcentaje")>
         <DefaultValue("{0}%")>
         Public Property TextFormat As String
@@ -464,6 +487,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del texto")>
         Public Property TextColor As Color
             Get
@@ -476,6 +500,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Fuente del texto")>
         Public Property TextFont As Font
             Get
@@ -492,6 +517,7 @@ Namespace Controls
 #Region "Propiedades - Separadores"
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Mostrar separadores en la barra")>
         <DefaultValue(False)>
         Public Property ShowSeparators As Boolean
@@ -505,6 +531,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Número de separadores")>
         <DefaultValue(10)>
         Public Property SeparatorCount As Integer
@@ -519,6 +546,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Ancho de los separadores")>
         <DefaultValue(2)>
         Public Property SeparatorWidth As Integer
@@ -533,6 +561,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color de los separadores")>
         Public Property SeparatorColor As Color
             Get
@@ -939,6 +968,7 @@ Namespace Controls
         Private _useTheme As Boolean = False
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Indica si el control usa el tema global automáticamente")>
         <DefaultValue(False)>
         Public Property UseTheme As Boolean Implements IThemeable.UseTheme

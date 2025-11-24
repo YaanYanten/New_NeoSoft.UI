@@ -4,6 +4,7 @@ Imports System.Drawing.Design
 Imports System.Drawing.Drawing2D
 Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
+Imports NeoSoft.UI.Design
 Imports NeoSoft.UI.Theming
 
 Namespace Controls
@@ -17,6 +18,7 @@ Namespace Controls
     ''' con soporte para esquinas redondeadas, efectos de sombra y estados visuales personalizables.
     ''' </remarks>
     <ToolboxBitmap(GetType(Button))>
+    <PropertyTab(GetType(NXPropertiesTab), PropertyTabScope.Component)>
     <DefaultEvent("Click")>
     Public Class NXButton
         Inherits Control
@@ -68,6 +70,7 @@ Namespace Controls
         ''' Imagen del botón - Usa el editor personalizado
         ''' </summary>
         <Category("Appearance")>
+        <NXProperty()>
         <Description("Imagen que se muestra en el botón")>
         <Editor(GetType(NXImageUITypeEditor), GetType(UITypeEditor))>
         <Localizable(True)>
@@ -92,6 +95,7 @@ Namespace Controls
         ''' Alineación de la imagen en el botón
         ''' </summary>
         <Category("Appearance")>
+        <NXProperty()>
         <Description("Alineación de la imagen en el botón")>
         <DefaultValue(GetType(ContentAlignment), "MiddleLeft")>
         Public Property ImageAlign As ContentAlignment
@@ -110,6 +114,7 @@ Namespace Controls
         ''' Tamaño de la imagen cuando se muestra con texto
         ''' </summary>
         <Category("Appearance")>
+        <NXProperty()>
         <Description("Tamaño de la imagen cuando se muestra con texto")>
         Public Property ImageSize As Size
             Get
@@ -127,6 +132,7 @@ Namespace Controls
         ''' Radio de las esquinas redondeadas del botón (en píxeles)
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Radio de las esquinas redondeadas del botón")>
         <DefaultValue(8)>
         Public Property BorderRadius As Integer
@@ -146,6 +152,7 @@ Namespace Controls
         ''' Grosor del borde del botón (en píxeles)
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Grosor del borde del botón")>
         <DefaultValue(0)>
         Public Property BorderSize As Integer
@@ -165,6 +172,7 @@ Namespace Controls
         ''' Color del borde del botón
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del borde del botón")>
         Public Property BorderColor As Color
             Get
@@ -182,6 +190,7 @@ Namespace Controls
         ''' Estilo visual del botón (Solid, Gradient, Outline)
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Estilo visual del botón")>
         <DefaultValue(GetType(ButtonStyle), "Solid")>
         Public Property Style As ButtonStyle
@@ -200,6 +209,7 @@ Namespace Controls
         ''' Color de fondo cuando el mouse está sobre el botón
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color de fondo cuando el mouse está sobre el botón")>
         Public Property HoverBackColor As Color
             Get
@@ -214,6 +224,7 @@ Namespace Controls
         ''' Color de fondo cuando el botón está presionado
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color de fondo cuando el botón está presionado")>
         Public Property PressedBackColor As Color
             Get
@@ -677,11 +688,10 @@ Namespace Controls
 
 #Region "Soporte de Temas"
 
-
-
         Private _useTheme As Boolean = False
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Indica si el control usa el tema global automáticamente")>
         <DefaultValue(False)>
         Public Property UseTheme As Boolean Implements Theming.IThemeable.UseTheme

@@ -3,6 +3,7 @@ Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Drawing.Text
 Imports System.Windows.Forms
+Imports NeoSoft.UI.Design
 
 Namespace Controls
 
@@ -15,6 +16,7 @@ Namespace Controls
     ''' fondos con gradientes y múltiples estilos de presentación.
     ''' </remarks>
     <ToolboxBitmap(GetType(Label))>
+    <PropertyTab(GetType(NXPropertiesTab), PropertyTabScope.Component)>
     Public Class NXLabel
         Inherits Control
         Implements Theming.IThemeable
@@ -100,6 +102,7 @@ Namespace Controls
         ''' Radio de las esquinas redondeadas del label
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Radio de las esquinas redondeadas")>
         <DefaultValue(0)>
         Public Property BorderRadius As Integer
@@ -119,6 +122,7 @@ Namespace Controls
         ''' Grosor del borde del label
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Grosor del borde")>
         <DefaultValue(0)>
         Public Property BorderSize As Integer
@@ -138,6 +142,7 @@ Namespace Controls
         ''' Color del borde del label
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del borde")>
         Public Property BorderColor As Color
             Get
@@ -155,6 +160,7 @@ Namespace Controls
         ''' Estilo del borde del label
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Estilo del borde")>
         <DefaultValue(GetType(BorderStyle), "None")>
         Public Property BorderStyleValue As BorderStyle
@@ -173,6 +179,7 @@ Namespace Controls
         ''' Estilo de fondo del label
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Estilo de fondo")>
         <DefaultValue(GetType(BackgroundStyle), "Solid")>
         Public Property BackgroundStyleValue As BackgroundStyle
@@ -191,6 +198,7 @@ Namespace Controls
         ''' Color secundario para gradientes
         ''' </summary>
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color secundario para gradientes")>
         Public Property GradientColor As Color
             Get
@@ -577,6 +585,7 @@ Namespace Controls
         Private _useTheme As Boolean = False
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Indica si el control usa el tema global automáticamente")>
         <DefaultValue(False)>
         Public Property UseTheme As Boolean Implements Theming.IThemeable.UseTheme

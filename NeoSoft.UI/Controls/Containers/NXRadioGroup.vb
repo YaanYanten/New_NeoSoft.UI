@@ -3,6 +3,7 @@ Imports System.ComponentModel.Design
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
+Imports NeoSoft.UI.Design
 Imports NeoSoft.UI.Theming
 
 Namespace Controls
@@ -11,6 +12,7 @@ Namespace Controls
     ''' Control RadioGroup estilo DevExpress con colección de items editable
     ''' </summary>
     <ToolboxBitmap(GetType(RadioButton))>
+    <PropertyTab(GetType(NXPropertiesTab), PropertyTabScope.Component)>
     <DefaultProperty("Items")>
     <DefaultEvent("SelectedIndexChanged")>
     Public Class NXRadioGroup
@@ -75,6 +77,7 @@ Namespace Controls
 #Region "Propiedades Públicas"
 
         <Category("Data")>
+        <NXProperty()>
         <Description("Colección de items del RadioGroup")>
         <DesignerSerializationVisibility(DesignerSerializationVisibility.Content)>
         <Editor(GetType(NXRadioGroupItemCollectionEditor), GetType(System.Drawing.Design.UITypeEditor))>
@@ -85,6 +88,7 @@ Namespace Controls
         End Property
 
         <Category("Behavior")>
+        <NXProperty()>
         <Description("Índice del item seleccionado")>
         <DefaultValue(-1)>
         Public Property SelectedIndex As Integer
@@ -105,6 +109,7 @@ Namespace Controls
         End Property
 
         <Category("Behavior")>
+        <NXProperty()>
         <Description("Item seleccionado actualmente")>
         <Browsable(False)>
         <DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
@@ -126,6 +131,7 @@ Namespace Controls
         End Property
 
         <Category("Layout")>
+        <NXProperty()>
         <Description("Número de columnas (0 = automático)")>
         <DefaultValue(0)>
         Public Property Columns As Integer
@@ -143,6 +149,7 @@ Namespace Controls
         End Property
 
         <Category("Layout")>
+        <NXProperty()>
         <Description("Orientación del layout")>
         <DefaultValue(GetType(LayoutOrientation), "Vertical")>
         Public Property Orientation As LayoutOrientation
@@ -159,6 +166,7 @@ Namespace Controls
         End Property
 
         <Category("Layout")>
+        <NXProperty()>
         <Description("Alineación del glyph (radio button)")>
         <DefaultValue(GetType(GlyphAlignment), "Near")>
         Public Property GlyphAlignments As GlyphAlignment
@@ -174,6 +182,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Espaciado entre items")>
         <DefaultValue(8)>
         Public Property ItemSpacing As Integer
@@ -191,6 +200,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Altura de cada item")>
         <DefaultValue(28)>
         Public Property ItemHeight As Integer
@@ -208,6 +218,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Tamaño del círculo del radio button")>
         <DefaultValue(18)>
         Public Property RadioSize As Integer
@@ -225,6 +236,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Radio del borde redondeado")>
         <DefaultValue(8)>
         Public Property BorderRadius As Integer
@@ -241,6 +253,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Grosor del borde")>
         <DefaultValue(1)>
         Public Property BorderSize As Integer
@@ -257,6 +270,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color del borde")>
         Public Property BorderColor As Color
             Get
@@ -271,6 +285,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color cuando está seleccionado")>
         Public Property RadioColor As Color
             Get
@@ -283,6 +298,7 @@ Namespace Controls
         End Property
 
         <Category("Apariencia NX")>
+        <NXProperty()>
         <Description("Color cuando no está seleccionado")>
         Public Property RadioColorUnchecked As Color
             Get

@@ -107,6 +107,9 @@
     <Compile Include="Controls\Containers\NXGroup.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Designers\NXAppearance.vb" />
+    <Compile Include="Designers\NXPropertiesTab.vb" />
+    <Compile Include="Designers\NXPropertyAttribute.vb" />
     <Compile Include="Dialogs\NXImagePickerDialog.Designer.vb">
       <DependentUpon>NXImagePickerDialog.vb</DependentUpon>
     </Compile>
@@ -148,9 +151,7 @@
     <Compile Include="Theming\ThemeChangedEventArgs.vb" />
     <Compile Include="Theming\ThemeSettings.vb" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Designers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Dialogs\NXImagePickerDialog.resx">
       <DependentUpon>NXImagePickerDialog.vb</DependentUpon>
