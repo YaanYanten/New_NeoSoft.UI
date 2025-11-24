@@ -58,9 +58,12 @@ Partial Class FormThemeDemo
         Me.pnlRadioGroups.Controls.Add(Me.rgpNotifications)
         Me.pnlRadioGroups.Controls.Add(Me.rgpSubscription)
         Me.pnlRadioGroups.Controls.Add(Me.lblRadioGroupSection)
+        Me.pnlRadioGroups.GradientColor1 = System.Drawing.Color.White
+        Me.pnlRadioGroups.GradientColor2 = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.pnlRadioGroups.Location = New System.Drawing.Point(20, 390)
         Me.pnlRadioGroups.Name = "pnlRadioGroups"
         Me.pnlRadioGroups.Padding = New System.Windows.Forms.Padding(10)
+        Me.pnlRadioGroups.ScrollBarColor = System.Drawing.Color.FromArgb(CType(CType(150, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(150, Byte), Integer))
         Me.pnlRadioGroups.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.pnlRadioGroups.ShowShadow = True
         Me.pnlRadioGroups.Size = New System.Drawing.Size(960, 200)
@@ -152,9 +155,12 @@ Partial Class FormThemeDemo
         Me.pnlHeader.Controls.Add(Me.lblThemeDescription)
         Me.pnlHeader.Controls.Add(Me.cboThemes)
         Me.pnlHeader.Controls.Add(Me.lblSelectTheme)
+        Me.pnlHeader.GradientColor1 = System.Drawing.Color.White
+        Me.pnlHeader.GradientColor2 = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.pnlHeader.Location = New System.Drawing.Point(20, 70)
         Me.pnlHeader.Name = "pnlHeader"
         Me.pnlHeader.Padding = New System.Windows.Forms.Padding(10)
+        Me.pnlHeader.ScrollBarColor = System.Drawing.Color.FromArgb(CType(CType(150, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(150, Byte), Integer))
         Me.pnlHeader.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.pnlHeader.ShowShadow = True
         Me.pnlHeader.Size = New System.Drawing.Size(960, 100)
