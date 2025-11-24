@@ -145,6 +145,26 @@ Namespace Controls
         End Property
 
         ''' <summary>
+        ''' Texto que se muestra en el header del grupo
+        ''' </summary>
+        <Category("Appearance")>
+        <Description("Texto que se muestra en el header del grupo")>
+        <Browsable(True)>
+        <EditorBrowsable(EditorBrowsableState.Always)>
+        <DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)>
+        Public Overrides Property Text As String
+            Get
+                Return MyBase.Text
+            End Get
+            Set(value As String)
+                If MyBase.Text <> value Then
+                    MyBase.Text = value
+                    Me.Invalidate()
+                End If
+            End Set
+        End Property
+
+        ''' <summary>
         ''' Obtiene el RadioButton seleccionado actualmente
         ''' </summary>
         <Browsable(False)>
@@ -241,6 +261,7 @@ Namespace Controls
         Protected Overrides Sub OnPaint(e As PaintEventArgs)
             Dim g As Graphics = e.Graphics
             g.SmoothingMode = SmoothingMode.AntiAlias
+            g.TextRenderingHint = Drawing.Text.TextRenderingHint.ClearTypeGridFit
 
             Dim rectBorder As New Rectangle(0, 0, Me.Width - 1, Me.Height - 1)
 
@@ -368,7 +389,12 @@ Namespace Controls
             Me.BackColor = theme.PanelBackColor
             Me.ForeColor = theme.ForeColor
             Me.BorderColor = theme.BorderColor
-            Me.HeaderBackColor = Helpers.ColorHelper.Darken(theme.PanelBackColor, 3)
+
+            ' Calcular color del header basado en el fondo del panel
+            Me.HeaderBackColor = If(theme.PanelBackColor.GetBrightness() > 0.5,
+                                    Helpers.ColorHelper.Darken(theme.PanelBackColor, 3),
+                                    Helpers.ColorHelper.Lighten(theme.PanelBackColor, 10))
+
             Me.BorderRadius = theme.BorderRadius
             Me.Invalidate()
         End Sub

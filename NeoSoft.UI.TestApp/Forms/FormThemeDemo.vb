@@ -1,149 +1,114 @@
-﻿Imports NeoSoft.UI.Controls
-Imports NeoSoft.UI.Theming
+﻿Imports NeoSoft.UI.Theming
+Imports NeoSoft.UI.Controls
+Imports System.Windows.Forms
 
 Public Class FormThemeDemo
 
-    Public Sub New()
-        InitializeComponent()
+#Region "Form Load"
 
-        ' Inicializar temas predefinidos
+    Private Sub FormThemeDemo_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' Inicializar temas disponibles
         NXThemeManager.Instance.InitializeBuiltInThemes()
 
-        ' Cargar lista de temas
-        LoadThemes()
+        ' Cargar tema guardado
+        Dim savedTheme As String = ThemeSettings.LoadCurrentTheme()
 
-        ' Suscribirse al evento de cambio de tema
-        AddHandler NXThemeManager.Instance.ThemeChanged, AddressOf OnThemeChanged
+        ' Poblar combo con temas disponibles
+        cboThemes.Items.Clear()
+        For Each themeName As String In NXThemeManager.Instance.AvailableThemes.Keys
+            cboThemes.Items.Add(NXThemeManager.Instance.AvailableThemes(themeName).DisplayName)
+        Next
+
+        ' Seleccionar el tema guardado
+        SelectSavedTheme(savedTheme)
 
         ' Aplicar tema inicial
         ApplyCurrentTheme()
     End Sub
 
-    Private Sub LoadThemes()
-        cboThemes.Items.Clear()
+#End Region
 
-        For Each themeName As String In NXThemeManager.Instance.AvailableThemes.Keys
-            Dim theme As NXTheme = NXThemeManager.Instance.AvailableThemes(themeName)
-            cboThemes.Items.Add(theme.DisplayName)
+#Region "Selección de Tema"
+
+    Private Sub SelectSavedTheme(themeName As String)
+        ' Buscar el tema en el combo
+        For i As Integer = 0 To cboThemes.Items.Count - 1
+            Dim displayName As String = cboThemes.Items(i).ToString()
+
+            ' Buscar el tema por nombre interno
+            For Each kvp In NXThemeManager.Instance.AvailableThemes
+                If kvp.Key = themeName AndAlso kvp.Value.DisplayName = displayName Then
+                    cboThemes.SelectedIndex = i
+                    Return
+                End If
+            Next
         Next
 
-        cboThemes.SelectedIndex = 0
+        ' Si no se encontró, seleccionar el primero (Default)
+        If cboThemes.Items.Count > 0 Then
+            cboThemes.SelectedIndex = 0
+        End If
     End Sub
 
     Private Sub CboThemes_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboThemes.SelectedIndexChanged
         If cboThemes.SelectedIndex >= 0 Then
-            Dim themeName As String = GetThemeKeyByDisplayName(cboThemes.SelectedItem.ToString())
-            NXThemeManager.Instance.ApplyTheme(themeName)
+            ApplyCurrentTheme()
         End If
     End Sub
 
-    Private Function GetThemeKeyByDisplayName(displayName As String) As String
-        For Each kvp In NXThemeManager.Instance.AvailableThemes
-            If kvp.Value.DisplayName = displayName Then
-                Return kvp.Key
-            End If
-        Next
-        Return "Default"
-    End Function
+#End Region
 
-    Private Sub OnThemeChanged(sender As Object, e As ThemeChangedEventArgs)
-        ApplyCurrentTheme()
-    End Sub
+#Region "Aplicar Tema"
 
     Private Sub ApplyCurrentTheme()
+        If cboThemes.SelectedIndex < 0 Then Return
+
+        Dim selectedDisplayName As String = cboThemes.SelectedItem.ToString()
+
+        ' Encontrar el tema por DisplayName
+        Dim selectedThemeName As String = ""
+        For Each kvp In NXThemeManager.Instance.AvailableThemes
+            If kvp.Value.DisplayName = selectedDisplayName Then
+                selectedThemeName = kvp.Key
+                Exit For
+            End If
+        Next
+
+        If String.IsNullOrEmpty(selectedThemeName) Then Return
+
+        ' Aplicar tema
+        NXThemeManager.Instance.ApplyTheme(selectedThemeName)
         Dim theme As NXTheme = NXThemeManager.Instance.CurrentTheme
 
         ' Aplicar al formulario
         Me.BackColor = theme.FormBackColor
         Me.ForeColor = theme.ForeColor
 
-        ' Actualizar descripción del tema
+        ' Aplicar a todos los controles con UseTheme
+        NXThemeHelper.ApplyThemeToForm(Me, theme)
+
+        ' Actualizar descripción
         lblThemeDescription.Text = theme.Description
 
-        ' Aplicar a todos los controles con UseTheme = True
-        NXThemeHelper.ApplyThemeToForm(Me, theme)
+        ' GUARDAR EL TEMA SELECCIONADO
+        ThemeSettings.SaveCurrentTheme(selectedThemeName)
+
+        Console.WriteLine($"✅ Tema '{theme.DisplayName}' aplicado y guardado")
     End Sub
+
+#End Region
+
+#Region "Botón Aplicar a Todos"
 
     Private Sub BtnApplyToAll_Click(sender As Object, e As EventArgs) Handles btnApplyToAll.Click
-        ' Habilitar UseTheme en todos los controles
-        NXThemeHelper.EnableThemeOnAllControls(Me)
+        ' Aplicar el tema actual
         ApplyCurrentTheme()
-        MessageBox.Show("Tema aplicado a todos los controles", "NeoSoft.UI",
-                       MessageBoxButtons.OK, MessageBoxIcon.Information)
-    End Sub
 
-#Region "Radio Button Events"
-
-    Private Sub GrpGender_SelectedChanged() Handles grpGender.ControlAdded, grpGender.ControlRemoved
-        ' Se puede usar para detectar cambios en el grupo
-        UpdateGenderSelection()
-    End Sub
-
-    Private Sub RdoMale_CheckedChanged(sender As Object, e As EventArgs) Handles rdoMale.CheckedChanged
-        If rdoMale.Checked Then
-            UpdateGenderSelection()
-        End If
-    End Sub
-
-    Private Sub RdoFemale_CheckedChanged(sender As Object, e As EventArgs) Handles rdoFemale.CheckedChanged
-        If rdoFemale.Checked Then
-            UpdateGenderSelection()
-        End If
-    End Sub
-
-    Private Sub RdoOther_CheckedChanged(sender As Object, e As EventArgs) Handles rdoOther.CheckedChanged
-        If rdoOther.Checked Then
-            UpdateGenderSelection()
-        End If
-    End Sub
-
-    Private Sub UpdateGenderSelection()
-        Dim selected = grpGender.SelectedRadioButton
-        If selected IsNot Nothing Then
-            Console.WriteLine($"Género seleccionado: {selected.Text}")
-        End If
-    End Sub
-
-    Private Sub RdoCreditCard_CheckedChanged(sender As Object, e As EventArgs) Handles rdoCreditCard.CheckedChanged
-        If rdoCreditCard.Checked Then
-            UpdatePaymentSelection()
-        End If
-    End Sub
-
-    Private Sub RdoDebitCard_CheckedChanged(sender As Object, e As EventArgs) Handles rdoDebitCard.CheckedChanged
-        If rdoDebitCard.Checked Then
-            UpdatePaymentSelection()
-        End If
-    End Sub
-
-    Private Sub RdoCash_CheckedChanged(sender As Object, e As EventArgs) Handles rdoCash.CheckedChanged
-        If rdoCash.Checked Then
-            UpdatePaymentSelection()
-        End If
-    End Sub
-
-    Private Sub RdoTransfer_CheckedChanged(sender As Object, e As EventArgs) Handles rdoTransfer.CheckedChanged
-        If rdoTransfer.Checked Then
-            UpdatePaymentSelection()
-        End If
-    End Sub
-
-    Private Sub UpdatePaymentSelection()
-        Dim selected = grpPayment.SelectedRadioButton
-        If selected IsNot Nothing Then
-            Console.WriteLine($"Método de pago seleccionado: {selected.Text}")
-            ' Aquí podrías mostrar/ocultar campos según el método de pago
-            Select Case grpPayment.SelectedIndex
-                Case 0 ' Tarjeta de Crédito
-                ' Mostrar campos de tarjeta
-                Case 1 ' Tarjeta de Débito
-                ' Mostrar campos de tarjeta
-                Case 2 ' Efectivo
-                ' Ocultar campos de tarjeta
-                Case 3 ' Transferencia
-                    ' Mostrar campos de transferencia
-            End Select
-        End If
+        MessageBox.Show($"Tema aplicado a todos los controles.{Environment.NewLine}" &
+                       $"Este tema se recordará para futuros formularios.",
+                       "Tema Aplicado",
+                       MessageBoxButtons.OK,
+                       MessageBoxIcon.Information)
     End Sub
 
 #End Region

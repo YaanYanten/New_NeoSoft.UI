@@ -57,6 +57,7 @@ Partial Class FormMain
         Me.chkDisabled = New NeoSoft.UI.Controls.NXCheckBox()
         Me.lblSectionCheckBox = New NeoSoft.UI.Controls.NXLabel()
         Me.lblInfoCheckBox = New NeoSoft.UI.Controls.NXLabel()
+        Me.btnProgressDemo = New NeoSoft.UI.Controls.NXButton()
         Me.SuspendLayout()
         '
         'Button1
@@ -650,12 +651,30 @@ Partial Class FormMain
         Me.lblInfoCheckBox.TabIndex = 32
         Me.lblInfoCheckBox.Text = "Soporta estilos Standard, Switch y Button con animaciones suaves"
         '
+        'btnProgressDemo
+        '
+        Me.btnProgressDemo.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.btnProgressDemo.BorderColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.btnProgressDemo.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnProgressDemo.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnProgressDemo.ForeColor = System.Drawing.Color.White
+        Me.btnProgressDemo.HoverBackColor = System.Drawing.Color.Empty
+        Me.btnProgressDemo.Image = Nothing
+        Me.btnProgressDemo.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnProgressDemo.Location = New System.Drawing.Point(561, 357)
+        Me.btnProgressDemo.Name = "btnProgressDemo"
+        Me.btnProgressDemo.PressedBackColor = System.Drawing.Color.Empty
+        Me.btnProgressDemo.Size = New System.Drawing.Size(140, 40)
+        Me.btnProgressDemo.TabIndex = 34
+        Me.btnProgressDemo.Text = "Demo Progress"
+        '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(1103, 534)
+        Me.Controls.Add(Me.btnProgressDemo)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.lblInfoImagePicker)
@@ -730,4 +749,5 @@ Partial Class FormMain
     Friend WithEvents Button1 As Button
     Friend WithEvents Button2 As Button
     Friend WithEvents btnThemeDemo As NeoSoft.UI.Controls.NXButton
+    Friend WithEvents btnProgressDemo As Controls.NXButton
 End Class

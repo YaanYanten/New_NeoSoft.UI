@@ -130,9 +130,13 @@ Namespace Theming
                 .ShadowColor = Color.FromArgb(100, 0, 0, 0),
                 .FormBackColor = Color.FromArgb(245, 245, 245),
                 .PanelBackColor = Color.White,
+                .ControlBackColor = Color.White,
+                .GroupHeaderBackColor = Color.FromArgb(245, 245, 245),
+                .GroupForeColor = Color.FromArgb(33, 33, 33),
                 .BorderRadius = 4,
                 .ButtonBorderRadius = 4,
                 .TextBoxBorderRadius = 4,
+                .GroupBorderRadius = 8,
                 .AnimationDuration = 200
             }
         End Function
@@ -158,9 +162,13 @@ Namespace Theming
                 .ShadowColor = Color.FromArgb(80, 0, 0, 0),
                 .FormBackColor = Color.FromArgb(243, 243, 243),
                 .PanelBackColor = Color.White,
+                .ControlBackColor = Color.White,
+                .GroupHeaderBackColor = Color.FromArgb(242, 242, 242),
+                .GroupForeColor = Color.FromArgb(68, 68, 68),
                 .BorderRadius = 2,
                 .ButtonBorderRadius = 2,
                 .TextBoxBorderRadius = 2,
+                .GroupBorderRadius = 2,
                 .AnimationDuration = 150
             }
         End Function
@@ -186,9 +194,13 @@ Namespace Theming
                 .ShadowColor = Color.FromArgb(120, 0, 0, 0),
                 .FormBackColor = Color.FromArgb(250, 250, 250),
                 .PanelBackColor = Color.White,
+                .ControlBackColor = Color.White,
+                .GroupHeaderBackColor = Color.FromArgb(245, 245, 245),
+                .GroupForeColor = Color.FromArgb(33, 33, 33),
                 .BorderRadius = 4,
                 .ButtonBorderRadius = 4,
                 .TextBoxBorderRadius = 4,
+                .GroupBorderRadius = 4,
                 .AnimationDuration = 250
             }
         End Function
@@ -214,9 +226,13 @@ Namespace Theming
                 .ShadowColor = Color.FromArgb(60, 0, 0, 0),
                 .FormBackColor = Color.FromArgb(250, 249, 248),
                 .PanelBackColor = Color.White,
+                .ControlBackColor = Color.White,
+                .GroupHeaderBackColor = Color.FromArgb(237, 235, 233),
+                .GroupForeColor = Color.FromArgb(50, 49, 48),
                 .BorderRadius = 2,
                 .ButtonBorderRadius = 2,
                 .TextBoxBorderRadius = 2,
+                .GroupBorderRadius = 2,
                 .AnimationDuration = 200
             }
         End Function
@@ -242,9 +258,13 @@ Namespace Theming
                 .ShadowColor = Color.FromArgb(100, 0, 0, 0),
                 .FormBackColor = Color.FromArgb(45, 45, 48),
                 .PanelBackColor = Color.FromArgb(37, 37, 38),
+                .ControlBackColor = Color.FromArgb(37, 37, 38),
+                .GroupHeaderBackColor = Color.FromArgb(62, 62, 64),
+                .GroupForeColor = Color.FromArgb(241, 241, 241),
                 .BorderRadius = 0,
                 .ButtonBorderRadius = 0,
                 .TextBoxBorderRadius = 0,
+                .GroupBorderRadius = 0,
                 .AnimationDuration = 150
             }
         End Function
@@ -270,9 +290,13 @@ Namespace Theming
                 .ShadowColor = Color.FromArgb(150, 0, 0, 0),
                 .FormBackColor = Color.FromArgb(25, 25, 25),
                 .PanelBackColor = Color.FromArgb(30, 30, 30),
+                .ControlBackColor = Color.FromArgb(30, 30, 30),
+                .GroupHeaderBackColor = Color.FromArgb(40, 40, 40),
+                .GroupForeColor = Color.FromArgb(230, 230, 230),
                 .BorderRadius = 4,
                 .ButtonBorderRadius = 4,
                 .TextBoxBorderRadius = 4,
+                .GroupBorderRadius = 8,
                 .AnimationDuration = 200
             }
         End Function
@@ -298,9 +322,13 @@ Namespace Theming
                 .ShadowColor = Color.Transparent,
                 .FormBackColor = Color.Black,
                 .PanelBackColor = Color.Black,
+                .ControlBackColor = Color.Black,
+                .GroupHeaderBackColor = Color.FromArgb(0, 0, 0),
+                .GroupForeColor = Color.White,
                 .BorderRadius = 0,
                 .ButtonBorderRadius = 0,
                 .TextBoxBorderRadius = 0,
+                .GroupBorderRadius = 0,
                 .AnimationDuration = 0
             }
         End Function
@@ -326,9 +354,13 @@ Namespace Theming
                 .ShadowColor = Color.FromArgb(80, 0, 0, 0),
                 .FormBackColor = Color.FromArgb(252, 252, 252),
                 .PanelBackColor = Color.White,
+                .ControlBackColor = Color.White,
+                .GroupHeaderBackColor = Color.FromArgb(220, 223, 228),
+                .GroupForeColor = Color.FromArgb(49, 54, 59),
                 .BorderRadius = 3,
                 .ButtonBorderRadius = 3,
                 .TextBoxBorderRadius = 3,
+                .GroupBorderRadius = 3,
                 .AnimationDuration = 200
             }
         End Function
@@ -354,9 +386,13 @@ Namespace Theming
                 .ShadowColor = Color.FromArgb(100, 70, 130, 180),
                 .FormBackColor = Color.FromArgb(248, 248, 255),
                 .PanelBackColor = Color.FromArgb(240, 248, 255),
+                .ControlBackColor = Color.FromArgb(240, 248, 255),
+                .GroupHeaderBackColor = Color.FromArgb(230, 240, 255),
+                .GroupForeColor = Color.FromArgb(25, 25, 112),
                 .BorderRadius = 6,
                 .ButtonBorderRadius = 6,
                 .TextBoxBorderRadius = 6,
+                .GroupBorderRadius = 6,
                 .AnimationDuration = 250
             }
         End Function
@@ -382,9 +418,13 @@ Namespace Theming
                 .ShadowColor = Color.FromArgb(60, 0, 0, 0),
                 .FormBackColor = Color.White,
                 .PanelBackColor = Color.White,
+                .ControlBackColor = Color.White,
+                .GroupHeaderBackColor = Color.FromArgb(239, 243, 248),
+                .GroupForeColor = Color.FromArgb(68, 68, 68),
                 .BorderRadius = 0,
                 .ButtonBorderRadius = 0,
                 .TextBoxBorderRadius = 0,
+                .GroupBorderRadius = 0,
                 .AnimationDuration = 150
             }
         End Function

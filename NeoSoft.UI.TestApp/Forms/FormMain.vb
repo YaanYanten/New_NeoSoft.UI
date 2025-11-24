@@ -66,4 +66,8 @@ Public Class FormMain
         frmTheme.ShowDialog()
     End Sub
 
+    Private Sub btnProgressDemo_Click(sender As Object, e As EventArgs) Handles btnProgressDemo.Click
+        Dim frmPrgDemo As New FormProgressBarDemo()
+        frmPrgDemo.ShowDialog()
+    End Sub
 End Class

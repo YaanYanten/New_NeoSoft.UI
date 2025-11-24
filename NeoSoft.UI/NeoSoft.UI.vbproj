@@ -85,13 +85,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\TraceLogger.vb" />
+    <Compile Include="Components\NXRadioGroupItem.vb" />
     <Compile Include="Controls\Containers\NXPanel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Containers\NXRadioGroup.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\NXCheckBox.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\NXMaskedTextBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NXProgressBar.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\NXRadioButton.vb">
@@ -114,6 +121,8 @@
     </Compile>
     <Compile Include="Editors\NXImageUITypeEditor.vb" />
     <Compile Include="Editors\NXMaskUITypeEditor.vb" />
+    <Compile Include="Editors\NXRadioGroupItemCollection.vb" />
+    <Compile Include="Editors\NXRadioGroupItemCollectionEditor.vb" />
     <Compile Include="Helper\ColorHelper.vb" />
     <Compile Include="Helper\MaskValidationRules.vb" />
     <Compile Include="Helper\ProjectResourceFinder.vb" />
@@ -137,9 +146,9 @@
     <Compile Include="Theming\NXThemeHelper.vb" />
     <Compile Include="Theming\NXThemeManager.vb" />
     <Compile Include="Theming\ThemeChangedEventArgs.vb" />
+    <Compile Include="Theming\ThemeSettings.vb" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Components\" />
     <Folder Include="Designers\" />
   </ItemGroup>
   <ItemGroup>
