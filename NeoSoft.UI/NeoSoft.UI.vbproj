@@ -95,6 +95,12 @@
     <Compile Include="Controls\NXCheckBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\NXComboBox.Designer.vb">
+      <DependentUpon>NXComboBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NXComboBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\NXMaskedTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -108,6 +114,15 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\NXSeparator.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NXToggleSwitch.Designer.vb">
+      <DependentUpon>NXToggleSwitch.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NXToggleSwitch.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NXToolTip.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Designers\NXAppearance.vb" />

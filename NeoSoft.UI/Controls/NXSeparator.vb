@@ -2,6 +2,7 @@
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
+Imports System.ComponentModel.Design
 Imports NeoSoft.UI.Design
 Imports NeoSoft.UI.Theming
 
@@ -84,7 +85,7 @@ Namespace Controls
         Private _showText As Boolean = False
         Private _textAlignment As TextAlignment = TextAlignment.Center
         Private _textPadding As Integer = 10
-        Private _textBackColor As Color = Color.Transparent
+        Private _textBackColor As Color = Color.White
 
 #End Region
 
@@ -97,7 +98,8 @@ Namespace Controls
                        ControlStyles.ResizeRedraw Or
                        ControlStyles.SupportsTransparentBackColor, True)
 
-            Me.BackColor = Color.Transparent
+            ' Usar color sólido por defecto (240,240,240) para evitar bug de renderizado múltiple
+            Me.BackColor = Color.White
             Me.ForeColor = Color.FromArgb(100, 100, 100)
             Me.Size = New Size(200, 20)
             Me.Font = New Font("Segoe UI", 9.0F)
@@ -515,6 +517,7 @@ Namespace Controls
         End Sub
 
         Protected Overrides Sub OnPaintBackground(e As PaintEventArgs)
+            ' Solo pintar fondo si no es transparente
             If Me.BackColor <> Color.Transparent Then
                 MyBase.OnPaintBackground(e)
             End If
@@ -572,5 +575,35 @@ Namespace Controls
 #End Region
 
     End Class
+
+#Region "Designer"
+
+    ''' <summary>
+    ''' Designer personalizado para NXSeparator que previene el bug de renderizado múltiple
+    ''' </summary>
+    <System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name:="FullTrust")>
+    Friend Class NXSeparatorDesigner
+        Inherits System.Windows.Forms.Design.ControlDesigner
+
+        Public Overrides Sub InitializeNewComponent(defaultValues As System.Collections.IDictionary)
+            MyBase.InitializeNewComponent(defaultValues)
+
+            ' Configuración inicial
+            Dim separator As NXSeparator = TryCast(Me.Control, NXSeparator)
+            If separator IsNot Nothing Then
+                separator.Orientation = NXSeparator.SeparatorOrientation.Horizontal
+                separator.LineStyleType = NXSeparator.LineStyle.Solid
+            End If
+        End Sub
+
+        ' CRÍTICO: Prevenir el repaint múltiple en tiempo de diseño
+        Protected Overrides Sub OnPaintAdornments(pe As PaintEventArgs)
+            ' No hacer nada - esto previene el renderizado múltiple
+            ' MyBase.OnPaintAdornments(pe) <- comentado intencionalmente
+        End Sub
+
+    End Class
+
+#End Region
 
 End Namespace

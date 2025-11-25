@@ -17,13 +17,31 @@ Partial Class FormThemeDemo
     End Sub
 
     Private Sub InitializeComponent()
-        Dim NxRadioGroupItem1 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
-        Dim NxRadioGroupItem2 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
-        Dim NxRadioGroupItem3 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
-        Dim NxRadioGroupItem4 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
-        Dim NxRadioGroupItem5 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
-        Dim NxRadioGroupItem6 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem7 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem8 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem9 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem10 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem11 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
+        Dim NxRadioGroupItem12 As NeoSoft.UI.Controls.NXRadioGroupItem = New NeoSoft.UI.Controls.NXRadioGroupItem()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormThemeDemo))
+        Me.pnlToggleAndSeparator = New NeoSoft.UI.Controls.NXPanel()
+        Me.tglAirplaneMode = New NeoSoft.UI.Controls.NXToggleSwitch()
+        Me.tglBluetooth = New NeoSoft.UI.Controls.NXToggleSwitch()
+        Me.tglWiFi = New NeoSoft.UI.Controls.NXToggleSwitch()
+        Me.sepVertical1 = New NeoSoft.UI.Controls.NXSeparator()
+        Me.tglAutoSave = New NeoSoft.UI.Controls.NXToggleSwitch()
+        Me.lblToggleSounds = New NeoSoft.UI.Controls.NXLabel()
+        Me.tglSounds = New NeoSoft.UI.Controls.NXToggleSwitch()
+        Me.lblToggleDarkMode = New NeoSoft.UI.Controls.NXLabel()
+        Me.tglDarkMode = New NeoSoft.UI.Controls.NXToggleSwitch()
+        Me.lblToggleBasic = New NeoSoft.UI.Controls.NXLabel()
+        Me.tglNotifications = New NeoSoft.UI.Controls.NXToggleSwitch()
+        Me.sepDashed = New NeoSoft.UI.Controls.NXSeparator()
+        Me.sepGradient = New NeoSoft.UI.Controls.NXSeparator()
+        Me.sepWithText = New NeoSoft.UI.Controls.NXSeparator()
+        Me.lblSeparatorDemo = New NeoSoft.UI.Controls.NXLabel()
+        Me.sepHorizontal1 = New NeoSoft.UI.Controls.NXSeparator()
+        Me.lblToggleSwitchSection = New NeoSoft.UI.Controls.NXLabel()
         Me.pnlRadioGroups = New NeoSoft.UI.Controls.NXPanel()
         Me.rgpNotifications = New NeoSoft.UI.Controls.NXRadioGroup()
         Me.rgpSubscription = New NeoSoft.UI.Controls.NXRadioGroup()
@@ -43,11 +61,369 @@ Partial Class FormThemeDemo
         Me.rdoDebitCard = New NeoSoft.UI.Controls.NXRadioButton()
         Me.rdoCreditCard = New NeoSoft.UI.Controls.NXRadioButton()
         Me.lblTitle = New NeoSoft.UI.Controls.NXLabel()
+        Me.pnlToggleAndSeparator.SuspendLayout()
         Me.pnlRadioGroups.SuspendLayout()
         Me.pnlHeader.SuspendLayout()
         Me.grpGender.SuspendLayout()
         Me.grpPayment.SuspendLayout()
         Me.SuspendLayout()
+        '
+        'pnlToggleAndSeparator
+        '
+        Me.pnlToggleAndSeparator.BackColor = System.Drawing.Color.White
+        Me.pnlToggleAndSeparator.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.pnlToggleAndSeparator.BorderRadius = 4
+        Me.pnlToggleAndSeparator.BorderSize = 1
+        Me.pnlToggleAndSeparator.Controls.Add(Me.tglAirplaneMode)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.tglBluetooth)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.tglWiFi)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.sepVertical1)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.tglAutoSave)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.lblToggleSounds)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.tglSounds)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.lblToggleDarkMode)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.tglDarkMode)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.lblToggleBasic)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.tglNotifications)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.sepDashed)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.sepGradient)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.sepWithText)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.lblSeparatorDemo)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.sepHorizontal1)
+        Me.pnlToggleAndSeparator.Controls.Add(Me.lblToggleSwitchSection)
+        Me.pnlToggleAndSeparator.GradientColor1 = System.Drawing.Color.White
+        Me.pnlToggleAndSeparator.GradientColor2 = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.pnlToggleAndSeparator.Location = New System.Drawing.Point(510, 176)
+        Me.pnlToggleAndSeparator.Name = "pnlToggleAndSeparator"
+        Me.pnlToggleAndSeparator.Padding = New System.Windows.Forms.Padding(10)
+        Me.pnlToggleAndSeparator.ScrollBarColor = System.Drawing.Color.FromArgb(CType(CType(150, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(150, Byte), Integer))
+        Me.pnlToggleAndSeparator.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.pnlToggleAndSeparator.ShowShadow = True
+        Me.pnlToggleAndSeparator.Size = New System.Drawing.Size(470, 414)
+        Me.pnlToggleAndSeparator.TabIndex = 37
+        Me.pnlToggleAndSeparator.UseTheme = True
+        '
+        'tglAirplaneMode
+        '
+        Me.tglAirplaneMode.BackColor = System.Drawing.Color.White
+        Me.tglAirplaneMode.BorderColor = System.Drawing.Color.FromArgb(CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer))
+        Me.tglAirplaneMode.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.tglAirplaneMode.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.tglAirplaneMode.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.tglAirplaneMode.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.tglAirplaneMode.GlyphAlignment = NeoSoft.UI.Controls.NXToggleSwitch.SwitchAlignment.Far
+        Me.tglAirplaneMode.Location = New System.Drawing.Point(270, 260)
+        Me.tglAirplaneMode.Name = "tglAirplaneMode"
+        Me.tglAirplaneMode.OffColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.tglAirplaneMode.OnColor = System.Drawing.Color.FromArgb(CType(CType(244, Byte), Integer), CType(CType(67, Byte), Integer), CType(CType(54, Byte), Integer))
+        Me.tglAirplaneMode.ShowText = True
+        Me.tglAirplaneMode.Size = New System.Drawing.Size(152, 25)
+        Me.tglAirplaneMode.TabIndex = 16
+        Me.tglAirplaneMode.TextOff = "Modo Avión"
+        Me.tglAirplaneMode.TextOn = "Modo Avión"
+        Me.tglAirplaneMode.ThumbColor = System.Drawing.Color.White
+        '
+        'tglBluetooth
+        '
+        Me.tglBluetooth.BackColor = System.Drawing.Color.White
+        Me.tglBluetooth.BorderColor = System.Drawing.Color.FromArgb(CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer))
+        Me.tglBluetooth.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.tglBluetooth.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.tglBluetooth.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.tglBluetooth.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.tglBluetooth.GlyphAlignment = NeoSoft.UI.Controls.NXToggleSwitch.SwitchAlignment.Far
+        Me.tglBluetooth.Location = New System.Drawing.Point(270, 225)
+        Me.tglBluetooth.Name = "tglBluetooth"
+        Me.tglBluetooth.OffColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.tglBluetooth.OnColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(243, Byte), Integer))
+        Me.tglBluetooth.ShowText = True
+        Me.tglBluetooth.Size = New System.Drawing.Size(152, 25)
+        Me.tglBluetooth.TabIndex = 15
+        Me.tglBluetooth.TextOff = "Bluetooth"
+        Me.tglBluetooth.TextOn = "Bluetooth"
+        Me.tglBluetooth.ThumbColor = System.Drawing.Color.White
+        '
+        'tglWiFi
+        '
+        Me.tglWiFi.BackColor = System.Drawing.Color.White
+        Me.tglWiFi.BorderColor = System.Drawing.Color.FromArgb(CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer))
+        Me.tglWiFi.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.tglWiFi.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.tglWiFi.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.tglWiFi.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.tglWiFi.GlyphAlignment = NeoSoft.UI.Controls.NXToggleSwitch.SwitchAlignment.Far
+        Me.tglWiFi.IsOn = True
+        Me.tglWiFi.Location = New System.Drawing.Point(270, 190)
+        Me.tglWiFi.Name = "tglWiFi"
+        Me.tglWiFi.OffColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.tglWiFi.OnColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(243, Byte), Integer))
+        Me.tglWiFi.ShowText = True
+        Me.tglWiFi.Size = New System.Drawing.Size(152, 25)
+        Me.tglWiFi.TabIndex = 14
+        Me.tglWiFi.TextOff = "WiFi"
+        Me.tglWiFi.TextOn = "WiFi"
+        Me.tglWiFi.ThumbColor = System.Drawing.Color.White
+        '
+        'sepVertical1
+        '
+        Me.sepVertical1.BackColor = System.Drawing.Color.White
+        Me.sepVertical1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.sepVertical1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.sepVertical1.LineColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.sepVertical1.LineGradientColor1 = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.sepVertical1.LineGradientColor2 = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(100, Byte), Integer), CType(CType(100, Byte), Integer))
+        Me.sepVertical1.Location = New System.Drawing.Point(230, 190)
+        Me.sepVertical1.Name = "sepVertical1"
+        Me.sepVertical1.Orientation = NeoSoft.UI.Controls.NXSeparator.SeparatorOrientation.Vertical
+        Me.sepVertical1.Size = New System.Drawing.Size(20, 140)
+        Me.sepVertical1.TabIndex = 13
+        Me.sepVertical1.TextBackColor = System.Drawing.Color.Transparent
+        Me.sepVertical1.UseTheme = True
+        '
+        'tglAutoSave
+        '
+        Me.tglAutoSave.BackColor = System.Drawing.Color.White
+        Me.tglAutoSave.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.tglAutoSave.BorderRadius = 10
+        Me.tglAutoSave.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.tglAutoSave.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer))
+        Me.tglAutoSave.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.tglAutoSave.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.tglAutoSave.Location = New System.Drawing.Point(15, 305)
+        Me.tglAutoSave.Name = "tglAutoSave"
+        Me.tglAutoSave.OffColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.tglAutoSave.OnColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.tglAutoSave.ShowText = True
+        Me.tglAutoSave.Size = New System.Drawing.Size(40, 20)
+        Me.tglAutoSave.SwitchHeight = 20
+        Me.tglAutoSave.SwitchSize = NeoSoft.UI.Controls.NXToggleSwitch.ToggleSize.Small
+        Me.tglAutoSave.SwitchWidth = 40
+        Me.tglAutoSave.TabIndex = 12
+        Me.tglAutoSave.TextOff = "Autoguardado"
+        Me.tglAutoSave.TextOn = "Autoguardado"
+        Me.tglAutoSave.ThumbColor = System.Drawing.Color.White
+        Me.tglAutoSave.UseTheme = True
+        '
+        'lblToggleSounds
+        '
+        Me.lblToggleSounds.BackColor = System.Drawing.Color.Transparent
+        Me.lblToggleSounds.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.lblToggleSounds.BorderRadius = 4
+        Me.lblToggleSounds.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.lblToggleSounds.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.lblToggleSounds.GradientColor = System.Drawing.Color.Empty
+        Me.lblToggleSounds.Location = New System.Drawing.Point(15, 260)
+        Me.lblToggleSounds.Name = "lblToggleSounds"
+        Me.lblToggleSounds.OutlineColor = System.Drawing.Color.Black
+        Me.lblToggleSounds.Padding = New System.Windows.Forms.Padding(5)
+        Me.lblToggleSounds.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblToggleSounds.ShadowOffset = New System.Drawing.Point(1, 1)
+        Me.lblToggleSounds.Size = New System.Drawing.Size(100, 25)
+        Me.lblToggleSounds.TabIndex = 10
+        Me.lblToggleSounds.Text = "Sonidos:"
+        Me.lblToggleSounds.UseTheme = True
+        '
+        'tglSounds
+        '
+        Me.tglSounds.BackColor = System.Drawing.Color.White
+        Me.tglSounds.BorderColor = System.Drawing.Color.FromArgb(CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer))
+        Me.tglSounds.BorderRadius = 15
+        Me.tglSounds.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.tglSounds.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.tglSounds.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.tglSounds.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.tglSounds.IsOn = True
+        Me.tglSounds.Location = New System.Drawing.Point(120, 260)
+        Me.tglSounds.Name = "tglSounds"
+        Me.tglSounds.OffColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.tglSounds.OnColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(152, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.tglSounds.Size = New System.Drawing.Size(60, 30)
+        Me.tglSounds.SwitchHeight = 30
+        Me.tglSounds.SwitchSize = NeoSoft.UI.Controls.NXToggleSwitch.ToggleSize.Large
+        Me.tglSounds.SwitchWidth = 60
+        Me.tglSounds.TabIndex = 11
+        Me.tglSounds.ThumbColor = System.Drawing.Color.White
+        '
+        'lblToggleDarkMode
+        '
+        Me.lblToggleDarkMode.BackColor = System.Drawing.Color.Transparent
+        Me.lblToggleDarkMode.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.lblToggleDarkMode.BorderRadius = 4
+        Me.lblToggleDarkMode.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.lblToggleDarkMode.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.lblToggleDarkMode.GradientColor = System.Drawing.Color.Empty
+        Me.lblToggleDarkMode.Location = New System.Drawing.Point(15, 225)
+        Me.lblToggleDarkMode.Name = "lblToggleDarkMode"
+        Me.lblToggleDarkMode.OutlineColor = System.Drawing.Color.Black
+        Me.lblToggleDarkMode.Padding = New System.Windows.Forms.Padding(5)
+        Me.lblToggleDarkMode.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblToggleDarkMode.ShadowOffset = New System.Drawing.Point(1, 1)
+        Me.lblToggleDarkMode.Size = New System.Drawing.Size(100, 25)
+        Me.lblToggleDarkMode.TabIndex = 8
+        Me.lblToggleDarkMode.Text = "Modo Oscuro:"
+        Me.lblToggleDarkMode.UseTheme = True
+        '
+        'tglDarkMode
+        '
+        Me.tglDarkMode.BackColor = System.Drawing.Color.White
+        Me.tglDarkMode.BorderColor = System.Drawing.Color.FromArgb(CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(180, Byte), Integer))
+        Me.tglDarkMode.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.tglDarkMode.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.tglDarkMode.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.tglDarkMode.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.tglDarkMode.Location = New System.Drawing.Point(120, 225)
+        Me.tglDarkMode.Name = "tglDarkMode"
+        Me.tglDarkMode.OffColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.tglDarkMode.OnColor = System.Drawing.Color.FromArgb(CType(CType(76, Byte), Integer), CType(CType(175, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.tglDarkMode.Size = New System.Drawing.Size(50, 25)
+        Me.tglDarkMode.TabIndex = 9
+        Me.tglDarkMode.ThumbColor = System.Drawing.Color.White
+        '
+        'lblToggleBasic
+        '
+        Me.lblToggleBasic.BackColor = System.Drawing.Color.Transparent
+        Me.lblToggleBasic.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.lblToggleBasic.BorderRadius = 4
+        Me.lblToggleBasic.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.lblToggleBasic.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.lblToggleBasic.GradientColor = System.Drawing.Color.Empty
+        Me.lblToggleBasic.Location = New System.Drawing.Point(15, 190)
+        Me.lblToggleBasic.Name = "lblToggleBasic"
+        Me.lblToggleBasic.OutlineColor = System.Drawing.Color.Black
+        Me.lblToggleBasic.Padding = New System.Windows.Forms.Padding(5)
+        Me.lblToggleBasic.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblToggleBasic.ShadowOffset = New System.Drawing.Point(1, 1)
+        Me.lblToggleBasic.Size = New System.Drawing.Size(100, 25)
+        Me.lblToggleBasic.TabIndex = 6
+        Me.lblToggleBasic.Text = "Notificaciones:"
+        Me.lblToggleBasic.UseTheme = True
+        '
+        'tglNotifications
+        '
+        Me.tglNotifications.BackColor = System.Drawing.Color.White
+        Me.tglNotifications.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.tglNotifications.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.tglNotifications.DisabledColor = System.Drawing.Color.FromArgb(CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer), CType(CType(189, Byte), Integer))
+        Me.tglNotifications.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.tglNotifications.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.tglNotifications.IsOn = True
+        Me.tglNotifications.Location = New System.Drawing.Point(120, 190)
+        Me.tglNotifications.Name = "tglNotifications"
+        Me.tglNotifications.OffColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.tglNotifications.OnColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.tglNotifications.Size = New System.Drawing.Size(50, 25)
+        Me.tglNotifications.TabIndex = 7
+        Me.tglNotifications.ThumbColor = System.Drawing.Color.White
+        Me.tglNotifications.UseTheme = True
+        '
+        'sepDashed
+        '
+        Me.sepDashed.BackColor = System.Drawing.Color.White
+        Me.sepDashed.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.sepDashed.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.sepDashed.LineColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.sepDashed.LineGradientColor1 = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.sepDashed.LineGradientColor2 = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(100, Byte), Integer), CType(CType(100, Byte), Integer))
+        Me.sepDashed.LineStyleType = NeoSoft.UI.Controls.NXSeparator.LineStyle.Dashed
+        Me.sepDashed.LineThickness = 2
+        Me.sepDashed.Location = New System.Drawing.Point(15, 150)
+        Me.sepDashed.Name = "sepDashed"
+        Me.sepDashed.ShowText = True
+        Me.sepDashed.Size = New System.Drawing.Size(440, 25)
+        Me.sepDashed.TabIndex = 5
+        Me.sepDashed.Text = "Línea Discontinua"
+        Me.sepDashed.TextAlign = NeoSoft.UI.Controls.NXSeparator.TextAlignment.Right
+        Me.sepDashed.TextBackColor = System.Drawing.Color.Transparent
+        Me.sepDashed.UseTheme = True
+        '
+        'sepGradient
+        '
+        Me.sepGradient.BackColor = System.Drawing.Color.White
+        Me.sepGradient.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.sepGradient.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(100, Byte), Integer), CType(CType(100, Byte), Integer))
+        Me.sepGradient.LineColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.sepGradient.LineColorStyleType = NeoSoft.UI.Controls.NXSeparator.LineColorStyle.Gradient
+        Me.sepGradient.LineGradientColor1 = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.sepGradient.LineGradientColor2 = System.Drawing.Color.FromArgb(CType(CType(76, Byte), Integer), CType(CType(175, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.sepGradient.LineThickness = 2
+        Me.sepGradient.Location = New System.Drawing.Point(15, 120)
+        Me.sepGradient.Name = "sepGradient"
+        Me.sepGradient.ShowText = True
+        Me.sepGradient.Size = New System.Drawing.Size(440, 25)
+        Me.sepGradient.TabIndex = 4
+        Me.sepGradient.Text = "Gradiente"
+        Me.sepGradient.TextAlign = NeoSoft.UI.Controls.NXSeparator.TextAlignment.Left
+        Me.sepGradient.TextBackColor = System.Drawing.Color.White
+        '
+        'sepWithText
+        '
+        Me.sepWithText.BackColor = System.Drawing.Color.White
+        Me.sepWithText.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.sepWithText.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.sepWithText.LineColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.sepWithText.LineGradientColor1 = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.sepWithText.LineGradientColor2 = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(100, Byte), Integer), CType(CType(100, Byte), Integer))
+        Me.sepWithText.Location = New System.Drawing.Point(15, 90)
+        Me.sepWithText.Name = "sepWithText"
+        Me.sepWithText.ShowText = True
+        Me.sepWithText.Size = New System.Drawing.Size(440, 25)
+        Me.sepWithText.TabIndex = 3
+        Me.sepWithText.Text = "Con Texto"
+        Me.sepWithText.TextBackColor = System.Drawing.Color.Transparent
+        Me.sepWithText.UseTheme = True
+        '
+        'lblSeparatorDemo
+        '
+        Me.lblSeparatorDemo.BackColor = System.Drawing.Color.Transparent
+        Me.lblSeparatorDemo.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.lblSeparatorDemo.BorderRadius = 4
+        Me.lblSeparatorDemo.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.lblSeparatorDemo.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.lblSeparatorDemo.GradientColor = System.Drawing.Color.Empty
+        Me.lblSeparatorDemo.Location = New System.Drawing.Point(15, 60)
+        Me.lblSeparatorDemo.Name = "lblSeparatorDemo"
+        Me.lblSeparatorDemo.OutlineColor = System.Drawing.Color.Black
+        Me.lblSeparatorDemo.Padding = New System.Windows.Forms.Padding(5)
+        Me.lblSeparatorDemo.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblSeparatorDemo.ShadowOffset = New System.Drawing.Point(1, 1)
+        Me.lblSeparatorDemo.Size = New System.Drawing.Size(150, 25)
+        Me.lblSeparatorDemo.TabIndex = 2
+        Me.lblSeparatorDemo.Text = "Separadores:"
+        Me.lblSeparatorDemo.UseTheme = True
+        '
+        'sepHorizontal1
+        '
+        Me.sepHorizontal1.BackColor = System.Drawing.Color.White
+        Me.sepHorizontal1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.sepHorizontal1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.sepHorizontal1.LineColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.sepHorizontal1.LineGradientColor1 = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.sepHorizontal1.LineGradientColor2 = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(100, Byte), Integer), CType(CType(100, Byte), Integer))
+        Me.sepHorizontal1.Location = New System.Drawing.Point(15, 45)
+        Me.sepHorizontal1.Name = "sepHorizontal1"
+        Me.sepHorizontal1.Size = New System.Drawing.Size(440, 10)
+        Me.sepHorizontal1.TabIndex = 1
+        Me.sepHorizontal1.TextBackColor = System.Drawing.Color.Transparent
+        Me.sepHorizontal1.UseTheme = True
+        '
+        'lblToggleSwitchSection
+        '
+        Me.lblToggleSwitchSection.BackColor = System.Drawing.Color.Transparent
+        Me.lblToggleSwitchSection.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.lblToggleSwitchSection.BorderRadius = 4
+        Me.lblToggleSwitchSection.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.lblToggleSwitchSection.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.lblToggleSwitchSection.GradientColor = System.Drawing.Color.Empty
+        Me.lblToggleSwitchSection.Location = New System.Drawing.Point(15, 10)
+        Me.lblToggleSwitchSection.Name = "lblToggleSwitchSection"
+        Me.lblToggleSwitchSection.OutlineColor = System.Drawing.Color.Black
+        Me.lblToggleSwitchSection.Padding = New System.Windows.Forms.Padding(5)
+        Me.lblToggleSwitchSection.ShadowColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.lblToggleSwitchSection.ShadowOffset = New System.Drawing.Point(1, 1)
+        Me.lblToggleSwitchSection.Size = New System.Drawing.Size(440, 30)
+        Me.lblToggleSwitchSection.TabIndex = 0
+        Me.lblToggleSwitchSection.Text = "🎛️ NXToggleSwitch && ➖ NXSeparator"
+        Me.lblToggleSwitchSection.UseTheme = True
         '
         'pnlRadioGroups
         '
@@ -76,18 +452,18 @@ Partial Class FormThemeDemo
         Me.rgpNotifications.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.rgpNotifications.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.rgpNotifications.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
-        NxRadioGroupItem1.Tag = Nothing
-        NxRadioGroupItem1.Text = "🔔 Todas"
-        NxRadioGroupItem1.Value = "all"
-        NxRadioGroupItem2.Tag = Nothing
-        NxRadioGroupItem2.Text = "🔕 Solo importantes"
-        NxRadioGroupItem2.Value = "important"
-        NxRadioGroupItem3.Tag = Nothing
-        NxRadioGroupItem3.Text = "⛔ Ninguna"
-        NxRadioGroupItem3.Value = "none"
-        Me.rgpNotifications.Items.Add(NxRadioGroupItem1)
-        Me.rgpNotifications.Items.Add(NxRadioGroupItem2)
-        Me.rgpNotifications.Items.Add(NxRadioGroupItem3)
+        NxRadioGroupItem7.Tag = Nothing
+        NxRadioGroupItem7.Text = "🔔 Todas"
+        NxRadioGroupItem7.Value = "all"
+        NxRadioGroupItem8.Tag = Nothing
+        NxRadioGroupItem8.Text = "🔕 Solo importantes"
+        NxRadioGroupItem8.Value = "important"
+        NxRadioGroupItem9.Tag = Nothing
+        NxRadioGroupItem9.Text = "⛔ Ninguna"
+        NxRadioGroupItem9.Value = "none"
+        Me.rgpNotifications.Items.Add(NxRadioGroupItem7)
+        Me.rgpNotifications.Items.Add(NxRadioGroupItem8)
+        Me.rgpNotifications.Items.Add(NxRadioGroupItem9)
         Me.rgpNotifications.Location = New System.Drawing.Point(330, 50)
         Me.rgpNotifications.Name = "rgpNotifications"
         Me.rgpNotifications.Padding = New System.Windows.Forms.Padding(10)
@@ -104,18 +480,18 @@ Partial Class FormThemeDemo
         Me.rgpSubscription.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.rgpSubscription.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.rgpSubscription.ForeColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
-        NxRadioGroupItem4.Tag = Nothing
-        NxRadioGroupItem4.Text = "📅 Mensual - $9.99"
-        NxRadioGroupItem4.Value = "monthly"
-        NxRadioGroupItem5.Tag = Nothing
-        NxRadioGroupItem5.Text = "📆 Anual - $99.99 (ahorra 17%)"
-        NxRadioGroupItem5.Value = "yearly"
-        NxRadioGroupItem6.Tag = Nothing
-        NxRadioGroupItem6.Text = "🆓 Gratuito"
-        NxRadioGroupItem6.Value = "free"
-        Me.rgpSubscription.Items.Add(NxRadioGroupItem4)
-        Me.rgpSubscription.Items.Add(NxRadioGroupItem5)
-        Me.rgpSubscription.Items.Add(NxRadioGroupItem6)
+        NxRadioGroupItem10.Tag = Nothing
+        NxRadioGroupItem10.Text = "📅 Mensual - $9.99"
+        NxRadioGroupItem10.Value = "monthly"
+        NxRadioGroupItem11.Tag = Nothing
+        NxRadioGroupItem11.Text = "📆 Anual - $99.99 (ahorra 17%)"
+        NxRadioGroupItem11.Value = "yearly"
+        NxRadioGroupItem12.Tag = Nothing
+        NxRadioGroupItem12.Text = "🆓 Gratuito"
+        NxRadioGroupItem12.Value = "free"
+        Me.rgpSubscription.Items.Add(NxRadioGroupItem10)
+        Me.rgpSubscription.Items.Add(NxRadioGroupItem11)
+        Me.rgpSubscription.Items.Add(NxRadioGroupItem12)
         Me.rgpSubscription.Location = New System.Drawing.Point(15, 50)
         Me.rgpSubscription.Name = "rgpSubscription"
         Me.rgpSubscription.Padding = New System.Windows.Forms.Padding(10)
@@ -412,6 +788,7 @@ Partial Class FormThemeDemo
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1000, 610)
+        Me.Controls.Add(Me.pnlToggleAndSeparator)
         Me.Controls.Add(Me.pnlRadioGroups)
         Me.Controls.Add(Me.pnlHeader)
         Me.Controls.Add(Me.grpGender)
@@ -421,6 +798,7 @@ Partial Class FormThemeDemo
         Me.Name = "FormThemeDemo"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Demo de Temas - NeoSoft.UI"
+        Me.pnlToggleAndSeparator.ResumeLayout(False)
         Me.pnlRadioGroups.ResumeLayout(False)
         Me.pnlHeader.ResumeLayout(False)
         Me.grpGender.ResumeLayout(False)
@@ -448,4 +826,22 @@ Partial Class FormThemeDemo
     Friend WithEvents lblRadioGroupSection As NXLabel
     Friend WithEvents rgpSubscription As NXRadioGroup
     Friend WithEvents rgpNotifications As NXRadioGroup
+    Friend WithEvents pnlToggleAndSeparator As NXPanel
+    Friend WithEvents lblToggleSwitchSection As NXLabel
+    Friend WithEvents sepHorizontal1 As NXSeparator
+    Friend WithEvents lblSeparatorDemo As NXLabel
+    Friend WithEvents sepWithText As NXSeparator
+    Friend WithEvents sepGradient As NXSeparator
+    Friend WithEvents sepDashed As NXSeparator
+    Friend WithEvents lblToggleBasic As NXLabel
+    Friend WithEvents tglNotifications As NXToggleSwitch
+    Friend WithEvents lblToggleDarkMode As NXLabel
+    Friend WithEvents tglDarkMode As NXToggleSwitch
+    Friend WithEvents lblToggleSounds As NXLabel
+    Friend WithEvents tglSounds As NXToggleSwitch
+    Friend WithEvents tglAutoSave As NXToggleSwitch
+    Friend WithEvents sepVertical1 As NXSeparator
+    Friend WithEvents tglWiFi As NXToggleSwitch
+    Friend WithEvents tglBluetooth As NXToggleSwitch
+    Friend WithEvents tglAirplaneMode As NXToggleSwitch
 End Class

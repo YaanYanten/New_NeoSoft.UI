@@ -70,4 +70,9 @@ Public Class FormMain
         Dim frmPrgDemo As New FormProgressBarDemo()
         frmPrgDemo.ShowDialog()
     End Sub
+
+    Private Sub btnToolComboDemo_Click(sender As Object, e As EventArgs) Handles btnToolComboDemo.Click
+        Dim frmToolTipDemo As New FormNXToolTipDemo()
+        frmToolTipDemo.ShowDialog()
+    End Sub
 End Class

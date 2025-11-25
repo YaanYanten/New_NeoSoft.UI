@@ -80,6 +80,12 @@
       <DependentUpon>FormMain.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\FormNXToolTipDemo.Designer.vb">
+      <DependentUpon>FormNXToolTipDemo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormNXToolTipDemo.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FormProgressBarDemo.Designer.vb">
       <DependentUpon>FormProgressBarDemo.vb</DependentUpon>
     </Compile>
@@ -106,6 +112,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\FormMain.resx">
       <DependentUpon>FormMain.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormNXToolTipDemo.resx">
+      <DependentUpon>FormNXToolTipDemo.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormProgressBarDemo.resx">
       <DependentUpon>FormProgressBarDemo.vb</DependentUpon>
