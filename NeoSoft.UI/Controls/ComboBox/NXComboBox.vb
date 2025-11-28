@@ -21,7 +21,7 @@ Namespace Controls
         ''' <summary>
         ''' Estilo del dropdown
         ''' </summary>
-        Public Enum DropdownStyle
+        Public Enum NXDropdownStyle
             ''' <summary>Estilo simple</summary>
             Simple
             ''' <summary>Estilo moderno con sombra</summary>
@@ -391,7 +391,7 @@ Namespace Controls
 
                 ' Dibujar borde según estilo
                 Select Case _owner._dropdownStyle
-                    Case DropDownStyle.Modern
+                    Case NXDropdownStyle.Modern
                         ' Sombra
                         Using shadowBrush As New SolidBrush(Color.FromArgb(30, 0, 0, 0))
                             g.FillRectangle(shadowBrush, 2, 2, Me.Width - 4, Me.Height - 4)
@@ -401,7 +401,7 @@ Namespace Controls
                             g.DrawRectangle(pen, 0, 0, Me.Width - 1, Me.Height - 1)
                         End Using
 
-                    Case DropDownStyle.Material
+                    Case NXDropdownStyle.Material
                         ' Sin borde, solo sombra
                         Using shadowBrush As New SolidBrush(Color.FromArgb(40, 0, 0, 0))
                             g.FillRectangle(shadowBrush, 3, 3, Me.Width - 6, Me.Height - 6)
@@ -434,7 +434,7 @@ Namespace Controls
 
         ' Propiedades
         Private _selectionMode As SelectionMode = SelectionMode.Single
-        Private _dropdownStyle As DropdownStyle = DropDownStyle.Modern
+        Private _dropdownStyle As NXDropdownStyle = NXDropdownStyle.Modern
         Private _enableSearch As Boolean = True
         Private _enableAutoComplete As Boolean = True
         Private _accentColor As Color = Color.FromArgb(0, 120, 215)
@@ -447,6 +447,12 @@ Namespace Controls
         ' Estados
         Private _isMouseOver As Boolean = False
         Private _isFocused As Boolean = False
+        Private _readOnly As Boolean = False
+
+        ' DataBinding
+        Private _dataSource As Object = Nothing
+        Private _displayMember As String = ""
+        Private _valueMember As String = ""
 
 #End Region
 
@@ -471,7 +477,8 @@ Namespace Controls
                 .BackColor = Me.BackColor,
                 .ForeColor = Me.ForeColor,
                 .Location = New Point(8, 8),
-                .Size = New Size(165, 20)
+                .Size = New Size(165, 20),
+                .ReadOnly = _readOnly
             }
             Me.Controls.Add(_textBox)
 
@@ -499,12 +506,12 @@ Namespace Controls
         <Category("Apariencia NX")>
         <NXProperty()>
         <Description("Estilo del dropdown")>
-        <DefaultValue(GetType(DropdownStyle), "Modern")>
-        Public Property DropDownStyl As DropdownStyle
+        <DefaultValue(GetType(NXDropdownStyle), "Modern")>
+        Public Property DropDownStyle As NXDropdownStyle
             Get
                 Return _dropdownStyle
             End Get
-            Set(value As DropdownStyle)
+            Set(value As NXDropdownStyle)
                 _dropdownStyle = value
                 Me.Invalidate()
             End Set
@@ -680,6 +687,25 @@ Namespace Controls
             End Set
         End Property
 
+        ''' <summary>
+        ''' Indica si el usuario puede editar el texto del ComboBox
+        ''' </summary>
+        <Category("Behavior")>
+        <NXProperty()>
+        <Description("Si es True, el usuario no puede editar el texto manualmente, pero el código sí puede modificar items")>
+        <DefaultValue(False)>
+        Public Property [ReadOnly] As Boolean
+            Get
+                Return _readOnly
+            End Get
+            Set(value As Boolean)
+                _readOnly = value
+                If _textBox IsNot Nothing Then
+                    _textBox.ReadOnly = value
+                End If
+            End Set
+        End Property
+
 #End Region
 
 #Region "Eventos"
@@ -691,18 +717,63 @@ Namespace Controls
 
 #Region "Métodos Públicos"
 
+        ''' <summary>
+        ''' Agrega un item al ComboBox con solo texto
+        ''' </summary>
         Public Sub AddItem(text As String)
-            _items.Add(New NXComboBoxItem(text))
-            Me.Invalidate()
-        End Sub
+            ' Validar que no haya DataSource activo
+            If _dataSource IsNot Nothing Then
+                Throw New InvalidOperationException(
+                    "No se puede agregar items manualmente cuando DataSource está configurado. " &
+                    "Establezca DataSource = Nothing primero.")
+            End If
 
-        Public Sub AddItem(text As String, value As Object)
-            _items.Add(New NXComboBoxItem(text, value))
-            Me.Invalidate()
-        End Sub
-
-        Public Sub AddItem(item As NXComboBoxItem)
+            Dim item As New NXComboBoxItem(text)
             _items.Add(item)
+            UpdateTextBox()
+            Me.Invalidate()
+        End Sub
+
+        ''' <summary>
+        ''' Agrega un item al ComboBox con texto y valor
+        ''' </summary>
+        Public Sub AddItem(text As String, value As Object)
+            If _dataSource IsNot Nothing Then
+                Throw New InvalidOperationException(
+                    "No se puede agregar items manualmente cuando DataSource está configurado.")
+            End If
+
+            Dim item As New NXComboBoxItem(text, value)
+            _items.Add(item)
+            UpdateTextBox()
+            Me.Invalidate()
+        End Sub
+
+        ''' <summary>
+        ''' Agrega un item completo al ComboBox
+        ''' </summary>
+        Public Sub AddItem(item As NXComboBoxItem)
+            If _dataSource IsNot Nothing Then
+                Throw New InvalidOperationException(
+                    "No se puede agregar items manualmente cuando DataSource está configurado.")
+            End If
+
+            _items.Add(item)
+            UpdateTextBox()
+            Me.Invalidate()
+        End Sub
+
+        ''' <summary>
+        ''' Agrega múltiples items al ComboBox
+        ''' </summary>
+        Public Sub AddItems(items As List(Of NXComboBoxItem))
+            If _dataSource IsNot Nothing Then
+                Throw New InvalidOperationException(
+                    "No se puede agregar items manualmente cuando DataSource está configurado.")
+            End If
+
+            _items.AddRange(items)
+            UpdateTextBox()
             Me.Invalidate()
         End Sub
 
@@ -724,13 +795,19 @@ Namespace Controls
             End If
         End Sub
 
+        ''' <summary>
+        ''' Limpia todos los items del ComboBox y el DataSource
+        ''' </summary>
         Public Sub Clear()
+            _dataSource = Nothing
+            _displayMember = ""
+            _valueMember = ""
             _items.Clear()
             _selectedIndex = -1
-            _selectedItems.Clear()
             UpdateTextBox()
             Me.Invalidate()
         End Sub
+
 
 #End Region
 
@@ -754,11 +831,6 @@ Namespace Controls
                     _textBox.ForeColor = Color.FromArgb(160, 160, 160)
                 End If
             End If
-        End Sub
-
-        Private Sub UpdateTextBoxPosition()
-            _textBox.Location = New Point(8, (Me.Height - _textBox.Height) \ 2)
-            _textBox.Size = New Size(Me.Width - 35, _textBox.Height)
         End Sub
 
         Private Sub UpdateAutoComplete()
@@ -820,7 +892,6 @@ Namespace Controls
 
         Protected Overrides Sub OnResize(e As EventArgs)
             MyBase.OnResize(e)
-            UpdateTextBoxPosition()
         End Sub
 
         Protected Overrides Sub OnMouseEnter(e As EventArgs)

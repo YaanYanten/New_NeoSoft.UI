@@ -59,6 +59,8 @@ Partial Class FormMain
         Me.lblInfoCheckBox = New NeoSoft.UI.Controls.NXLabel()
         Me.btnProgressDemo = New NeoSoft.UI.Controls.NXButton()
         Me.btnToolComboDemo = New NeoSoft.UI.Controls.NXButton()
+        Me.btnCheckComboDemo = New NeoSoft.UI.Controls.NXButton()
+        Me.btnTestControl1 = New NeoSoft.UI.Controls.NXButton()
         Me.SuspendLayout()
         '
         'Button1
@@ -686,12 +688,48 @@ Partial Class FormMain
         Me.btnToolComboDemo.TabIndex = 35
         Me.btnToolComboDemo.Text = "Demo Tool & Combo"
         '
+        'btnCheckComboDemo
+        '
+        Me.btnCheckComboDemo.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.btnCheckComboDemo.BorderColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.btnCheckComboDemo.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnCheckComboDemo.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnCheckComboDemo.ForeColor = System.Drawing.Color.White
+        Me.btnCheckComboDemo.HoverBackColor = System.Drawing.Color.Empty
+        Me.btnCheckComboDemo.Image = CType(resources.GetObject("btnCheckComboDemo.Image"), System.Drawing.Image)
+        Me.btnCheckComboDemo.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnCheckComboDemo.Location = New System.Drawing.Point(741, 432)
+        Me.btnCheckComboDemo.Name = "btnCheckComboDemo"
+        Me.btnCheckComboDemo.PressedBackColor = System.Drawing.Color.Empty
+        Me.btnCheckComboDemo.Size = New System.Drawing.Size(162, 56)
+        Me.btnCheckComboDemo.TabIndex = 36
+        Me.btnCheckComboDemo.Text = "Demo Check Combo"
+        '
+        'btnTestControl1
+        '
+        Me.btnTestControl1.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.btnTestControl1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.btnTestControl1.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnTestControl1.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnTestControl1.ForeColor = System.Drawing.Color.White
+        Me.btnTestControl1.HoverBackColor = System.Drawing.Color.Empty
+        Me.btnTestControl1.Image = Nothing
+        Me.btnTestControl1.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnTestControl1.Location = New System.Drawing.Point(915, 357)
+        Me.btnTestControl1.Name = "btnTestControl1"
+        Me.btnTestControl1.PressedBackColor = System.Drawing.Color.Empty
+        Me.btnTestControl1.Size = New System.Drawing.Size(140, 40)
+        Me.btnTestControl1.TabIndex = 37
+        Me.btnTestControl1.Text = "Test Control"
+        '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(245, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(1103, 534)
+        Me.Controls.Add(Me.btnTestControl1)
+        Me.Controls.Add(Me.btnCheckComboDemo)
         Me.Controls.Add(Me.btnToolComboDemo)
         Me.Controls.Add(Me.btnProgressDemo)
         Me.Controls.Add(Me.Button2)
@@ -770,4 +808,6 @@ Partial Class FormMain
     Friend WithEvents btnThemeDemo As NeoSoft.UI.Controls.NXButton
     Friend WithEvents btnProgressDemo As Controls.NXButton
     Friend WithEvents btnToolComboDemo As Controls.NXButton
+    Friend WithEvents btnCheckComboDemo As Controls.NXButton
+    Friend WithEvents btnTestControl1 As Controls.NXButton
 End Class

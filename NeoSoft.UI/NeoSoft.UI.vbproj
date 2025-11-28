@@ -86,22 +86,34 @@
   <ItemGroup>
     <Compile Include="Common\TraceLogger.vb" />
     <Compile Include="Components\NXRadioGroupItem.vb" />
+    <Compile Include="Controls\ComboBox\NXCheckComboBox.Designer.vb">
+      <DependentUpon>NXCheckComboBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ComboBox\NXCheckComboBox.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\Containers\NXPanel.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\Containers\NXRadioGroup.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\ListBox\NXListBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\NXCheckBox.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\NXComboBox.Designer.vb">
+    <Compile Include="Controls\ComboBox\NXComboBox.Designer.vb">
       <DependentUpon>NXComboBox.vb</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NXComboBox.vb">
+    <Compile Include="Controls\ComboBox\NXComboBox.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\NXMaskedTextBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NXNumericUpDown\NXNumericUpDown.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\NXProgressBar.vb">

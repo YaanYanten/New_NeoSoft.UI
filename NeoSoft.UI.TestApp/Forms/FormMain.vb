@@ -75,4 +75,15 @@ Public Class FormMain
         Dim frmToolTipDemo As New FormNXToolTipDemo()
         frmToolTipDemo.ShowDialog()
     End Sub
+
+    Private Sub btnCheckComboDemo_Click(sender As Object, e As EventArgs) Handles btnCheckComboDemo.Click
+        Dim frmCheckComboDemo As New FormNXCheckComboBoxDemo()
+        frmCheckComboDemo.ShowDialog()
+    End Sub
+
+    Private Sub NxButton1_Click(sender As Object, e As EventArgs) Handles btnTestControl1.Click
+        Dim frmTestControl As New frmNXControlTest1()
+        frmTestControl.ShowDialog()
+    End Sub
+
 End Class

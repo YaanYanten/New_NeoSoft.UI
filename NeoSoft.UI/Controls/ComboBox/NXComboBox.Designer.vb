@@ -70,11 +70,11 @@ Namespace Design
             End Set
         End Property
 
-        Public Property DropDownStyle As NXComboBox.DropdownStyle
+        Public Property DropDownStyle As NXComboBox.NXDropdownStyle
             Get
-                Return _comboBox.DropDownStyl
+                Return _comboBox.DropDownStyle
             End Get
-            Set(value As NXComboBox.DropdownStyle)
+            Set(value As NXComboBox.NXDropdownStyle)
                 GetPropertyByName("DropDownStyle").SetValue(_comboBox, value)
             End Set
         End Property

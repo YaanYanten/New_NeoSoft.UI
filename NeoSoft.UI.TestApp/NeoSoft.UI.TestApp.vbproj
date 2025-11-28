@@ -80,6 +80,12 @@
       <DependentUpon>FormMain.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\FormNXCheckComboBoxDemo.Designer.vb">
+      <DependentUpon>FormNXCheckComboBoxDemo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormNXCheckComboBoxDemo.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FormNXToolTipDemo.Designer.vb">
       <DependentUpon>FormNXToolTipDemo.vb</DependentUpon>
     </Compile>
@@ -98,6 +104,12 @@
     <Compile Include="Forms\FormThemeDemo.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmNXControlTest1.Designer.vb">
+      <DependentUpon>frmNXControlTest1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmNXControlTest1.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -113,6 +125,9 @@
     <EmbeddedResource Include="Forms\FormMain.resx">
       <DependentUpon>FormMain.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormNXCheckComboBoxDemo.resx">
+      <DependentUpon>FormNXCheckComboBoxDemo.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormNXToolTipDemo.resx">
       <DependentUpon>FormNXToolTipDemo.vb</DependentUpon>
     </EmbeddedResource>
@@ -121,6 +136,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormThemeDemo.resx">
       <DependentUpon>FormThemeDemo.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmNXControlTest1.resx">
+      <DependentUpon>frmNXControlTest1.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
