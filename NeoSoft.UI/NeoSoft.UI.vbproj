@@ -153,6 +153,8 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Editors\NXImageUITypeEditor.vb" />
+    <Compile Include="Editors\NXMaskNumericUITypeEditor.vb" />
+    <Compile Include="Editors\NXMaskStringUITypeEditor.vb" />
     <Compile Include="Editors\NXMaskUITypeEditor.vb" />
     <Compile Include="Editors\NXRadioGroupItemCollection.vb" />
     <Compile Include="Editors\NXRadioGroupItemCollectionEditor.vb" />

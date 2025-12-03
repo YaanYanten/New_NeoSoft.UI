@@ -1,9 +1,10 @@
 ﻿Imports System.ComponentModel
 Imports System.Drawing
+Imports System.Drawing.Design
 Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
-Imports System.Drawing.Design
 Imports NeoSoft.UI.Design
+Imports NeoSoft.UI.NeoSoft.UI.Controls
 Imports NeoSoft.UI.Theming
 
 Namespace Controls
@@ -351,10 +352,13 @@ Namespace Controls
             End Set
         End Property
 
+        ''' <summary>
+        ''' Máscara numérica - USA EDITOR CON FILTRO NUMERIC
+        ''' </summary>
         <NXProperty()>
         <Category("NeoSoft")>
-        <Description("Máscara numérica para entrada de datos")>
-        <Editor(GetType(NXMaskUITypeEditor), GetType(UITypeEditor))>
+        <Description("Máscara numérica para entrada de datos (solo máscaras numéricas)")>
+        <Editor(GetType(NXMaskNumericUITypeEditor), GetType(UITypeEditor))> '⭐ EDITOR PERSONALIZADO
         Public Property Mask As String
             Get
                 Return _mask
@@ -366,6 +370,7 @@ Namespace Controls
                 End If
             End Set
         End Property
+
 
 #End Region
 
@@ -500,15 +505,19 @@ Namespace Controls
 
         <Category("Apariencia NX")>
         <NXProperty()>
-        <Description("Usar tema global")>
+        <Description("Indica si el control usa el tema global automáticamente")>
         <DefaultValue(False)>
-        Public Property UseTheme As Boolean Implements IThemeable.UseTheme
+        Public Property UseTheme As Boolean Implements Theming.IThemeable.UseTheme
             Get
                 Return _useTheme
             End Get
             Set(value As Boolean)
-                _useTheme = value
-                If value Then ApplyTheme(NXThemeManager.Instance.CurrentTheme)
+                If _useTheme <> value Then
+                    _useTheme = value
+                    If value Then
+                        ApplyTheme(Theming.NXThemeManager.Instance.CurrentTheme)
+                    End If
+                End If
             End Set
         End Property
 
