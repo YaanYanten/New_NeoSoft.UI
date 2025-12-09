@@ -98,6 +98,9 @@
     <Compile Include="Controls\Containers\NXRadioGroup.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\Containers\NXTabControl\NXTabControl.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\ListBox\NXListBox.vb">
       <SubType>Component</SubType>
     </Compile>
